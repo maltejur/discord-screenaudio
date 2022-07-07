@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
+#include <QColor>
 #include <QComboBox>
 #include <QFile>
 #include <QGridLayout>
@@ -48,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
+  m_webView->page()->setBackgroundColor(QColor("#202225"));
 
   // TODO: Custom QWebEnginePage that implements acceptNavigationRequest
   connect(m_webView->page(), &QWebEnginePage::featurePermissionRequested, this,
