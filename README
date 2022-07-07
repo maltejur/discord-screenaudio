@@ -1,0 +1,14 @@
+-- Build instructions --
+
+mkdir build
+cd build
+cmake ../
+make
+
+./discord-screenaudio
+
+
+-- Tutorials and resources --
+
+Qt online docs
+https://doc.qt.io/

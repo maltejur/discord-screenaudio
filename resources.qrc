@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC>
+  <qresource>
+    <file>assets/userscript.js</file>
+  </qresource>
+</RCC>

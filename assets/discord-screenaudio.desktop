@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=discord-screenaudio
+Exec=discord-screenaudio
+Icon=discord
+Terminal=false
