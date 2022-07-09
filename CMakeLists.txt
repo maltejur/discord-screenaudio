@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 # set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS 
@@ -16,6 +17,8 @@ set(discord-screenaudio_SRC
   src/main.cpp
   src/mainwindow.cpp
   src/virtmic.cpp
+  src/discordpage.cpp
+  src/streamdialog.cpp
   resources.qrc
 )
 

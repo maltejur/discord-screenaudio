@@ -1,5 +1,7 @@
 #pragma once
 
+#include "discordpage.h"
+
 #include <QMainWindow>
 #include <QScopedPointer>
 #include <QString>
@@ -13,15 +15,10 @@ class MainWindow : public QMainWindow {
 
 public:
   explicit MainWindow(QWidget *parent = nullptr);
-  ~MainWindow() override;
 
 private:
   void setupWebView();
   QWebEngineView *m_webView;
   QWebEngineProfile *prepareProfile();
-  QThread *m_virtmicThread;
-
-private Q_SLOTS:
-  void featurePermissionRequested(const QUrl &securityOrigin,
-                                  QWebEnginePage::Feature feature);
+  DiscordPage *m_discordPage;
 };
