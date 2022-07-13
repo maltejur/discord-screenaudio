@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
 project(discord-screenaudio)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -13,7 +13,7 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS
   WebEngineWidgets
 )
 
-set(discord-screenaudio_SRC
+set(${CMAKE_PROJECT_NAME}_SRC
   src/main.cpp
   src/mainwindow.cpp
   src/virtmic.cpp
@@ -27,9 +27,11 @@ include(FetchContent)
 FetchContent_Declare(rohrkabel GIT_REPOSITORY "https://github.com/Soundux/rohrkabel")
 FetchContent_MakeAvailable(rohrkabel)
 
-add_executable(discord-screenaudio ${discord-screenaudio_SRC})
+add_executable(${CMAKE_PROJECT_NAME} ${${CMAKE_PROJECT_NAME}_SRC})
 
-target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
+target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
 
-install(TARGETS discord-screenaudio DESTINATION bin)
-install(PROGRAMS assets/discord-screenaudio.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)
+install(PROGRAMS assets/${CMAKE_PROJECT_NAME}.desktop DESTINATION share/applications)
+
+add_custom_target(appimage ${CMAKE_SOURCE_DIR}/scripts/build-appimage.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
