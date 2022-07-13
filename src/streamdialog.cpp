@@ -10,6 +10,8 @@
 #include <QVBoxLayout>
 
 StreamDialog::StreamDialog() : QWidget() {
+  setAttribute(Qt::WA_QuitOnClose, false);
+
   auto layout = new QVBoxLayout;
 
   auto targetLabel = new QLabel;
