@@ -84,7 +84,7 @@ void DiscordPage::stopVirtmic() {
 }
 
 void DiscordPage::startVirtmic(QString target) {
-  if (target != "") {
+  if (target != "None") {
     qDebug() << "[virtmic] Starting Virtmic with target" << target;
     m_virtmicProcess.start(QApplication::arguments()[0], {"--virtmic", target});
   }
@@ -111,7 +111,7 @@ void DiscordPage::startStream(QString target, uint width, uint height,
   stopVirtmic();
   startVirtmic(target);
   // Wait a bit for the virtmic to start
-  QTimer::singleShot(target == "" ? 0 : 200, [=]() {
+  QTimer::singleShot(target == "None" ? 0 : 200, [=]() {
     runJavaScript(QString("window.discordScreenaudioStartStream(%1, %2, %3);")
                       .arg(width)
                       .arg(height)

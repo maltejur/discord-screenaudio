@@ -111,6 +111,7 @@ setInterval(() => {
     }
   }
 
+  // Add about text in settings
   if (
     document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
   ) {
@@ -123,4 +124,8 @@ setInterval(() => {
       el.appendChild(aboutEl);
     }
   }
+
+  // Remove stream settings if stream is active
+  document.getElementById("manage-streams-change-windows")?.remove();
+  document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
 }, 1000);
