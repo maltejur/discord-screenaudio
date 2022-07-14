@@ -116,7 +116,7 @@ setInterval(() => {
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
       const aboutEl = document.createElement("div");
-      aboutEl.innerText = "discord-screenaudio v1.0.0-alpha";
+      aboutEl.innerText = "discord-screenaudio v1.0.0-rc.1";
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
