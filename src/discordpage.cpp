@@ -98,6 +98,7 @@ void DiscordPage::javaScriptConsoleMessage(
       m_streamDialog.setHidden(false);
     else
       m_streamDialog.activateWindow();
+    m_streamDialog.updateTargets();
   } else if (message == "!discord-screenaudio-stream-stopped") {
     stopVirtmic();
   } else {

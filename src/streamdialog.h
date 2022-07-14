@@ -19,6 +19,9 @@ Q_SIGNALS:
   void requestedStreamStart(QString target, uint width, uint height,
                             uint frameRate);
 
+public Q_SLOTS:
+  void updateTargets();
+
 private Q_SLOTS:
   void startStream();
 };
