@@ -9,7 +9,7 @@ if [ ! -f /.dockerenv ]; then
     echo "Error: Docker is not available."
     exit 1
   fi
-  docker run --rm -v "$PWD":/work discord-screenaudio-buildenv bash /work/scripts/build-appimage.sh
+  docker run --rm -u $(id -u) -v "$PWD":/work discord-screenaudio-buildenv bash /work/scripts/build-appimage.sh
   exit 0
 fi
 
@@ -22,4 +22,4 @@ DESTDIR="$appdir" cmake --install "$builddir" --prefix "/usr"
 mkdir -p "$appdir/usr/share/doc/libc6"
 touch "$appdir/usr/share/doc/libc6/copyright"
 
-linuxdeployqt "$appdir/usr/share/applications/discord-screenaudio.desktop" -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so -unsupported-allow-new-glibc
+VERSION="$(cat version)" linuxdeployqt "$appdir/usr/share/applications/discord-screenaudio.desktop" -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so -unsupported-allow-new-glibc

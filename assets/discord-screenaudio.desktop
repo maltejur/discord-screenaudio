@@ -4,3 +4,4 @@ Name=discord-screenaudio
 Exec=discord-screenaudio
 Icon=discord
 Terminal=false
+Categories=Audio;
