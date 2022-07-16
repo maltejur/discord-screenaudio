@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
-  auto page = new DiscordPage;
+  auto page = new DiscordPage(this);
   m_webView->setPage(page);
   setCentralWidget(m_webView);
 }

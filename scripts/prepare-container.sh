@@ -16,16 +16,20 @@ fi
 echo "-> Installing dependencies with apt..."
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y curl build-essential qtbase5-dev qtwebengine5-dev qt5-qmake cmake pkg-config git libpipewire-0.3-dev file
+apt-get install -y curl build-essential qtbase5-dev qtwebengine5-dev qt5-qmake cmake ninja-build pkg-config git libpipewire-0.3-dev file
 
-echo "-> Installing linuxdeployqt..."
+echo "-> Installing linuxdeploy..."
 tmpdir="$(mktemp -d)"
-curl -Lo "$tmpdir/linuxdeployqt.AppImage" "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-chmod +x "$tmpdir/linuxdeployqt.AppImage"
-sed '0,/AI\x02/{s|AI\x02|\x00\x00\x00|}' -i -i "$tmpdir/linuxdeployqt.AppImage"
-(cd "$tmpdir" && ./linuxdeployqt.AppImage --appimage-extract)
-mv -v "$tmpdir/squashfs-root" "/opt/linuxdeployqt"
-ln -sv "/opt/linuxdeployqt/AppRun" "/usr/local/bin/linuxdeployqt"
+install_appimage() {
+  curl -Lo "$tmpdir/$1.AppImage" "$2"
+  chmod +x "$tmpdir/$1.AppImage"
+  sed '0,/AI\x02/{s|AI\x02|\x00\x00\x00|}' -i -i "$tmpdir/$1.AppImage"
+  (cd "$tmpdir" && ./$1.AppImage --appimage-extract)
+  mv -v "$tmpdir/squashfs-root" "/opt/$1"
+  ln -sv "/opt/$1/AppRun" "/usr/local/bin/$1"
+}
+install_appimage "linuxdeploy" "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+install_appimage "linuxdeploy-plugin-qt" "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
 
 echo "-> Cleaning up..."
 rm -rf "$tmpdir"

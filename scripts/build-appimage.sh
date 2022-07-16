@@ -16,10 +16,16 @@ fi
 tmpdir="$(mktemp -d)"
 builddir="$tmpdir/build"
 appdir="$tmpdir/AppDir"
+export CMAKE_GENERATOR="Ninja"
 cmake -B "$builddir" -S "$PWD"
 cmake --build "$builddir" --config Release
 DESTDIR="$appdir" cmake --install "$builddir" --prefix "/usr"
-mkdir -p "$appdir/usr/share/doc/libc6"
-touch "$appdir/usr/share/doc/libc6/copyright"
 
-VERSION="$(cat version)" linuxdeployqt "$appdir/usr/share/applications/discord-screenaudio.desktop" -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so -unsupported-allow-new-glibc
+VERSION="$(cat version)" linuxdeploy \
+  --appdir "$appdir" \
+  --icon-file "assets/discord.png" \
+  --plugin qt \
+  --library "/usr/lib/x86_64-linux-gnu/nss/libsoftokn3.so" \
+  --library "/usr/lib/x86_64-linux-gnu/nss/libnssckbi.so" \
+  --exclude-library "libpipewire-0.3.so.0" \
+  --output appimage
