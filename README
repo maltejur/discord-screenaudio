@@ -1,9 +1,6 @@
--- Build instructions --
+-- Install instructions --
 
-mkdir build
-cd build
-cmake ../
-make
+Just run `scripts/install.sh`
 
 ./discord-screenaudio
 
