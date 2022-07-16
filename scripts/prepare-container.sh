@@ -16,7 +16,7 @@ fi
 echo "-> Installing dependencies with apt..."
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y curl build-essential qtbase5-dev qtwebengine5-dev qt5-qmake cmake git libpipewire-0.3-dev
+apt-get install -y curl build-essential qtbase5-dev qtwebengine5-dev qt5-qmake cmake pkg-config git libpipewire-0.3-dev
 
 echo "-> Installing linuxdeployqt..."
 tmpdir="$(mktemp -d)"

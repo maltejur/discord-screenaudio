@@ -33,5 +33,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} Qt5::Widgets Qt5::WebEngineWidgets r
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION bin)
 install(PROGRAMS assets/${CMAKE_PROJECT_NAME}.desktop DESTINATION share/applications)
+install(FILES assets/discord.png DESTINATION share/pixmaps)
 
 add_custom_target(appimage ${CMAKE_SOURCE_DIR}/scripts/build-appimage.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

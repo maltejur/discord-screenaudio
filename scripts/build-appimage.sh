@@ -19,5 +19,7 @@ appdir="$tmpdir/AppDir"
 cmake -B "$builddir" -S "$PWD"
 cmake --build "$builddir" --config Release
 DESTDIR="$appdir" cmake --install "$builddir" --prefix "/usr"
+mkdir -p "$appdir/usr/share/doc/libc6"
+touch "$appdir/usr/share/doc/libc6/copyright"
 
-linuxdeployqt "$appdir/usr/share/applications/discord-screenaudio.desktop" -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so
+linuxdeployqt "$appdir/usr/share/applications/discord-screenaudio.desktop" -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so -unsupported-allow-new-glibc
