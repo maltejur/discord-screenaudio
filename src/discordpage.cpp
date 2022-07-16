@@ -36,7 +36,7 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 }
 
 void DiscordPage::injectScript(QString source) {
-  qDebug() << "[main   ] Injecting " << source;
+  qDebug() << "[main   ] Injecting" << source;
 
   QFile userscript(source);
 
@@ -68,11 +68,10 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
 bool DiscordPage::acceptNavigationRequest(const QUrl &url,
                                           QWebEnginePage::NavigationType type,
                                           bool isMainFrame) {
-  qDebug() << url;
-  if (type == QWebEnginePage::NavigationTypeLinkClicked) {
-    QDesktopServices::openUrl(url);
-    return false;
-  }
+  // if (type == QWebEnginePage::NavigationTypeLinkClicked) {
+  //   QDesktopServices::openUrl(url);
+  //   return false;
+  // }
   return true;
 };
 

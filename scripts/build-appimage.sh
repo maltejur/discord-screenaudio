@@ -20,12 +20,13 @@ export CMAKE_GENERATOR="Ninja"
 cmake -B "$builddir" -S "$PWD"
 cmake --build "$builddir" --config Release
 DESTDIR="$appdir" cmake --install "$builddir" --prefix "/usr"
+# Include libnss related files
+mkdir -p "$appdir/AppDir/usr/lib/"
+cp -rv "/usr/lib/x86_64-linux-gnu/nss" "$appdir/usr/lib/"
 
 VERSION="$(cat version)" linuxdeploy \
   --appdir "$appdir" \
   --icon-file "assets/discord.png" \
   --plugin qt \
-  --library "/usr/lib/x86_64-linux-gnu/nss/libsoftokn3.so" \
-  --library "/usr/lib/x86_64-linux-gnu/nss/libnssckbi.so" \
   --exclude-library "libpipewire-0.3.so.0" \
   --output appimage
