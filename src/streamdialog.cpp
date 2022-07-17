@@ -19,10 +19,7 @@ StreamDialog::StreamDialog() : QWidget() {
   layout->addWidget(targetLabel);
 
   m_targetComboBox = new QComboBox;
-  m_targetComboBox->addItem("None");
-  for (auto target : Virtmic::getTargets()) {
-    m_targetComboBox->addItem(target);
-  }
+  updateTargets();
   layout->addWidget(m_targetComboBox);
 
   auto qualityLabel = new QLabel;
@@ -70,4 +67,12 @@ void StreamDialog::startStream() {
                             resolution[0].toUInt(), resolution[1].toUInt(),
                             m_qualityFPSComboBox->currentData().toUInt());
   setHidden(true);
+}
+
+void StreamDialog::updateTargets() {
+  m_targetComboBox->clear();
+  m_targetComboBox->addItem("None");
+  for (auto target : Virtmic::getTargets()) {
+    m_targetComboBox->addItem(target);
+  }
 }

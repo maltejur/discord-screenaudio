@@ -111,16 +111,21 @@ setInterval(() => {
     }
   }
 
+  // Add about text in settings
   if (
     document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
       const aboutEl = document.createElement("div");
-      aboutEl.innerText = "discord-screenaudio v1.0.0-alpha";
+      aboutEl.innerText = "discord-screenaudio v1.0.0-rc.2";
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
       el.appendChild(aboutEl);
     }
   }
+
+  // Remove stream settings if stream is active
+  document.getElementById("manage-streams-change-windows")?.remove();
+  document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
 }, 1000);
