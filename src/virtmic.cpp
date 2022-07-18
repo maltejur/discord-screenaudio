@@ -33,7 +33,7 @@ void start(QString _target) {
   std::map<std::uint32_t, pipewire::port> ports;
   std::unique_ptr<pipewire::port> virt_fl, virt_fr;
 
-  std::map<std::uint32_t, pipewire::node> nodes;
+  std::map<std::uint32_t, pipewire::node_info> nodes;
   std::map<std::uint32_t, pipewire::link_factory> links;
 
   auto main_loop = pipewire::main_loop();
@@ -62,7 +62,7 @@ void start(QString _target) {
 
       auto &parent = nodes.at(parent_id);
 
-      if (parent.info().props["node.name"].find(target) != std::string::npos) {
+      if (parent.props["node.name"].find(target) != std::string::npos) {
         std::cout << "[virtmic] "
                   << "Link   : " << target << ":" << port_id << " -> ";
 
@@ -100,7 +100,7 @@ void start(QString _target) {
                     << std::endl;
 
           if (!nodes.count(global.id)) {
-            nodes.emplace(global.id, std::move(node));
+            nodes.emplace(global.id, node.info());
             link(target, core);
           }
         }
@@ -130,7 +130,7 @@ void start(QString _target) {
   reg_events.on<pipewire::registry_event::global_removed>(
       [&](const std::uint32_t id) {
         if (nodes.count(id)) {
-          auto info = nodes.at(id).info();
+          auto info = nodes.at(id);
           std::cout << "[virtmic] "
                     << "Removed: " << info.props["node.name"] << std::endl;
           nodes.erase(id);
