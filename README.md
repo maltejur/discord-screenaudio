@@ -3,8 +3,9 @@
 A very WIP custom discord client that supports streaming with audio on Linux,
 made possible by the
 [great work](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux)
-of @edisionnano and the
-[Rohrkabel library](https://github.com/Soundux/rohrkabel) by @Curve.
+of [@edisionnano](https://github.com/edisionnano) and the
+[Rohrkabel library](https://github.com/Soundux/rohrkabel) by
+[@Curve](https://github.com/Curve).
 
 ![Screenshot_20220718_194357](https://user-images.githubusercontent.com/48161361/179571245-11ea05f3-fb5e-4aef-9132-2736e122ef04.png)
 
