@@ -24,7 +24,11 @@ set(discord-screenaudio_SRC
 
 include(FetchContent)
 
-FetchContent_Declare(rohrkabel GIT_REPOSITORY "https://github.com/Soundux/rohrkabel")
+FetchContent_Declare(
+  rohrkabel 
+  GIT_REPOSITORY "https://github.com/Soundux/rohrkabel" 
+  GIT_TAG "d87403f48d3a95aa4bcf4cd60112d9e4bb090d5d"
+)
 FetchContent_MakeAvailable(rohrkabel)
 
 add_executable(discord-screenaudio ${discord-screenaudio_SRC})
