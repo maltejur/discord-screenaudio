@@ -9,6 +9,12 @@ of [@edisionnano](https://github.com/edisionnano) and the
 
 ![Screenshot_20220718_194357](https://user-images.githubusercontent.com/48161361/179571245-11ea05f3-fb5e-4aef-9132-2736e122ef04.png)
 
+## Known Issues
+
+- Only works with **PipeWire**
+- Only works on **X11**
+- Can only share primary screen (no other screens or specific applications)
+
 ## Installation
 
 If you are using Arch, you can build and install
