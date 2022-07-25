@@ -13,7 +13,7 @@ of [@edisionnano](https://github.com/edisionnano) and the
 
 - Only works with **PipeWire**
 - Only works on **X11**
-- Can only share primary screen (no other screens or specific applications)
+- Can only share primary screen (no other screens or specific applications) (see [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
 
 ## Installation
 
