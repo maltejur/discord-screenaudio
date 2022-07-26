@@ -90,58 +90,60 @@ void start(QString _target) {
                    {"audio.position", "FL,FR"}},
                   pipewire::node::type, pipewire::node::version, false);
 
-  auto reg_events = reg.listen<pipewire::registry_listener>();
-  reg_events.on<pipewire::registry_event::global>(
-      [&](const pipewire::global &global) {
-        if (global.type == pipewire::node::type) {
-          auto node = reg.bind<pipewire::node>(global.id);
-          std::cout << "[virtmic] "
-                    << "Added  : " << node.info().props["node.name"]
-                    << std::endl;
+  if (target != "None") {
+    auto reg_events = reg.listen<pipewire::registry_listener>();
+    reg_events.on<pipewire::registry_event::global>(
+        [&](const pipewire::global &global) {
+          if (global.type == pipewire::node::type) {
+            auto node = reg.bind<pipewire::node>(global.id);
+            std::cout << "[virtmic] "
+                      << "Added  : " << node.info().props["node.name"]
+                      << std::endl;
 
-          if (!nodes.count(global.id)) {
-            nodes.emplace(global.id, node.info());
-            link(target, core);
-          }
-        }
-        if (global.type == pipewire::port::type) {
-          auto port = reg.bind<pipewire::port>(global.id);
-          auto info = port.info();
-
-          if (info.props.count("node.id")) {
-            auto node_id = std::stoul(info.props["node.id"]);
-
-            if (node_id == virtual_mic.id() &&
-                info.direction == pipewire::port_direction::input) {
-              if (info.props["audio.channel"] == "FL") {
-                virt_fl = std::make_unique<pipewire::port>(std::move(port));
-              } else {
-                virt_fr = std::make_unique<pipewire::port>(std::move(port));
-              }
-            } else {
-              ports.emplace(global.id, std::move(port));
+            if (!nodes.count(global.id)) {
+              nodes.emplace(global.id, node.info());
+              link(target, core);
             }
-
-            link(target, core);
           }
-        }
-      });
+          if (global.type == pipewire::port::type) {
+            auto port = reg.bind<pipewire::port>(global.id);
+            auto info = port.info();
 
-  reg_events.on<pipewire::registry_event::global_removed>(
-      [&](const std::uint32_t id) {
-        if (nodes.count(id)) {
-          auto info = nodes.at(id);
-          std::cout << "[virtmic] "
-                    << "Removed: " << info.props["node.name"] << std::endl;
-          nodes.erase(id);
-        }
-        if (ports.count(id)) {
-          ports.erase(id);
-        }
-        if (links.count(id)) {
-          links.erase(id);
-        }
-      });
+            if (info.props.count("node.id")) {
+              auto node_id = std::stoul(info.props["node.id"]);
+
+              if (node_id == virtual_mic.id() &&
+                  info.direction == pipewire::port_direction::input) {
+                if (info.props["audio.channel"] == "FL") {
+                  virt_fl = std::make_unique<pipewire::port>(std::move(port));
+                } else {
+                  virt_fr = std::make_unique<pipewire::port>(std::move(port));
+                }
+              } else {
+                ports.emplace(global.id, std::move(port));
+              }
+
+              link(target, core);
+            }
+          }
+        });
+
+    reg_events.on<pipewire::registry_event::global_removed>(
+        [&](const std::uint32_t id) {
+          if (nodes.count(id)) {
+            auto info = nodes.at(id);
+            std::cout << "[virtmic] "
+                      << "Removed: " << info.props["node.name"] << std::endl;
+            nodes.erase(id);
+          }
+          if (ports.count(id)) {
+            ports.erase(id);
+          }
+          if (links.count(id)) {
+            links.erase(id);
+          }
+        });
+  }
 
   while (true) {
     main_loop.run();

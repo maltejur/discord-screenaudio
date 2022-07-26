@@ -63,6 +63,15 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
   // Allow every permission asked
   setFeaturePermission(securityOrigin, feature,
                        QWebEnginePage::PermissionGrantedByUser);
+
+  if (feature == QWebEnginePage::Feature::MediaAudioCapture) {
+    if (m_virtmicProcess.state() == QProcess::NotRunning) {
+      qDebug() << "[virtmic] Starting Virtmic with no target to make sure "
+                  "Discord can find all the audio devices";
+      m_virtmicProcess.start(QApplication::arguments()[0],
+                             {"--virtmic", "None"});
+    }
+  }
 }
 
 bool DiscordPage::acceptNavigationRequest(const QUrl &url,
