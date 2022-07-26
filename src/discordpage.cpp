@@ -89,6 +89,7 @@ void DiscordPage::stopVirtmic() {
   if (m_virtmicProcess.state() == QProcess::Running) {
     qDebug() << "[virtmic] Stopping Virtmic";
     m_virtmicProcess.kill();
+    m_virtmicProcess.waitForFinished();
   }
 }
 

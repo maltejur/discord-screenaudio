@@ -1,0 +1,3 @@
+[submodule "submodules/rohrkabel"]
+	path = submodules/rohrkabel
+	url = https://github.com/Soundux/rohrkabel
