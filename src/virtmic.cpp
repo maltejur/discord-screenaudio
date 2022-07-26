@@ -70,12 +70,12 @@ void start(QString _target) {
                   << "Link   : " << target << ":" << port_id << " -> ";
 
         if (port.info().props["audio.channel"] == "FL") {
-          links.emplace(port_id, core.create_simple<pipewire::link_factory>(
-                                     virt_fl->info().id, port_id));
+          links.emplace(port_id, core.create<pipewire::link_factory>(
+                                     {virt_fl->info().id, port_id}));
           std::cout << "[virtmic] " << virt_fl->info().id << std::endl;
         } else {
-          links.emplace(port_id, core.create_simple<pipewire::link_factory>(
-                                     virt_fr->info().id, port_id));
+          links.emplace(port_id, core.create<pipewire::link_factory>(
+                                     {virt_fr->info().id, port_id}));
           std::cout << "[virtmic] " << virt_fr->info().id << std::endl;
         }
       }
