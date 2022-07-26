@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
   QApplication::setApplicationName("discord-screenaudio");
-  QApplication::setApplicationVersion("1.0.0-rc.5");
+  QApplication::setApplicationVersion("1.0.0-rc.6");
 
   QCommandLineParser parser;
   parser.setApplicationDescription(
