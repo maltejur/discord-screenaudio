@@ -128,4 +128,4 @@ setInterval(() => {
   // Remove stream settings if stream is active
   document.getElementById("manage-streams-change-windows")?.remove();
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
-}, 1000);
+}, 500);
