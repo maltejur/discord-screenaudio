@@ -38,3 +38,5 @@ void MainWindow::fullScreenRequested(
   fullScreenRequest.accept();
   fullScreenRequest.toggleOn() ? showFullScreen() : showNormal();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }
