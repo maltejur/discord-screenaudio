@@ -43,7 +43,14 @@ On Debian:
 
 ### Building
 
-To build the program, run this in the source directory:
+First, clone the repository:
+
+```bash
+git clone https://github.com/maltejur/discord-screenaudio.git
+cd discord-screenaudio
+```
+
+Then, to build the program, run this in the source directory:
 
 ```bash
 cmake -B build
