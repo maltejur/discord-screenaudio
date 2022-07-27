@@ -22,6 +22,7 @@ private:
   QWebEngineProfile *prepareProfile();
   DiscordPage *m_discordPage;
   void closeEvent(QCloseEvent *event) override;
+  bool m_wasMaximized;
 
 private Q_SLOTS:
   void fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest);

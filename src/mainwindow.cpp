@@ -36,7 +36,12 @@ void MainWindow::setupWebView() {
 void MainWindow::fullScreenRequested(
     QWebEngineFullScreenRequest fullScreenRequest) {
   fullScreenRequest.accept();
-  fullScreenRequest.toggleOn() ? showFullScreen() : showNormal();
+  if (fullScreenRequest.toggleOn()) {
+    m_wasMaximized = isMaximized();
+    showFullScreen();
+  } else {
+    m_wasMaximized ? showMaximized() : showNormal();
+  }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }
