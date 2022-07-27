@@ -22,10 +22,26 @@ set(${CMAKE_PROJECT_NAME}_SRC
   resources.qrc
 )
 
-include(FetchContent)
+# Adapted from https://cliutils.gitlab.io/modern-cmake/chapters/projects/submodule.html
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+  option(GIT_SUBMODULE "Check submodules during build" ON)
+  if(GIT_SUBMODULE)
+    message(STATUS "Updating submodules")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive --checkout
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+      message(FATAL_ERROR "`git submodule update --init --recursive --checkout` failed with ${GIT_SUBMOD_RESULT}, please provide the submodules manually")
+    endif()
+  endif()
+endif()
 
-FetchContent_Declare(rohrkabel GIT_REPOSITORY "https://github.com/Soundux/rohrkabel")
-FetchContent_MakeAvailable(rohrkabel)
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/submodules/rohrkabel/CMakeLists.txt")
+  message(FATAL_ERROR "Rohrkabel was not found since you are not in a Git checkout or have GIT_SUBMODULE disabled. Please provide rohrkabel manually to `./submodules/rohrkabel`.")
+endif()
+
+add_subdirectory(submodules/rohrkabel)
 
 add_executable(${CMAKE_PROJECT_NAME} ${${CMAKE_PROJECT_NAME}_SRC})
 

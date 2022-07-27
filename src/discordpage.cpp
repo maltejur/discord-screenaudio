@@ -26,6 +26,7 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled, true);
   settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture,
                            false);
+  settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
 
   setUrl(QUrl("https://discord.com/app"));
 
@@ -63,6 +64,15 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
   // Allow every permission asked
   setFeaturePermission(securityOrigin, feature,
                        QWebEnginePage::PermissionGrantedByUser);
+
+  if (feature == QWebEnginePage::Feature::MediaAudioCapture) {
+    if (m_virtmicProcess.state() == QProcess::NotRunning) {
+      qDebug() << "[virtmic] Starting Virtmic with no target to make sure "
+                  "Discord can find all the audio devices";
+      m_virtmicProcess.start(QApplication::arguments()[0],
+                             {"--virtmic", "None"});
+    }
+  }
 }
 
 bool DiscordPage::acceptNavigationRequest(const QUrl &url,
@@ -75,10 +85,23 @@ bool DiscordPage::acceptNavigationRequest(const QUrl &url,
   return true;
 };
 
+bool ExternalPage::acceptNavigationRequest(const QUrl &url,
+                                           QWebEnginePage::NavigationType type,
+                                           bool isMainFrame) {
+  QDesktopServices::openUrl(url);
+  deleteLater();
+  return false;
+}
+
+QWebEnginePage *DiscordPage::createWindow(QWebEnginePage::WebWindowType type) {
+  return new ExternalPage;
+}
+
 void DiscordPage::stopVirtmic() {
   if (m_virtmicProcess.state() == QProcess::Running) {
     qDebug() << "[virtmic] Stopping Virtmic";
     m_virtmicProcess.kill();
+    m_virtmicProcess.waitForFinished();
   }
 }
 

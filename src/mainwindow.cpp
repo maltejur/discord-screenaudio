@@ -23,8 +23,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::setupWebView() {
-  m_webView = new QWebEngineView(this);
   auto page = new DiscordPage(this);
+  connect(page, &QWebEnginePage::fullScreenRequested, this,
+          &MainWindow::fullScreenRequested);
+
+  m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
+
   setCentralWidget(m_webView);
 }
+
+void MainWindow::fullScreenRequested(
+    QWebEngineFullScreenRequest fullScreenRequest) {
+  fullScreenRequest.accept();
+  if (fullScreenRequest.toggleOn()) {
+    m_wasMaximized = isMaximized();
+    showFullScreen();
+  } else {
+    m_wasMaximized ? showMaximized() : showNormal();
+  }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }

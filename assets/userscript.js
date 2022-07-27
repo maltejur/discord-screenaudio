@@ -117,7 +117,7 @@ setInterval(() => {
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
       const aboutEl = document.createElement("div");
-      aboutEl.innerText = "discord-screenaudio v1.0.0-rc.2";
+      aboutEl.innerText = "discord-screenaudio v1.0.0-rc.6";
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
@@ -128,4 +128,8 @@ setInterval(() => {
   // Remove stream settings if stream is active
   document.getElementById("manage-streams-change-windows")?.remove();
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
-}, 1000);
+}, 500);
+
+// Fix for broken discord notifications after restart
+// (https://github.com/maltejur/discord-screenaudio/issues/17)
+Notification.requestPermission();

@@ -1,5 +1,8 @@
 #include "virtmic.h"
 
+#include <rohrkabel/loop/main.hpp>
+#include <rohrkabel/registry/registry.hpp>
+
 namespace Virtmic {
 
 QVector<QString> getTargets() {
@@ -24,7 +27,7 @@ QVector<QString> getTargets() {
           }
         }
       });
-  core.sync();
+  core.update();
 
   return targets;
 }
@@ -33,7 +36,7 @@ void start(QString _target) {
   std::map<std::uint32_t, pipewire::port> ports;
   std::unique_ptr<pipewire::port> virt_fl, virt_fr;
 
-  std::map<std::uint32_t, pipewire::node> nodes;
+  std::map<std::uint32_t, pipewire::node_info> nodes;
   std::map<std::uint32_t, pipewire::link_factory> links;
 
   auto main_loop = pipewire::main_loop();
@@ -62,7 +65,7 @@ void start(QString _target) {
 
       auto &parent = nodes.at(parent_id);
 
-      if (parent.info().props["node.name"].find(target) != std::string::npos) {
+      if (parent.props["node.name"].find(target) != std::string::npos) {
         std::cout << "[virtmic] "
                   << "Link   : " << target << ":" << port_id << " -> ";
 
@@ -81,14 +84,21 @@ void start(QString _target) {
 
   std::string target = _target.toLatin1().toStdString();
 
-  auto virtual_mic =
-      core.create("adapter",
-                  {{"node.name", "discord-screenaudio-virtmic"},
-                   {"media.class", "Audio/Source/Virtual"},
-                   {"factory.name", "support.null-audio-sink"},
-                   {"audio.channels", "2"},
-                   {"audio.position", "FL,FR"}},
-                  pipewire::node::type, pipewire::node::version, false);
+  auto virtual_mic = core.create("adapter",
+                                 {{"node.name", "discord-screenaudio-virtmic"},
+                                  {"media.class", "Audio/Source/Virtual"},
+                                  {"factory.name", "support.null-audio-sink"},
+                                  {"audio.channels", "2"},
+                                  {"audio.position", "FL,FR"}},
+                                 pipewire::node::type, pipewire::node::version,
+                                 pipewire::update_strategy::none);
+
+  if (target == "None") {
+    while (true) {
+      main_loop.run();
+    }
+    return;
+  }
 
   auto reg_events = reg.listen<pipewire::registry_listener>();
   reg_events.on<pipewire::registry_event::global>(
@@ -100,7 +110,7 @@ void start(QString _target) {
                     << std::endl;
 
           if (!nodes.count(global.id)) {
-            nodes.emplace(global.id, std::move(node));
+            nodes.emplace(global.id, node.info());
             link(target, core);
           }
         }
@@ -130,7 +140,7 @@ void start(QString _target) {
   reg_events.on<pipewire::registry_event::global_removed>(
       [&](const std::uint32_t id) {
         if (nodes.count(id)) {
-          auto info = nodes.at(id).info();
+          auto info = nodes.at(id);
           std::cout << "[virtmic] "
                     << "Removed: " << info.props["node.name"] << std::endl;
           nodes.erase(id);

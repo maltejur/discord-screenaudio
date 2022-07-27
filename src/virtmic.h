@@ -3,7 +3,6 @@
 #include <QString>
 #include <QVector>
 #include <iostream>
-#include <rohrkabel/registry/registry.hpp>
 
 namespace Virtmic {
 

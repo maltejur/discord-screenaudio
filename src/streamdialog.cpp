@@ -12,24 +12,24 @@
 StreamDialog::StreamDialog() : QWidget() {
   setAttribute(Qt::WA_QuitOnClose, false);
 
-  auto layout = new QVBoxLayout;
+  auto layout = new QVBoxLayout(this);
 
-  auto targetLabel = new QLabel;
+  auto targetLabel = new QLabel(this);
   targetLabel->setText("Which app do you want to stream sound from?");
   layout->addWidget(targetLabel);
 
-  m_targetComboBox = new QComboBox;
+  m_targetComboBox = new QComboBox(this);
   updateTargets();
   layout->addWidget(m_targetComboBox);
 
-  auto qualityLabel = new QLabel;
+  auto qualityLabel = new QLabel(this);
   qualityLabel->setText("Stream Quality");
   layout->addWidget(qualityLabel);
 
-  auto qualityHBox = new QHBoxLayout;
+  auto qualityHBox = new QHBoxLayout(this);
   layout->addLayout(qualityHBox);
 
-  m_qualityResolutionComboBox = new QComboBox;
+  m_qualityResolutionComboBox = new QComboBox(this);
   m_qualityResolutionComboBox->addItem("2160p", "3840x2160");
   m_qualityResolutionComboBox->addItem("1440p", "2560x1440");
   m_qualityResolutionComboBox->addItem("1080p", "1920x1080");
@@ -40,7 +40,7 @@ StreamDialog::StreamDialog() : QWidget() {
   m_qualityResolutionComboBox->setCurrentText("720p");
   qualityHBox->addWidget(m_qualityResolutionComboBox);
 
-  m_qualityFPSComboBox = new QComboBox;
+  m_qualityFPSComboBox = new QComboBox(this);
   m_qualityFPSComboBox->addItem("144 FPS", 144);
   m_qualityFPSComboBox->addItem("60 FPS", 60);
   m_qualityFPSComboBox->addItem("30 FPS", 30);
@@ -49,7 +49,7 @@ StreamDialog::StreamDialog() : QWidget() {
   m_qualityFPSComboBox->setCurrentText("30 FPS");
   qualityHBox->addWidget(m_qualityFPSComboBox);
 
-  auto button = new QPushButton;
+  auto button = new QPushButton(this);
   button->setText("Start Stream");
   connect(button, &QPushButton::clicked, this, &StreamDialog::startStream);
   layout->addWidget(button, Qt::AlignRight | Qt::AlignBottom);
