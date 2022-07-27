@@ -4,6 +4,7 @@
 #include "virtmic.h"
 
 #include <QProcess>
+#include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 
 class DiscordPage : public QWebEnginePage {

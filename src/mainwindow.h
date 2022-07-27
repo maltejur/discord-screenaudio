@@ -21,4 +21,7 @@ private:
   QWebEngineView *m_webView;
   QWebEngineProfile *prepareProfile();
   DiscordPage *m_discordPage;
+
+private Q_SLOTS:
+  void fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest);
 };
