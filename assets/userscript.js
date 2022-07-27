@@ -129,3 +129,7 @@ setInterval(() => {
   document.getElementById("manage-streams-change-windows")?.remove();
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
 }, 500);
+
+// Fix for broken discord notifications after restart
+// (https://github.com/maltejur/discord-screenaudio/issues/17)
+Notification.requestPermission();
