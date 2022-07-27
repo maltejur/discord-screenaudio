@@ -9,11 +9,18 @@ of [@edisionnano](https://github.com/edisionnano) and the
 
 ![Screenshot_20220718_194357](https://user-images.githubusercontent.com/48161361/179571245-11ea05f3-fb5e-4aef-9132-2736e122ef04.png)
 
+The purpose of this project is **not** to provide an alternative to the original
+Discord client. Rather, it should be used in addition to the original client in
+case you want to stream something, maybe used with a second account. For
+anything else, this client has way too many things that work less well than in
+the original client.
+
 ## Known Issues
 
 - Only works with **PipeWire**
 - Only works on **X11**
-- Can only share primary screen (no other screens or specific applications) (see [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
+- Can only share primary screen (no other screens or specific applications) (see
+  [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
 
 ## Installation
 
