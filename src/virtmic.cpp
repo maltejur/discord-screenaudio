@@ -32,7 +32,38 @@ QVector<QString> getTargets() {
   return targets;
 }
 
-void start(QString _target) {
+std::string getDefaultSource() {
+  auto main_loop = pipewire::main_loop();
+  auto context = pipewire::context(main_loop);
+  auto core = pipewire::core(context);
+  auto reg = pipewire::registry(core);
+
+  std::string defaultSource = "";
+
+  auto metadata_listener = reg.listen<pipewire::registry_listener>();
+  metadata_listener.on<pipewire::registry_event::global>(
+      [&](const pipewire::global &global) {
+        if (global.type == pipewire::metadata::type) {
+          auto metadata = reg.bind<pipewire::metadata>(global.id);
+          auto properties = metadata.properties();
+
+          if (properties.count("default.audio.source")) {
+            auto value = properties.at("default.audio.source").value;
+
+            auto start = value.find_first_of(':') + 2;
+            auto len = value.find_last_of('"') - start;
+
+            auto name = value.substr(start, len);
+            defaultSource = name;
+          }
+        }
+      });
+  core.update();
+
+  return defaultSource;
+}
+
+int start(QString _target) {
   std::map<std::uint32_t, pipewire::port> ports;
   std::unique_ptr<pipewire::port> virt_fl, virt_fr;
 
@@ -84,6 +115,11 @@ void start(QString _target) {
 
   std::string target = _target.toLatin1().toStdString();
 
+  std::cout << "[virtmic] "
+            << "Default microphone is: " << getDefaultSource() << std::endl;
+  std::cout << "[virtmic] "
+            << "Creating virtual microphone" << std::endl;
+
   auto virtual_mic = core.create("adapter",
                                  {{"node.name", "discord-screenaudio-virtmic"},
                                   {"media.class", "Audio/Source/Virtual"},
@@ -93,11 +129,14 @@ void start(QString _target) {
                                  pipewire::node::type, pipewire::node::version,
                                  pipewire::update_strategy::none);
 
+  std::cout << "[virtmic] "
+            << "Default microphone is: " << getDefaultSource() << std::endl;
+
   if (target == "None") {
     while (true) {
       main_loop.run();
     }
-    return;
+    return 0;
   }
 
   auto reg_events = reg.listen<pipewire::registry_listener>();
@@ -113,8 +152,7 @@ void start(QString _target) {
             nodes.emplace(global.id, node.info());
             link(target, core);
           }
-        }
-        if (global.type == pipewire::port::type) {
+        } else if (global.type == pipewire::port::type) {
           auto port = reg.bind<pipewire::port>(global.id);
           auto info = port.info();
 
@@ -134,6 +172,9 @@ void start(QString _target) {
 
             link(target, core);
           }
+        } else if (global.type == pipewire::metadata::type) {
+          auto metadata = reg.bind<pipewire::metadata>(global.id);
+          auto properties = metadata.properties();
         }
       });
 

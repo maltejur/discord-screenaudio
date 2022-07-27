@@ -7,6 +7,6 @@
 namespace Virtmic {
 
 QVector<QString> getTargets();
-void start(QString _target);
+int start(QString _target);
 
 } // namespace Virtmic

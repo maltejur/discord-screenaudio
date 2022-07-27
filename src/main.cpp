@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   parser.process(app);
 
   if (parser.isSet(virtmicOption)) {
-    Virtmic::start(parser.value(virtmicOption));
+    return Virtmic::start(parser.value(virtmicOption));
   }
 
   MainWindow w;
