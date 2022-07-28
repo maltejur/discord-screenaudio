@@ -48,6 +48,6 @@ add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
 
 install(TARGETS discord-screenaudio DESTINATION bin)
-install(PROGRAMS assets/discord.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
-install(PROGRAMS assets/discord-screenaudio.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
+install(PROGRAMS assets/de.shorsh.discord-screenaudio.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/pixmaps)
+install(PROGRAMS assets/de.shorsh.discord-screenaudio.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
 install(PROGRAMS assets/de.shorsh.discord-screenaudio.metainfo.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/metainfo)

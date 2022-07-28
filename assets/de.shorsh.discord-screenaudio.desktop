@@ -2,5 +2,5 @@
 Type=Application
 Name=discord-screenaudio
 Exec=discord-screenaudio
-Icon=discord
+Icon=de.shorsh.discord-screenaudio
 Terminal=false
