@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>de.shorsh.discord-screenaudio</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>discord-screenaudio</name>
+  <releases>
+    <release version="v1.0.0-rc.7" />
+  </releases>
+
+  <summary>
+    A very WIP custom discord client that supports streaming with audio on
+    Linux.
+  </summary>
+
+  <description>
+    <p>
+      A very WIP custom discord client that supports streaming with audio on
+      Linux, made possible by the
+      <a href="https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux" >
+        great work
+      </a>
+      of <a href="https://github.com/edisionnano">@edisionnano</a> and the
+      <a href="https://github.com/Soundux/rohrkabel">Rohrkabel</a> library by
+      <a href="https://github.com/Curve">@Curve</a>.
+    </p>
+    <p>
+      The purpose of this project is
+      <b>not</b>
+      to provide an alternative to the original Discord client. Rather, it
+      should be used in addition to the original client in case you want to
+      stream something, maybe used with a second account. For anything else,
+      this client has way too many things that work less well than in the
+      original client.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">
+    discord-screenaudio.desktop
+  </launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>
+        https://user-images.githubusercontent.com/48161361/179571245-11ea05f3-fb5e-4aef-9132-2736e122ef04.png
+      </image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/maltejur/discord-screenaudio</url>
+
+  <provides>
+    <binary>discord-screenaudio</binary>
+  </provides>
+</component>
