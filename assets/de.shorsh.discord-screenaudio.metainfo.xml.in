@@ -5,13 +5,10 @@
   <project_license>GPL-3.0+</project_license>
   <name>discord-screenaudio</name>
   <releases>
-    <release version="${DISCORD_SCEENAUDIO_VERSION_FULL}" />
+    <release version="${DISCORD_SCEENAUDIO_VERSION_FULL}" timestamp="${TIMESTAMP}" />
   </releases>
 
-  <summary>
-    A very WIP custom discord client that supports streaming with audio on
-    Linux.
-  </summary>
+  <summary>A very WIP custom discord client that supports streaming with audio on Linux</summary>
 
   <description>
     <p>A very WIP custom discord client that supports streaming with audio on Linux, made possible by the great work of @edisionnano and the Rohrkabel library by @Curve.</p>
