@@ -13,6 +13,7 @@ StreamDialog::StreamDialog() : QWidget() {
   setAttribute(Qt::WA_QuitOnClose, false);
 
   auto layout = new QVBoxLayout(this);
+  layout->setSizeConstraint(QLayout::SetFixedSize);
 
   auto targetLabel = new QLabel(this);
   targetLabel->setText("Which app do you want to stream sound from?");
@@ -57,7 +58,6 @@ StreamDialog::StreamDialog() : QWidget() {
   setLayout(layout);
 
   setWindowTitle("discord-screenaudio Stream Dialog");
-  setFixedSize(0, 0);
 }
 
 void StreamDialog::startStream() {
