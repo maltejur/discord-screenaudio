@@ -16,7 +16,7 @@
   </description>
 
   <launchable type="desktop-id">
-    discord-screenaudio.desktop
+    de.shorsh.discord-screenaudio.desktop
   </launchable>
 
   <screenshots>
@@ -32,4 +32,12 @@
   <provides>
     <binary>discord-screenaudio</binary>
   </provides>
+
+  <content_rating type="oars-1.0">
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">intense</content_attribute>
+    <content_attribute id="social-audio">intense</content_attribute>
+    <content_attribute id="social-contacts">intense</content_attribute>
+    <content_attribute id="money-purchasing">mild</content_attribute>
+  </content_rating>
 </component>
