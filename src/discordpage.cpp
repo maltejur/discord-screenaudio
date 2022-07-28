@@ -17,6 +17,11 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
 
+  connect(this, &QWebEnginePage::loadStarted, [=]() {
+    runJavaScript(QString("window.discordScreenaudioVersion = '%1';")
+                      .arg(QApplication::applicationVersion()));
+  });
+
   settings()->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, true);
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
   settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent,
@@ -31,6 +36,7 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setUrl(QUrl("https://discord.com/app"));
 
   injectScript(":/assets/userscript.js");
+  injectVersion(QApplication::applicationVersion());
 
   connect(&m_streamDialog, &StreamDialog::requestedStreamStart, this,
           &DiscordPage::startStream);
@@ -59,6 +65,20 @@ void DiscordPage::injectScript(QString source) {
   }
 }
 
+void DiscordPage::injectVersion(QString version) {
+  QWebEngineScript script;
+
+  auto code = QString("window.discordScreenaudioVersion = '%1';").arg(version);
+
+  script.setSourceCode(code);
+  script.setName("version.js");
+  script.setWorldId(QWebEngineScript::MainWorld);
+  script.setInjectionPoint(QWebEngineScript::DocumentCreation);
+  script.setRunsOnSubFrames(false);
+
+  scripts().insert(script);
+}
+
 void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
                                              QWebEnginePage::Feature feature) {
   // Allow every permission asked
@@ -78,7 +98,6 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
 bool DiscordPage::acceptNavigationRequest(const QUrl &url,
                                           QWebEnginePage::NavigationType type,
                                           bool isMainFrame) {
-  qDebug() << url;
   if (type == QWebEnginePage::NavigationTypeLinkClicked) {
     QDesktopServices::openUrl(url);
     return false;

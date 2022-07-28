@@ -25,6 +25,7 @@ private:
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
   void injectScript(QString source);
+  void injectVersion(QString version);
   void stopVirtmic();
   void startVirtmic(QString target);
 

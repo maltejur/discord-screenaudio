@@ -122,9 +122,10 @@ setInterval(() => {
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
       const aboutEl = document.createElement("div");
-      aboutEl.innerText = "discord-screenaudio v1.0.0-rc.11";
+      aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
+      aboutEl.style.textTransform = "none";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
       el.appendChild(aboutEl);
     }
