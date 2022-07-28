@@ -81,11 +81,16 @@ setInterval(() => {
     });
     hiddenElements.length = 0;
   } else {
-    for (const el of document.querySelectorAll(
-      '[aria-label="Share Your Screen"]'
-    )) {
+    for (const el of [
+      document.getElementsByClassName("actionButtons-2vEOUh")?.[0]?.children[1],
+      document.querySelector(
+        ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
+      ),
+    ]) {
+      if (!el) continue;
+      if (el.classList.contains("discord-screenaudio-cloned")) continue;
+      el.classList.add("discord-screenaudio-cloned");
       elClone = el.cloneNode(true);
-      elClone.ariaLabel = "Share Your Screen with Audio";
       elClone.title = "Share Your Screen with Audio";
       elClone.addEventListener("click", () => {
         console.log("!discord-screenaudio-start-stream");
