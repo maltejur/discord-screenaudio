@@ -57,7 +57,7 @@ StreamDialog::StreamDialog() : QWidget() {
   setLayout(layout);
 
   setWindowTitle("discord-screenaudio Stream Dialog");
-  setFixedSize(0, 0);
+  // setFixedSize(0, 0);
 }
 
 void StreamDialog::startStream() {
