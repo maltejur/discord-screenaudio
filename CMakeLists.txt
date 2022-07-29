@@ -18,7 +18,11 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS
   WebEngineWidgets
 )
 
-find_package(KF5Notifications)
+option(KF5NOTIFICATIONS "Use KF5Notifications for enhanced system notifications" ON)
+if(KF5NOTIFICATIONS)
+  add_definitions( -DKF5NOTIFICATIONS )
+  find_package(KF5Notifications)
+endif()
 
 set(discord-screenaudio_SRC
   src/main.cpp
@@ -52,11 +56,15 @@ add_subdirectory(submodules/rohrkabel)
 
 add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 
-target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets KF5::Notifications rohrkabel)
+target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
+
+if(KF5NOTIFICATIONS)
+  target_link_libraries(discord-screenaudio KF5::Notifications)
+  install(FILES assets/discord-screenaudio.notifyrc DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knotifications5)
+endif()
 
 install(TARGETS discord-screenaudio DESTINATION bin)
 install(FILES assets/de.shorsh.discord-screenaudio.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps)
 install(PROGRAMS assets/de.shorsh.discord-screenaudio.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
 configure_file(assets/de.shorsh.discord-screenaudio.metainfo.xml.in de.shorsh.discord-screenaudio.metainfo.xml)
 install(FILES ${CMAKE_BINARY_DIR}/de.shorsh.discord-screenaudio.metainfo.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/metainfo)
-install(FILES assets/discord-screenaudio.notifyrc DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knotifications5)

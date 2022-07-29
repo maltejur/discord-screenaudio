@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
+#ifdef KF5NOTIFICATIONS
 #include <KNotification>
+#endif
+
 #include <QApplication>
 #include <QColor>
 #include <QComboBox>
@@ -33,6 +36,7 @@ void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
 
+#ifdef KF5NOTIFICATIONS
   QWebEngineProfile::defaultProfile()->setNotificationPresenter(
       [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
         KNotification *notification = new KNotification("discordNotification");
@@ -47,6 +51,7 @@ void MainWindow::setupWebView() {
                 });
         notification->sendEvent();
       });
+#endif
 
   setCentralWidget(m_webView);
 }
