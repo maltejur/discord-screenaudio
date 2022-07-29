@@ -10,6 +10,7 @@ int main(int argc, char *argv[]) {
   QApplication::setWindowIcon(
       QIcon(":assets/de.shorsh.discord-screenaudio.png"));
   QApplication::setApplicationVersion(DISCORD_SCEENAUDIO_VERSION_FULL);
+  QApplication::setDesktopFileName("de.shorsh.discord-screenaudio");
 
   QCommandLineParser parser;
   parser.setApplicationDescription(

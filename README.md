@@ -42,12 +42,12 @@ You have multiple options:
 
 - Basic building tools
 - CMake
-- Qt5 and QtWebEngine
+- Qt5, QtWebEngine and Kf5Notifications
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
 
 On Debian:
-`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev git`
+`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev pkg-config libpipewire-0.3-dev git`
 
 ### Building
 

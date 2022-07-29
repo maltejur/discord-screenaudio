@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
+#include <KNotification>
 #include <QApplication>
 #include <QColor>
 #include <QComboBox>
@@ -11,6 +12,8 @@
 #include <QSpacerItem>
 #include <QThread>
 #include <QUrl>
+#include <QWebEngineNotification>
+#include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
@@ -29,6 +32,21 @@ void MainWindow::setupWebView() {
 
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
+
+  QWebEngineProfile::defaultProfile()->setNotificationPresenter(
+      [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+        KNotification *notification = new KNotification("discordNotification");
+        notification->setTitle(notificationInfo->title());
+        notification->setText(notificationInfo->message());
+        notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
+        notification->setDefaultAction("View");
+        connect(notification, &KNotification::defaultActivated,
+                [&, notificationInfo = std::move(notificationInfo)]() {
+                  notificationInfo->click();
+                  activateWindow();
+                });
+        notification->sendEvent();
+      });
 
   setCentralWidget(m_webView);
 }

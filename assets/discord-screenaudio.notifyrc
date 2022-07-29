@@ -1,0 +1,8 @@
+[Global]
+IconName=de.shorsh.discord-screenaudio
+Name=discord-screenaudio
+DesktopEntry=de.shorsh.discord-screenaudio.desktop
+
+[Event/discordNotification]
+Name=Discord Notification
+Action=Popup
