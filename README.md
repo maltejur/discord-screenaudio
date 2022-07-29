@@ -24,9 +24,17 @@ the original client.
 
 ## Installation
 
-If you are using Arch, you can build and install
-[from the AUR](https://aur.archlinux.org/packages/discord-screenaudio). If you
-aren't, you will have to [build it yourself](#building-from-source).
+You have multiple options:
+
+- Install the Flatpak (recommended):
+  `flatpak install de.shorsh.discord-screenaudio`
+- If you are on Arch, you can build and install
+  [`discord-screenaudio`](https://aur.archlinux.org/packages/discord-screenaudio)
+  from the AUR
+- If you are on openSUSE, you can use the
+  [Open Build Service package](https://software.opensuse.org/download.html?project=home%3AVortexAcherontic&package=discord-screenaudio)
+  by [@VortexAcherontic](https://github.com/VortexAcherontic)
+- You can [build it yourself](#building-from-source)
 
 ## Building from Source
 
