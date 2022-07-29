@@ -15,6 +15,11 @@ case you want to stream something, maybe used with a second account. For
 anything else, this client has way too many things that work less well than in
 the original client.
 
+## DISCLAIMER!!!
+
+  ***USING THIRD PARTY CLIENTS IS AGAINST <a href="https://discord.com/terms">DISCORD'S TERMS OF SERVICE</a>, WE DO NOT TAKE ANY RESPONSABILITY FOR ANYTHING CAUSED DUE TO THE VIOLATION OF DISCORD'S TOS***
+  
+  
 ## Known Issues
 
 - Only works with **PipeWire**
