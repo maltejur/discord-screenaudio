@@ -15,6 +15,11 @@ case you want to stream something, maybe used with a second account. For
 anything else, this client has way too many things that work less well than in
 the original client.
 
+Technically this could be against
+[Discord's TOS](https://discord.com/terms#software-in-discord%E2%80%99s-services),
+so be warned. Discord probably won't ban you for using this, but if they do I
+told you and it's not my fault.
+
 ## Known Issues
 
 - Only works with **PipeWire**
