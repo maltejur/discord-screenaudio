@@ -30,6 +30,10 @@ int main(int argc, char *argv[]) {
     Virtmic::start(parser.value(virtmicOption));
   }
 
+  qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
+          "--enable-features=WebRTCPipeWireCapturer " +
+              qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
+
   MainWindow w;
   w.show();
 
