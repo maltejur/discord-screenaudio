@@ -23,9 +23,8 @@ told you and it's not my fault.
 ## Known Issues
 
 - Only works with **PipeWire**
-- Only works on **X11**
-- Can only share primary screen (no other screens or specific applications) (see
-  [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
+- Can only share primary screen on X11 (no other screens or specific applications)
+  (see [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
 
 ## Installation
 
