@@ -13,6 +13,8 @@
   <description>
     <p>A very WIP custom discord client that supports streaming with audio on Linux, made possible by the great work of @edisionnano and the Rohrkabel library by @Curve.</p>
     <p>The purpose of this project is not to provide an alternative to the original Discord client. Rather, it should be used in addition to the original client in case you want to stream something, maybe used with a second account. For anything else, this client has way too many things that work less well than in the original client.</p>
+    <p>Technically this could be against Discord's TOS, so be warned. Discord probably won't ban you for using this, but if they do I told you and it's not my fault.</p>
+    <p>Known issues:<ul><li>Only works with PipeWire</li><li>Can only share primary screen on X11</li></ul></p>
   </description>
 
   <launchable type="desktop-id">
