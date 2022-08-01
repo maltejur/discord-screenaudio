@@ -1,3 +1,5 @@
+#include "main.h"
+
 #include "mainwindow.h"
 #include "virtmic.h"
 
@@ -20,10 +22,9 @@ int main(int argc, char *argv[]) {
   QCommandLineOption virtmicOption("virtmic", "Start the Virtual Microphone",
                                    "target");
   parser.addOption(virtmicOption);
-#ifdef DEBUG
-  parser.addOption(QCommandLineOption(
-      "remote-debugging-port", "Chromium Remote Debugging Port", "port"));
-#endif
+  QCommandLineOption degubOption("remote-debugging",
+                                 "Open Chromium Remote Debugging on port 9222");
+  parser.addOption(degubOption);
   parser.process(app);
 
   if (parser.isSet(virtmicOption)) {
@@ -33,6 +34,11 @@ int main(int argc, char *argv[]) {
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
           "--enable-features=WebRTCPipeWireCapturer " +
               qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
+
+  if (parser.isSet(degubOption))
+    qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
+            "--remote-debugging-port=9222 " +
+                qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
 
   MainWindow w;
   w.show();
