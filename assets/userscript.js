@@ -3,10 +3,15 @@
 navigator.mediaDevices.chromiumGetDisplayMedia =
   navigator.mediaDevices.getDisplayMedia;
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const getAudioDevice = async (nameOfAudioDevice) => {
   await navigator.mediaDevices.getUserMedia({
     audio: true,
   });
+  await sleep(500);
   let devices = await navigator.mediaDevices.enumerateDevices();
   let audioDevice = devices.find(({ label }) => label === nameOfAudioDevice);
   return audioDevice;
