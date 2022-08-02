@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QLoggingCategory>
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
@@ -11,6 +12,8 @@ int main(int argc, char *argv[]) {
       QIcon(":assets/de.shorsh.discord-screenaudio.png"));
   QApplication::setApplicationVersion(DISCORD_SCEENAUDIO_VERSION_FULL);
   QApplication::setDesktopFileName("de.shorsh.discord-screenaudio");
+
+  qSetMessagePattern("[%{category}] %{message}");
 
   QCommandLineParser parser;
   parser.setApplicationDescription(

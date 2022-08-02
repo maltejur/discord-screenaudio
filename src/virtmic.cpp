@@ -1,4 +1,5 @@
 #include "virtmic.h"
+#include "log.h"
 
 #include <rohrkabel/loop/main.hpp>
 #include <rohrkabel/registry/registry.hpp>
@@ -66,18 +67,18 @@ void start(QString _target) {
       auto &parent = nodes.at(parent_id);
 
       if (parent.props["node.name"].find(target) != std::string::npos) {
-        std::cout << "[virtmic] "
-                  << "Link   : " << target << ":" << port_id << " -> ";
-
-        if (port.info().props["audio.channel"] == "FL") {
-          links.emplace(port_id, core.create<pipewire::link_factory>(
-                                     {virt_fl->info().id, port_id}));
-          std::cout << "[virtmic] " << virt_fl->info().id << std::endl;
-        } else {
-          links.emplace(port_id, core.create<pipewire::link_factory>(
-                                     {virt_fr->info().id, port_id}));
-          std::cout << "[virtmic] " << virt_fr->info().id << std::endl;
-        }
+        auto fl = port.info().props["audio.channel"] == "FL";
+        links.emplace(
+            port_id,
+            core.create<pipewire::link_factory>(
+                {fl ? virt_fl->info().id : virt_fr->info().id, port_id}));
+        qDebug(virtmicLog) << QString("Link: %1:%2 -> %3")
+                                  .arg(QString::fromStdString(target))
+                                  .arg(port_id)
+                                  .arg(fl ? virt_fl->info().id
+                                          : virt_fr->info().id)
+                                  .toUtf8()
+                                  .data();
       }
     }
   };
@@ -105,9 +106,11 @@ void start(QString _target) {
       [&](const pipewire::global &global) {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
-          std::cout << "[virtmic] "
-                    << "Added  : " << node.info().props["node.name"]
-                    << std::endl;
+          qDebug(virtmicLog) << QString("Added: %1")
+                                    .arg(QString::fromStdString(
+                                        node.info().props["node.name"]))
+                                    .toUtf8()
+                                    .data();
 
           if (!nodes.count(global.id)) {
             nodes.emplace(global.id, node.info());
@@ -141,8 +144,11 @@ void start(QString _target) {
       [&](const std::uint32_t id) {
         if (nodes.count(id)) {
           auto info = nodes.at(id);
-          std::cout << "[virtmic] "
-                    << "Removed: " << info.props["node.name"] << std::endl;
+          qDebug(virtmicLog) << QString("Removed: %1")
+                                    .arg(QString::fromStdString(
+                                        info.props["node.name"].data()))
+                                    .toUtf8()
+                                    .data();
           nodes.erase(id);
         }
         if (ports.count(id)) {

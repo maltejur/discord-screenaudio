@@ -16,10 +16,12 @@ const getAudioDevice = async (nameOfAudioDevice) => {
     let devices = await navigator.mediaDevices.enumerateDevices();
     audioDevice = devices.find(({ label }) => label === nameOfAudioDevice);
     if (!audioDevice)
-      console.log(`Did not find '${nameOfAudioDevice}', trying again in 100ms`);
+      console.log(
+        `dsa: Did not find '${nameOfAudioDevice}', trying again in 100ms`
+      );
     await sleep(100);
   }
-  console.log(`Found '${nameOfAudioDevice}'`);
+  console.log(`dsa: Found '${nameOfAudioDevice}'`);
   return audioDevice;
 };
 

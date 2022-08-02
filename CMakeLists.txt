@@ -30,6 +30,7 @@ set(discord-screenaudio_SRC
   src/virtmic.cpp
   src/discordpage.cpp
   src/streamdialog.cpp
+  src/log.cpp
   resources.qrc
 )
 

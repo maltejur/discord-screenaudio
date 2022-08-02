@@ -1,4 +1,5 @@
 #include "discordpage.h"
+#include "log.h"
 #include "virtmic.h"
 
 #include <QApplication>
@@ -43,7 +44,7 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 }
 
 void DiscordPage::injectScript(QString source) {
-  qDebug() << "[main   ] Injecting " << source;
+  qDebug(mainLog) << "Injecting " << source;
 
   QFile userscript(source);
 
@@ -87,8 +88,8 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
 
   if (feature == QWebEnginePage::Feature::MediaAudioCapture) {
     if (m_virtmicProcess.state() == QProcess::NotRunning) {
-      qDebug() << "[virtmic] Starting Virtmic with no target to make sure "
-                  "Discord can find all the audio devices";
+      qDebug(virtmicLog) << "Starting Virtmic with no target to make sure "
+                            "Discord can find all the audio devices";
       m_virtmicProcess.start(QApplication::arguments()[0],
                              {"--virtmic", "None"});
     }
@@ -119,7 +120,7 @@ QWebEnginePage *DiscordPage::createWindow(QWebEnginePage::WebWindowType type) {
 
 void DiscordPage::stopVirtmic() {
   if (m_virtmicProcess.state() == QProcess::Running) {
-    qDebug() << "[virtmic] Stopping Virtmic";
+    qDebug(virtmicLog) << "Stopping Virtmic";
     m_virtmicProcess.kill();
     m_virtmicProcess.waitForFinished();
   }
@@ -127,7 +128,7 @@ void DiscordPage::stopVirtmic() {
 
 void DiscordPage::startVirtmic(QString target) {
   if (target != "None") {
-    qDebug() << "[virtmic] Starting Virtmic with target" << target;
+    qDebug(virtmicLog) << "Starting Virtmic with target" << target;
     m_virtmicProcess.start(QApplication::arguments()[0], {"--virtmic", target});
   }
 }
@@ -143,8 +144,10 @@ void DiscordPage::javaScriptConsoleMessage(
     m_streamDialog.updateTargets();
   } else if (message == "!discord-screenaudio-stream-stopped") {
     stopVirtmic();
+  } else if (message.startsWith("dsa: ")) {
+    qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
   } else {
-    qDebug() << "[discord]" << message;
+    qDebug(discordLog) << message;
   }
 }
 
