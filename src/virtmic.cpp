@@ -21,8 +21,8 @@ QVector<QString> getTargets() {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
 
-          if (info.props.count("node.name")) {
-            auto name = QString::fromStdString(info.props["node.name"]);
+          if (info.props.count("application.name")) {
+            auto name = QString::fromStdString(info.props["application.name"]);
             if (!targets.contains(name))
               targets.append(name);
           }
@@ -66,7 +66,7 @@ void start(QString _target) {
 
       auto &parent = nodes.at(parent_id);
 
-      if (parent.props["node.name"].find(target) != std::string::npos) {
+      if (parent.props["application.name"].find(target) != std::string::npos) {
         auto fl = port.info().props["audio.channel"] == "FL";
         links.emplace(
             port_id,
@@ -106,9 +106,11 @@ void start(QString _target) {
       [&](const pipewire::global &global) {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
+          if (!node.info().props.count("application.name"))
+            return;
           qDebug(virtmicLog) << QString("Added: %1")
                                     .arg(QString::fromStdString(
-                                        node.info().props["node.name"]))
+                                        node.info().props["application.name"]))
                                     .toUtf8()
                                     .data();
 
@@ -146,7 +148,7 @@ void start(QString _target) {
           auto info = nodes.at(id);
           qDebug(virtmicLog) << QString("Removed: %1")
                                     .arg(QString::fromStdString(
-                                        info.props["node.name"].data()))
+                                        info.props["application.name"].data()))
                                     .toUtf8()
                                     .data();
           nodes.erase(id);
