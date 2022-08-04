@@ -71,8 +71,10 @@ void StreamDialog::startStream() {
 
 void StreamDialog::updateTargets() {
   m_targetComboBox->clear();
-  m_targetComboBox->addItem("None");
+  m_targetComboBox->addItem("[None]");
+  m_targetComboBox->addItem("[All Desktop Audio]");
   for (auto target : Virtmic::getTargets()) {
     m_targetComboBox->addItem(target);
   }
+  m_targetComboBox->setCurrentText("[All Desktop Audio]");
 }

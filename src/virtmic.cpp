@@ -6,6 +6,8 @@
 
 namespace Virtmic {
 
+const QStringList EXCLUDE_TARGETS{"Chromium input", "discord-screenaudio"};
+
 QVector<QString> getTargets() {
   auto main_loop = pipewire::main_loop();
   auto context = pipewire::context(main_loop);
@@ -20,11 +22,11 @@ QVector<QString> getTargets() {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
+          auto name = QString::fromStdString(info.props["application.name"]);
 
-          if (info.props.count("application.name")) {
-            auto name = QString::fromStdString(info.props["application.name"]);
-            if (!targets.contains(name))
-              targets.append(name);
+          if (name != "" && !EXCLUDE_TARGETS.contains(name) &&
+              !targets.contains(name)) {
+            targets.append(name);
           }
         }
       });
@@ -65,15 +67,19 @@ void start(QString _target) {
         continue;
 
       auto &parent = nodes.at(parent_id);
+      auto name = parent.props["application.name"];
 
-      if (parent.props["application.name"].find(target) != std::string::npos) {
+      if (name == target ||
+          (target == "[All Desktop Audio]" &&
+           !EXCLUDE_TARGETS.contains(QString::fromStdString(name)))) {
         auto fl = port.info().props["audio.channel"] == "FL";
         links.emplace(
             port_id,
             core.create<pipewire::link_factory>(
                 {fl ? virt_fl->info().id : virt_fr->info().id, port_id}));
         qDebug(virtmicLog) << QString("Link: %1:%2 -> %3")
-                                  .arg(QString::fromStdString(target))
+                                  .arg(QString::fromStdString(
+                                      parent.props["application.name"]))
                                   .arg(port_id)
                                   .arg(fl ? virt_fl->info().id
                                           : virt_fr->info().id)
@@ -94,7 +100,7 @@ void start(QString _target) {
                                  pipewire::node::type, pipewire::node::version,
                                  pipewire::update_strategy::none);
 
-  if (target == "None") {
+  if (target == "[None]") {
     while (true) {
       main_loop.run();
     }
