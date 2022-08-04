@@ -138,11 +138,12 @@ function(determine_version source_dir var_prefix)
   # | exact tag             | 0.9.0                       |
   # | exact tag, dirty      | 0.9.0+git20180604           |
   # | after tag             | 0.9.0+git20180604.1.085039f |
-  # | no tag, version.txt   | 0.9.0+git20180604.2ee02af   |
+  # | no tag, version.txt   | 0.9.0                       |
   # | no tag, no version.txt| 0.0.0+git20180604.2ee02af   |
   string(TIMESTAMP date "%Y%m%d" UTC)
   set(version_suffix "")
-  if (NOT ${local_prefix}_VERSION_NCOMMITS EQUAL 0)
+  if (has_version_txt)
+  elseif (NOT ${local_prefix}_VERSION_NCOMMITS EQUAL 0)
     # 0.9.0+git20150604.4.289818b
     string(APPEND version_suffix "+git${date}.${${local_prefix}_VERSION_NCOMMITS}.${${local_prefix}_VERSION_GIT_REV}")
   elseif ((NOT has_release_tag) AND ((NOT has_version_txt) OR ("${base_version}" STREQUAL "0.0.0") OR (NOT "${revision}" STREQUAL "")))
