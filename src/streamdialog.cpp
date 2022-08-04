@@ -19,9 +19,19 @@ StreamDialog::StreamDialog() : QWidget() {
   targetLabel->setText("Which app do you want to stream sound from?");
   layout->addWidget(targetLabel);
 
+  auto targetHBox = new QHBoxLayout(this);
+  layout->addLayout(targetHBox);
+
   m_targetComboBox = new QComboBox(this);
   updateTargets();
-  layout->addWidget(m_targetComboBox);
+  targetHBox->addWidget(m_targetComboBox);
+
+  auto refreshTargetsButton = new QPushButton(this);
+  refreshTargetsButton->setFixedSize(30, 30);
+  refreshTargetsButton->setIcon(QIcon::fromTheme("view-refresh"));
+  connect(refreshTargetsButton, &QPushButton::clicked, this,
+          &StreamDialog::updateTargets);
+  targetHBox->addWidget(refreshTargetsButton);
 
   auto qualityLabel = new QLabel(this);
   qualityLabel->setText("Stream Quality");
@@ -70,11 +80,17 @@ void StreamDialog::startStream() {
 }
 
 void StreamDialog::updateTargets() {
+  auto lastTarget = m_targetComboBox->currentText();
+
   m_targetComboBox->clear();
   m_targetComboBox->addItem("[None]");
   m_targetComboBox->addItem("[All Desktop Audio]");
   for (auto target : Virtmic::getTargets()) {
     m_targetComboBox->addItem(target);
   }
-  m_targetComboBox->setCurrentText("[All Desktop Audio]");
+
+  if (m_targetComboBox->findText(lastTarget) != -1)
+    m_targetComboBox->setCurrentText(lastTarget);
+  else
+    m_targetComboBox->setCurrentText("[All Desktop Audio]");
 }
