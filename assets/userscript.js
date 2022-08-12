@@ -134,12 +134,21 @@ setInterval(() => {
     document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
-      const aboutEl = document.createElement("div");
+      let aboutEl;
+      if (window.discordScreenaudioClickableAbout) {
+        aboutEl = document.createElement("a");
+        aboutEl.addEventListener("click", () => {
+          console.log("!discord-screenaudio-about");
+        });
+      } else {
+        aboutEl = document.createElement("div");
+      }
       aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
       aboutEl.style.textTransform = "none";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
+      aboutEl.style.cursor = "pointer";
       el.appendChild(aboutEl);
     }
   }
@@ -147,6 +156,27 @@ setInterval(() => {
   // Remove stream settings if stream is active
   document.getElementById("manage-streams-change-windows")?.remove();
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
+
+  // Add event listener for keybind tab
+  for (const el of document.querySelectorAll(
+    `[aria-controls="keybinds-tab"]`
+  )) {
+    el.removeAttribute("aria-controls");
+
+    const elClone = el.cloneNode(true);
+    elClone.addEventListener("click", (event) => {
+      event.preventDefault();
+      console.log("!discord-screenaudio-keybinds");
+    });
+
+    el.style.display = "none";
+    el.parentNode.insertBefore(elClone, el);
+  }
+
+  const muteBtn = document.getElementsByClassName(
+    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+  )[0];
+  window.discordScreenaudioToggleMute = muteBtn.click;
 }, 500);
 
 // Fix for broken discord notifications after restart

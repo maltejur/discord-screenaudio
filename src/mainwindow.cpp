@@ -1,8 +1,13 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
-#ifdef KF5NOTIFICATIONS
+#ifdef KNOTIFICATIONS
 #include <KNotification>
+#endif
+
+#ifdef KXMLGUI
+#include <KAboutData>
+#include <KActionCollection>
 #endif
 
 #include <QApplication>
@@ -22,7 +27,15 @@
 #include <QWebEngineSettings>
 #include <QWidget>
 
+MainWindow *MainWindow::m_instance = nullptr;
+
+#ifdef KXMLGUI
+MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent) {
+#else
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+#endif
+  assert(MainWindow::m_instance == nullptr);
+  MainWindow::m_instance = this;
   setupWebView();
   resize(1000, 700);
   showMaximized();
@@ -36,7 +49,7 @@ void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
 
-#ifdef KF5NOTIFICATIONS
+#ifdef KNOTIFICATIONS
   QWebEngineProfile::defaultProfile()->setNotificationPresenter(
       [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
         KNotification *notification = new KNotification("discordNotification");
@@ -68,3 +81,5 @@ void MainWindow::fullScreenRequested(
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }
+
+MainWindow *MainWindow::instance() { return m_instance; }

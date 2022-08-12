@@ -1,6 +1,15 @@
 #include "discordpage.h"
 #include "log.h"
+#include "mainwindow.h"
 #include "virtmic.h"
+
+#ifdef KXMLGUI
+#include <KAboutData>
+#include <KHelpMenu>
+#include <KShortcutsDialog>
+#include <KXmlGuiWindow>
+#include <QAction>
+#endif
 
 #include <QApplication>
 #include <QDesktopServices>
@@ -36,16 +45,66 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   setUrl(QUrl("https://discord.com/app"));
 
-  injectScript(":/assets/userscript.js");
-  injectVersion(QApplication::applicationVersion());
+  injectScriptFile("userscript.js", ":/assets/userscript.js");
+
+  injectScriptText("version.js",
+                   QString("window.discordScreenaudioVersion = '%1';")
+                       .arg(QApplication::applicationVersion()));
+
+#ifdef KXMLGUI
+  KAboutData aboutData(
+      "discord-screenaudio", "discord-screenaudio",
+      QApplication::applicationVersion(),
+      "Custom Discord client with the ability to stream audio on Linux",
+      KAboutLicense::GPL, "Copyright 2022 (C) Malte Jürgens");
+  aboutData.setBugAddress("https://github.com/maltejur/discord-screenaudio");
+  aboutData.addAuthor("Malte Jürgens", "Author", "maltejur@dismail.de",
+                      "https://github.com/maltejur");
+  aboutData.addCredit("edisionnano",
+                      "For creating and documenting the approach for streaming "
+                      "audio in Discord used in this project.",
+                      QString(),
+                      "https://github.com/edisionnano/"
+                      "Screenshare-with-audio-on-Discord-with-Linux");
+  aboutData.addCredit(
+      "Curve", "For creating the Rohrkabel library used in this project.",
+      QString(), "https://github.com/Curve");
+  aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.3",
+                         "https://github.com/Soundux/rohrkabel");
+  m_helpMenu = new KHelpMenu(parent, aboutData);
+
+  injectScriptText("xmlgui.js",
+                   "window.discordScreenaudioClickableAbout = true;");
+
+  auto toggleMuteAction = new QAction(this);
+  toggleMuteAction->setText("Toggle Mute");
+  toggleMuteAction->setIcon(QIcon::fromTheme("audio-input-microphone-muted"));
+  connect(toggleMuteAction, &QAction::triggered, this,
+          &DiscordPage::toggleMute);
+
+  m_actionCollection = new KActionCollection(this);
+  m_actionCollection->addAction("toggleMute", toggleMuteAction);
+#endif
 
   connect(&m_streamDialog, &StreamDialog::requestedStreamStart, this,
           &DiscordPage::startStream);
 }
 
-void DiscordPage::injectScript(QString source) {
-  qDebug(mainLog) << "Injecting " << source;
+void DiscordPage::injectScriptText(QString name, QString content) {
+  qDebug(mainLog) << "Injecting " << name;
 
+  QWebEngineScript script;
+
+  script.setSourceCode(content);
+  script.setName(name);
+  script.setWorldId(QWebEngineScript::MainWorld);
+  script.setInjectionPoint(QWebEngineScript::DocumentCreation);
+  script.setRunsOnSubFrames(false);
+
+  scripts().insert(script);
+}
+
+void DiscordPage::injectScriptFile(QString name, QString source) {
   QFile userscript(source);
 
   if (!userscript.open(QIODevice::ReadOnly)) {
@@ -53,31 +112,8 @@ void DiscordPage::injectScript(QString source) {
            userscript.errorString().toLatin1().constData());
   } else {
     QByteArray userscriptJs = userscript.readAll();
-
-    QWebEngineScript script;
-
-    script.setSourceCode(userscriptJs);
-    script.setName("userscript.js");
-    script.setWorldId(QWebEngineScript::MainWorld);
-    script.setInjectionPoint(QWebEngineScript::DocumentCreation);
-    script.setRunsOnSubFrames(false);
-
-    scripts().insert(script);
+    injectScriptText(name, userscriptJs);
   }
-}
-
-void DiscordPage::injectVersion(QString version) {
-  QWebEngineScript script;
-
-  auto code = QString("window.discordScreenaudioVersion = '%1';").arg(version);
-
-  script.setSourceCode(code);
-  script.setName("version.js");
-  script.setWorldId(QWebEngineScript::MainWorld);
-  script.setInjectionPoint(QWebEngineScript::DocumentCreation);
-  script.setRunsOnSubFrames(false);
-
-  scripts().insert(script);
 }
 
 void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
@@ -144,7 +180,17 @@ void DiscordPage::javaScriptConsoleMessage(
     m_streamDialog.updateTargets();
   } else if (message == "!discord-screenaudio-stream-stopped") {
     stopVirtmic();
-  } else if (message.startsWith("dsa: ")) {
+  }
+#ifdef KXMLGUI
+  else if (message == "!discord-screenaudio-about") {
+    m_helpMenu->aboutApplication();
+  } else if (message == "!discord-screenaudio-keybinds") {
+    auto dialog = new KShortcutsDialog(qobject_cast<QWidget *>(parent()));
+    dialog->addCollection(m_actionCollection);
+    dialog->show();
+  }
+#endif
+  else if (message.startsWith("dsa: ")) {
     qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
   } else {
     qDebug(discordLog) << message;
@@ -162,4 +208,8 @@ void DiscordPage::startStream(QString target, uint width, uint height,
                       .arg(height)
                       .arg(frameRate));
   });
+}
+
+void DiscordPage::toggleMute() {
+  runJavaScript("window.discordScreenaudioToggleMute();");
 }

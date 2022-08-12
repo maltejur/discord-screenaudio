@@ -3,6 +3,11 @@
 #include "streamdialog.h"
 #include "virtmic.h"
 
+#ifdef KXMLGUI
+#include <KActionCollection>
+#include <KHelpMenu>
+#endif
+
 #include <QProcess>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
@@ -16,6 +21,8 @@ public:
 private:
   StreamDialog m_streamDialog;
   QProcess m_virtmicProcess;
+  KHelpMenu *m_helpMenu;
+  KActionCollection *m_actionCollection;
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;
@@ -24,10 +31,11 @@ private:
   javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel level,
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
-  void injectScript(QString source);
-  void injectVersion(QString version);
+  void injectScriptText(QString name, QString source);
+  void injectScriptFile(QString name, QString content);
   void stopVirtmic();
   void startVirtmic(QString target);
+  void toggleMute();
 
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,
