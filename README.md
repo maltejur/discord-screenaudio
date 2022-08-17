@@ -46,19 +46,26 @@ You have multiple options:
 
 - Basic building tools
 - CMake
-- Qt5, QtWebEngine and Kf5Notifications
+- Qt5 and QtWebEngine
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
+- notification-daemon
+- Kf5Notifications (optional, for KDE users)
 
-On Debian:
-`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev pkg-config libpipewire-0.3-dev git`
+Optional packages will appear at the end of the line. Remove them, if you wish.
+
+On Debian **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
+`apt update && apt install -y build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev notification-daemon libkf5notifications-dev`
+
+On Arch **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
+`pacman -Sy --needed --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal-impl pipewire notification-daemon knotifications`
 
 ### Building
 
 First, clone the repository:
 
 ```bash
-git clone https://github.com/maltejur/discord-screenaudio.git
+git clone --recursive https://github.com/maltejur/discord-screenaudio.git
 cd discord-screenaudio
 ```
 
