@@ -3,9 +3,14 @@
 
 #ifdef KF5NOTIFICATIONS
 #include <KNotification>
+#else
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #endif
 
 #include <QApplication>
+#include <QBuffer>
 #include <QColor>
 #include <QComboBox>
 #include <QFile>
@@ -37,20 +42,31 @@ void MainWindow::setupWebView() {
   m_webView->setPage(page);
 
 #ifdef KF5NOTIFICATIONS
-  QWebEngineProfile::defaultProfile()->setNotificationPresenter(
-      [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
-        KNotification *notification = new KNotification("discordNotification");
-        notification->setTitle(notificationInfo->title());
-        notification->setText(notificationInfo->message());
-        notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
-        notification->setDefaultAction("View");
-        connect(notification, &KNotification::defaultActivated,
-                [&, notificationInfo = std::move(notificationInfo)]() {
-                  notificationInfo->click();
-                  activateWindow();
-                });
-        notification->sendEvent();
-      });
+QWebEngineProfile::defaultProfile()->setNotificationPresenter(
+    [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+      KNotification *notification = new KNotification("discordNotification");
+      notification->setTitle(notificationInfo->title());
+      notification->setText(notificationInfo->message());
+      notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
+      notification->setDefaultAction("View");
+      connect(notification, &KNotification::defaultActivated,
+              [&, notificationInfo = std::move(notificationInfo)]() {
+                notificationInfo->click();
+                activateWindow();
+              });
+      notification->sendEvent();
+    });
+#else
+QWebEngineProfile::defaultProfile()->setNotificationPresenter(
+    [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+      QByteArray title_ba = notificationInfo->title().toLocal8Bit();
+      QByteArray message_ba = notificationInfo->message().toLocal8Bit();
+      char title[255], message[1275], command[2000];
+      snprintf(title, sizeof(title_ba.data())+1, title_ba.data());
+      snprintf(message, sizeof(message_ba.data())+1, message_ba.data());
+      snprintf(command, 1999, "notify-send '%s' '%s'", title, message);
+      system(command);
+    });
 #endif
 
   setCentralWidget(m_webView);
