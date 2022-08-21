@@ -62,6 +62,30 @@ On Arch **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
 
 ### Building
 
+### Automatic install
+
+**Supported distributions**:<br>
+- Debian-based
+- Arch-based
+
+Choose your URL fetcher:
+
+- curl:
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+```
+- wget:
+```sh
+sh -c "$(wget -O- https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+```
+- fetch:
+```sh
+sh -c "$(fetch -o - https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+```
+**Forks**: Change the `user/repo` URL, if the repository supports automatic installation.
+
+### Manual install
+
 First, clone the repository:
 
 ```bash
