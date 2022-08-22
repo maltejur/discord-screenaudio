@@ -4,10 +4,13 @@
 #ifdef KF5NOTIFICATIONS
 #include <KNotification>
 #else
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #endif
+
+#include "c_tools.h"
 
 #include <QApplication>
 #include <QBuffer>
@@ -61,10 +64,10 @@ QWebEngineProfile::defaultProfile()->setNotificationPresenter(
     [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
       QByteArray title_ba = notificationInfo->title().toLocal8Bit();
       QByteArray message_ba = notificationInfo->message().toLocal8Bit();
-      char title[255], message[1275], command[2000];
-      snprintf(title, sizeof(title_ba.data())+1, title_ba.data());
-      snprintf(message, sizeof(message_ba.data())+1, message_ba.data());
-      snprintf(command, 1999, "notify-send '%s' '%s'", title, message);
+      char command[2048];
+      const char *title = title_ba.data();
+      const char *message = secureMe(message_ba.data());
+      sprintf(command, "notify-send --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", title, message);
       system(command);
     });
 #endif
