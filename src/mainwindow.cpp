@@ -64,10 +64,11 @@ QWebEngineProfile::defaultProfile()->setNotificationPresenter(
     [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
       QByteArray title_ba = notificationInfo->title().toLocal8Bit();
       QByteArray message_ba = notificationInfo->message().toLocal8Bit();
+      notificationInfo->icon().save("/tmp/discord-screenaudio.png");
       char command[2048];
       const char *title = title_ba.data();
       const char *message = secureMe(message_ba.data());
-      sprintf(command, "notify-send --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", title, message);
+      sprintf(command, "notify-send --icon=\"/tmp/discord-screenaudio.png\" --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", title, message);
       system(command);
     });
 #endif
