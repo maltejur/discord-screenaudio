@@ -66,7 +66,7 @@ case $package_manager in
 		packages="build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev $de_packages"
 		;;
 	"pacman")
-		packages="git cmake qt5-base qt5-webengine xdg-desktop-portal-impl pipewire $de_packages"
+		packages="git cmake qt5-base qt5-webengine xdg-desktop-portal pipewire $de_packages"
 		;;
 esac
 
@@ -102,4 +102,4 @@ cmake --build build --config Release
 sudo cmake --install build
 rm -rfv ./build/
 printf "$GREEN""discord-screenaudio has been installed!""$RESET_COLOUR""\n"
-notify-send "discord-screenaudio has been installed!"
+notify-send --icon="$(pwd)/assets/de.shorsh.discord-screenaudio.png" --app-name="discord-screenaudio" "discord-screenaudio" "The application has been installed!"

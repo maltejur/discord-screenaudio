@@ -67,9 +67,9 @@ QWebEngineProfile::defaultProfile()->setNotificationPresenter(
       char image_path[1024], command[2048];
       const char *title = title_ba.data();
       const char *message = secureMe(message_ba.data());
-      sprintf(image_path, "/tmp/discord-screenaudio-%s.png", title);
+      snprintf(image_path, 32+strlen(title), "/tmp/discord-screenaudio-%s.png", title);
       notificationInfo->icon().save(image_path);
-      sprintf(command, "notify-send --icon=\"%s\" --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", image_path, title, message);
+      snprintf(command, 70+strlen(image_path)+strlen(title)+strlen(message), "notify-send --icon=\"%s\" --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", image_path, title, message);
       system(command);
     });
 #endif
