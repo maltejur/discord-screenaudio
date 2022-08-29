@@ -18,10 +18,9 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS
   WebEngineWidgets
 )
 
-option(KF5NOTIFICATIONS "Use KF5Notifications for enhanced system notifications" ON)
-if(KF5NOTIFICATIONS)
-  add_definitions( -DKF5NOTIFICATIONS )
-  find_package(KF5Notifications)
+find_package(KF5Notifications)
+if(KF5Notifications_FOUND)
+  add_definitions( -DKNOTIFICATIONS )
 endif()
 
 set(discord-screenaudio_SRC
@@ -60,7 +59,7 @@ add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 
 target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
 
-if(KF5NOTIFICATIONS)
+if(KF5Notifications_FOUND)
   target_link_libraries(discord-screenaudio KF5::Notifications)
   install(FILES assets/discord-screenaudio.notifyrc DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knotifications5)
 endif()

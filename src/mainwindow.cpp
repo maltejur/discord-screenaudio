@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
-#ifdef KF5NOTIFICATIONS
+#ifdef KNOTIFICATIONS
 #include <KNotification>
 #else
 #include <iostream>
@@ -44,21 +44,21 @@ void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
 
-#ifdef KF5NOTIFICATIONS
-QWebEngineProfile::defaultProfile()->setNotificationPresenter(
-    [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
-      KNotification *notification = new KNotification("discordNotification");
-      notification->setTitle(notificationInfo->title());
-      notification->setText(notificationInfo->message());
-      notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
-      notification->setDefaultAction("View");
-      connect(notification, &KNotification::defaultActivated,
-              [&, notificationInfo = std::move(notificationInfo)]() {
-                notificationInfo->click();
-                activateWindow();
-              });
-      notification->sendEvent();
-    });
+#ifdef KNOTIFICATIONS
+  QWebEngineProfile::defaultProfile()->setNotificationPresenter(
+      [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+        KNotification *notification = new KNotification("discordNotification");
+        notification->setTitle(notificationInfo->title());
+        notification->setText(notificationInfo->message());
+        notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
+        notification->setDefaultAction("View");
+        connect(notification, &KNotification::defaultActivated,
+                [&, notificationInfo = std::move(notificationInfo)]() {
+                  notificationInfo->click();
+                  activateWindow();
+                });
+        notification->sendEvent();
+      });
 #else
 QWebEngineProfile::defaultProfile()->setNotificationPresenter(
     [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
