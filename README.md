@@ -50,7 +50,7 @@ You have multiple options:
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
 - notification-daemon (optional, for basic desktop notifications)
-- Kf5Notifications (optional, for KDE users)
+- Kf5Notifications (optional, for better desktop notifications)
 
 Optional packages will appear at the end of the line. Remove them, if you wish.
 
