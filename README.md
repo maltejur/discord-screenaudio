@@ -36,7 +36,7 @@ You have multiple options:
   [`discord-screenaudio`](https://aur.archlinux.org/packages/discord-screenaudio)
   from the AUR
 - If you are on openSUSE, you can use the
-  [Open Build Service package](https://software.opensuse.org//download.html?project=games%3Atools&package=discord-screenaudio)
+  [Open Build Service package](https://software.opensuse.org/download.html?project=home%3AVortexAcherontic&package=discord-screenaudio)
   by [@VortexAcherontic](https://github.com/VortexAcherontic)
 - You can [build it yourself](#building-from-source)
 
@@ -72,17 +72,18 @@ Choose your URL fetcher:
 
 - curl:
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
 ```
 - wget:
 ```sh
-sh -c "$(wget -O- https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+sh -c "$(wget -O- https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
 ```
 - fetch:
 ```sh
-sh -c "$(fetch -o - https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/install.sh)"
+sh -c "$(fetch -o - https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
 ```
-**Forks**: Change the `user/repo` URL, if the repository supports automatic installation.
+**Forks**: Change the `user/repo` URL, if the repository supports automatic installation.<br>
+**Important**: To use the basic desktop notification, append the `--basic-notifications` flag to the command.
 
 ### Manual install
 
