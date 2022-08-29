@@ -49,7 +49,7 @@ You have multiple options:
 - Qt5 and QtWebEngine
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
-- notification-daemon
+- notification-daemon (optional, for basic desktop notifications)
 - Kf5Notifications (optional, for KDE users)
 
 Optional packages will appear at the end of the line. Remove them, if you wish.
