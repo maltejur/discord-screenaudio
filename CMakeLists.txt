@@ -30,7 +30,6 @@ set(discord-screenaudio_SRC
   src/discordpage.cpp
   src/streamdialog.cpp
   src/log.cpp
-  src/c_tools.c
   resources.qrc
 )
 
