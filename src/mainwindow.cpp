@@ -4,10 +4,10 @@
 #ifdef KNOTIFICATIONS
 #include <KNotification>
 #else
-#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 #endif
 
 #include "c_tools.h"
@@ -44,9 +44,9 @@ void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
 
-#ifdef KNOTIFICATIONS
   QWebEngineProfile::defaultProfile()->setNotificationPresenter(
       [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+#ifdef KNOTIFICATIONS
         KNotification *notification = new KNotification("discordNotification");
         notification->setTitle(notificationInfo->title());
         notification->setText(notificationInfo->message());
@@ -58,21 +58,23 @@ void MainWindow::setupWebView() {
                   activateWindow();
                 });
         notification->sendEvent();
-      });
 #else
-QWebEngineProfile::defaultProfile()->setNotificationPresenter(
-    [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
-      QByteArray title_ba = notificationInfo->title().toLocal8Bit();
-      QByteArray message_ba = notificationInfo->message().toLocal8Bit();
-      char image_path[1024], command[2048];
-      const char *title = title_ba.data();
-      const char *message = secureMe(message_ba.data());
-      snprintf(image_path, 32+strlen(title), "/tmp/discord-screenaudio-%s.png", title);
-      notificationInfo->icon().save(image_path);
-      snprintf(command, 70+strlen(image_path)+strlen(title)+strlen(message), "notify-send --icon=\"%s\" --app-name=\"discord-screenaudio\" \"%s\" \"%s\"", image_path, title, message);
-      system(command);
-    });
+        QByteArray title_ba = notificationInfo->title().toLocal8Bit();
+        QByteArray message_ba = notificationInfo->message().toLocal8Bit();
+        char image_path[1024], command[2048];
+        const char *title = title_ba.data();
+        const char *message = secureMe(message_ba.data());
+        snprintf(image_path, 32 + strlen(title),
+                 "/tmp/discord-screenaudio-%s.png", title);
+        notificationInfo->icon().save(image_path);
+        snprintf(command,
+                 70 + strlen(image_path) + strlen(title) + strlen(message),
+                 "notify-send --icon=\"%s\" --app-name=\"discord-screenaudio\" "
+                 "\"%s\" \"%s\"",
+                 image_path, title, message);
+        system(command);
 #endif
+      });
 
   setCentralWidget(m_webView);
 }
