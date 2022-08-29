@@ -96,11 +96,7 @@ for package in $packages; do
 done
 
 # Installation process.
-if [[ $XDG_CURRENT_DESKTOP == "KDE" ]]; then
-	cmake -B build
-else
-	cmake -DKF5NOTIFICATIONS=OFF -B build
-fi
+cmake -B build
 cmake --build build --config Release
 sudo cmake --install build
 rm -rfv ./build/
