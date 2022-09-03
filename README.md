@@ -36,7 +36,7 @@ You have multiple options:
   [`discord-screenaudio`](https://aur.archlinux.org/packages/discord-screenaudio)
   from the AUR
 - If you are on openSUSE, you can use the
-  [Open Build Service package](https://software.opensuse.org/download.html?project=home%3AVortexAcherontic&package=discord-screenaudio)
+  [Open Build Service package](https://software.opensuse.org/download.html?project=games%3Atools&package=discord-screenaudio)
   by [@VortexAcherontic](https://github.com/VortexAcherontic)
 - You can [build it yourself](#building-from-source)
 
