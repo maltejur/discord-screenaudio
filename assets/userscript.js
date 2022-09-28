@@ -112,6 +112,7 @@ setInterval(() => {
       const initialDisplay = el.style.display;
 
       window.discordScreenaudioStartStream = (width, height, frameRate) => {
+        window.discordScreenaudioResolutionString = `${height}p ${frameRate}FPS`;
         setGetDisplayMedia({
           audio: true,
           video: { width, height, frameRate },
@@ -177,6 +178,14 @@ setInterval(() => {
     "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
   )[0];
   window.discordScreenaudioToggleMute = muteBtn.click;
+
+  if (window.discordScreenaudioResolutionString) {
+    for (const el of document.getElementsByClassName(
+      "qualityIndicator-39wQDy"
+    )) {
+      el.innerHTML = window.discordScreenaudioResolutionString;
+    }
+  }
 }, 500);
 
 // Fix for broken discord notifications after restart
