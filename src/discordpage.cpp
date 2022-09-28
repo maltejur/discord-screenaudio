@@ -56,7 +56,7 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
       "discord-screenaudio", "discord-screenaudio",
       QApplication::applicationVersion(),
       "Custom Discord client with the ability to stream audio on Linux",
-      KAboutLicense::GPL, "Copyright 2022 (C) Malte Jürgens");
+      KAboutLicense::GPL_V3, "Copyright 2022 (C) Malte Jürgens");
   aboutData.setBugAddress("https://github.com/maltejur/discord-screenaudio");
   aboutData.addAuthor("Malte Jürgens", "Author", "maltejur@dismail.de",
                       "https://github.com/maltejur");
