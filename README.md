@@ -51,12 +51,14 @@ You have multiple options:
 
 - Basic building tools
 - CMake
-- Qt5, QtWebEngine and Kf5Notifications
+- Qt5 and QtWebEngine
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
+- _Kf5Notifications (optional, for better notifications)_
+- _KXMLGui and KGlobalAccel (optional, for keybinds)_
 
 On Debian:
-`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev pkg-config libpipewire-0.3-dev git`
+`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
 
 ### Building
 

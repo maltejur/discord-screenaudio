@@ -15,6 +15,7 @@ class MainWindow : public QMainWindow {
 
 public:
   explicit MainWindow(QWidget *parent = nullptr);
+  static MainWindow *instance();
 
 private:
   void setupWebView();
@@ -23,6 +24,7 @@ private:
   DiscordPage *m_discordPage;
   void closeEvent(QCloseEvent *event) override;
   bool m_wasMaximized;
+  static MainWindow *m_instance;
 
 private Q_SLOTS:
   void fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest);

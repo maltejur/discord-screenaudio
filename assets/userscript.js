@@ -135,12 +135,21 @@ setInterval(() => {
     document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
-      const aboutEl = document.createElement("div");
+      let aboutEl;
+      if (window.discordScreenaudioKXMLGUI) {
+        aboutEl = document.createElement("a");
+        aboutEl.addEventListener("click", () => {
+          console.log("!discord-screenaudio-about");
+        });
+      } else {
+        aboutEl = document.createElement("div");
+      }
       aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
       aboutEl.style.fontSize = "12px";
       aboutEl.style.color = "var(--text-muted)";
       aboutEl.style.textTransform = "none";
       aboutEl.classList.add("dirscordScreenaudioAboutText");
+      aboutEl.style.cursor = "pointer";
       el.appendChild(aboutEl);
     }
   }
@@ -148,6 +157,40 @@ setInterval(() => {
   // Remove stream settings if stream is active
   document.getElementById("manage-streams-change-windows")?.remove();
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
+
+  // Add event listener for keybind tab
+  if (
+    document
+      .getElementById("keybinds-tab")
+      ?.getElementsByClassName(
+        "container-3jbRo5 info-1hMolH fontSize16-3zr6Io browserNotice-1u-Y5o"
+      ).length
+  ) {
+    const el = document
+      .getElementById("keybinds-tab")
+      .getElementsByClassName("children-1xdcWE")[0];
+    const div = document.createElement("div");
+    div.style.marginBottom = "50px";
+    const button = document.createElement("button");
+    button.classList =
+      "button-f2h6uQ lookFilled-yCfaCM colorBrand-I6CyqQ sizeSmall-wU2dO- grow-2sR_-F";
+    button.innerText = "Edit Global Keybinds";
+    button.addEventListener("click", () => {
+      console.log("!discord-screenaudio-keybinds");
+    });
+    div.appendChild(button);
+    el.innerHTML = "";
+    el.appendChild(div);
+  }
+
+  const muteBtn = document.getElementsByClassName(
+    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+  )[0];
+  window.discordScreenaudioToggleMute = () => muteBtn.click();
+  const deafenBtn = document.getElementsByClassName(
+    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+  )[1];
+  window.discordScreenaudioToggleDeafen = () => deafenBtn.click();
 
   if (window.discordScreenaudioResolutionString) {
     for (const el of document.getElementsByClassName(

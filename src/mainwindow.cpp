@@ -22,7 +22,11 @@
 #include <QWebEngineSettings>
 #include <QWidget>
 
+MainWindow *MainWindow::m_instance = nullptr;
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  assert(MainWindow::m_instance == nullptr);
+  MainWindow::m_instance = this;
   setupWebView();
   resize(1000, 700);
   showMaximized();
@@ -68,3 +72,5 @@ void MainWindow::fullScreenRequested(
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }
+
+MainWindow *MainWindow::instance() { return m_instance; }
