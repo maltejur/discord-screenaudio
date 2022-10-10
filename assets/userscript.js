@@ -136,7 +136,7 @@ setInterval(() => {
   ) {
     for (const el of document.getElementsByClassName("info-3pQQBb")) {
       let aboutEl;
-      if (window.discordScreenaudioClickableAbout) {
+      if (window.discordScreenaudioKXMLGUI) {
         aboutEl = document.createElement("a");
         aboutEl.addEventListener("click", () => {
           console.log("!discord-screenaudio-about");
@@ -159,25 +159,32 @@ setInterval(() => {
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
 
   // Add event listener for keybind tab
-  for (const el of document.querySelectorAll(
-    `[aria-controls="keybinds-tab"]`
+  for (const el of document.getElementsByClassName(
+    "item-3XjbnG themed-2-lozF"
   )) {
-    el.removeAttribute("aria-controls");
+    if (el.innerText == "Keybinds") {
+      if (el.classList.contains("discord-screenaudio-cloned")) continue;
+      el.classList.add("discord-screenaudio-cloned");
 
-    const elClone = el.cloneNode(true);
-    elClone.addEventListener("click", (event) => {
-      event.preventDefault();
-      console.log("!discord-screenaudio-keybinds");
-    });
+      const elClone = el.cloneNode(true);
+      elClone.addEventListener("click", (event) => {
+        event.preventDefault();
+        console.log("!discord-screenaudio-keybinds");
+      });
 
-    el.style.display = "none";
-    el.parentNode.insertBefore(elClone, el);
+      el.style.display = "none";
+      el.parentNode.insertBefore(elClone, el);
+    }
   }
 
   const muteBtn = document.getElementsByClassName(
     "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
   )[0];
-  window.discordScreenaudioToggleMute = muteBtn.click;
+  window.discordScreenaudioToggleMute = () => muteBtn.click();
+  const deafenBtn = document.getElementsByClassName(
+    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+  )[1];
+  window.discordScreenaudioToggleDeafen = () => deafenBtn.click();
 
   if (window.discordScreenaudioResolutionString) {
     for (const el of document.getElementsByClassName(

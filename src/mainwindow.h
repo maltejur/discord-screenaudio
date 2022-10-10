@@ -2,10 +2,6 @@
 
 #include "discordpage.h"
 
-#ifdef KXMLGUI
-#include <KXmlGuiWindow>
-#endif
-
 #include <QMainWindow>
 #include <QScopedPointer>
 #include <QString>
@@ -14,11 +10,7 @@
 #include <QWebEngineProfile>
 #include <QWebEngineView>
 
-#ifdef KXMLGUI
-class MainWindow : public KXmlGuiWindow {
-#else
 class MainWindow : public QMainWindow {
-#endif
   Q_OBJECT
 
 public:

@@ -9,11 +9,17 @@
 #include <KShortcutsDialog>
 #include <KXmlGuiWindow>
 #include <QAction>
+
+#ifdef KGLOBALACCEL
+#include <KGlobalAccel>
+#endif
+
 #endif
 
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFile>
+#include <QMessageBox>
 #include <QTimer>
 #include <QWebChannel>
 #include <QWebEngineScript>
@@ -52,6 +58,8 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
                        .arg(QApplication::applicationVersion()));
 
 #ifdef KXMLGUI
+  injectScriptText("xmlgui.js", "window.discordScreenaudioKXMLGUI = true;");
+
   KAboutData aboutData(
       "discord-screenaudio", "discord-screenaudio",
       QApplication::applicationVersion(),
@@ -73,17 +81,31 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
                          "https://github.com/Soundux/rohrkabel");
   m_helpMenu = new KHelpMenu(parent, aboutData);
 
-  injectScriptText("xmlgui.js",
-                   "window.discordScreenaudioClickableAbout = true;");
+#ifdef KGLOBALACCEL
+  injectScriptText("kglobalaccel.js",
+                   "window.discordScreenaudioKGLOBALACCEL = true;");
 
   auto toggleMuteAction = new QAction(this);
   toggleMuteAction->setText("Toggle Mute");
-  toggleMuteAction->setIcon(QIcon::fromTheme("audio-input-microphone-muted"));
+  toggleMuteAction->setIcon(QIcon::fromTheme("microphone-sensitivity-muted"));
   connect(toggleMuteAction, &QAction::triggered, this,
           &DiscordPage::toggleMute);
 
+  auto toggleDeafenAction = new QAction(this);
+  toggleDeafenAction->setText("Toggle Deafen");
+  toggleDeafenAction->setIcon(QIcon::fromTheme("audio-volume-muted"));
+  connect(toggleDeafenAction, &QAction::triggered, this,
+          &DiscordPage::toggleDeafen);
+
   m_actionCollection = new KActionCollection(this);
   m_actionCollection->addAction("toggleMute", toggleMuteAction);
+  KGlobalAccel::setGlobalShortcut(toggleMuteAction, QList<QKeySequence>{});
+  m_actionCollection->addAction("toggleDeafen", toggleDeafenAction);
+  KGlobalAccel::setGlobalShortcut(toggleDeafenAction, QList<QKeySequence>{});
+
+  m_shortcutsDialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction);
+  m_shortcutsDialog->addCollection(m_actionCollection);
+#endif
 #endif
 
   connect(&m_streamDialog, &StreamDialog::requestedStreamStart, this,
@@ -180,17 +202,27 @@ void DiscordPage::javaScriptConsoleMessage(
     m_streamDialog.updateTargets();
   } else if (message == "!discord-screenaudio-stream-stopped") {
     stopVirtmic();
-  }
+  } else if (message == "!discord-screenaudio-about") {
 #ifdef KXMLGUI
-  else if (message == "!discord-screenaudio-about") {
     m_helpMenu->aboutApplication();
-  } else if (message == "!discord-screenaudio-keybinds") {
-    auto dialog = new KShortcutsDialog(qobject_cast<QWidget *>(parent()));
-    dialog->addCollection(m_actionCollection);
-    dialog->show();
-  }
 #endif
-  else if (message.startsWith("dsa: ")) {
+  } else if (message == "!discord-screenaudio-keybinds") {
+#ifdef KXMLGUI
+#ifdef KGLOBALACCEL
+    m_shortcutsDialog->show();
+#else
+    QMessageBox::information(MainWindow::instance(), "discord-screenaudio",
+                             "Keybinds are not supported on this platform "
+                             "(KGlobalAccel is not available).",
+                             QMessageBox::Ok);
+#endif
+#else
+    QMessageBox::information(MainWindow::instance(), "discord-screenaudio",
+                             "Keybinds are not supported on this platform "
+                             "(KXmlGui and KGlobalAccel are not available).",
+                             QMessageBox::Ok);
+#endif
+  } else if (message.startsWith("dsa: ")) {
     qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
   } else {
     qDebug(discordLog) << message;
@@ -211,5 +243,11 @@ void DiscordPage::startStream(QString target, uint width, uint height,
 }
 
 void DiscordPage::toggleMute() {
+  qDebug(shortcutLog) << "Toggling mute";
   runJavaScript("window.discordScreenaudioToggleMute();");
+}
+
+void DiscordPage::toggleDeafen() {
+  qDebug(shortcutLog) << "Toggling deafen";
+  runJavaScript("window.discordScreenaudioToggleDeafen();");
 }

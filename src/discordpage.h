@@ -6,6 +6,7 @@
 #ifdef KXMLGUI
 #include <KActionCollection>
 #include <KHelpMenu>
+#include <KShortcutsDialog>
 #endif
 
 #include <QProcess>
@@ -21,8 +22,13 @@ public:
 private:
   StreamDialog m_streamDialog;
   QProcess m_virtmicProcess;
+#ifdef KXMLGUI
   KHelpMenu *m_helpMenu;
+#ifdef KGLOBALACCEL
   KActionCollection *m_actionCollection;
+  KShortcutsDialog *m_shortcutsDialog;
+#endif
+#endif
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;
@@ -36,6 +42,7 @@ private:
   void stopVirtmic();
   void startVirtmic(QString target);
   void toggleMute();
+  void toggleDeafen();
 
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,

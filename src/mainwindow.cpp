@@ -5,11 +5,6 @@
 #include <KNotification>
 #endif
 
-#ifdef KXMLGUI
-#include <KAboutData>
-#include <KActionCollection>
-#endif
-
 #include <QApplication>
 #include <QColor>
 #include <QComboBox>
@@ -29,11 +24,7 @@
 
 MainWindow *MainWindow::m_instance = nullptr;
 
-#ifdef KXMLGUI
-MainWindow::MainWindow(QWidget *parent) : KXmlGuiWindow(parent) {
-#else
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-#endif
   assert(MainWindow::m_instance == nullptr);
   MainWindow::m_instance = this;
   setupWebView();

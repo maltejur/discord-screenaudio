@@ -28,6 +28,11 @@ if(KF5XmlGui_FOUND)
   add_definitions( -DKXMLGUI )
 endif()
 
+find_package(KF5GlobalAccel)
+if(KF5GlobalAccel_FOUND)
+  add_definitions( -DKGLOBALACCEL )
+endif()
+
 set(discord-screenaudio_SRC
   src/main.cpp
   src/mainwindow.cpp
@@ -69,6 +74,9 @@ if(KF5Notifications_FOUND)
 endif()
 if(KF5XmlGui_FOUND)
   target_link_libraries(discord-screenaudio KF5::XmlGui)
+endif()
+if(KF5GlobalAccel_FOUND)
+  target_link_libraries(discord-screenaudio KF5::GlobalAccel)
 endif()
 
 install(TARGETS discord-screenaudio DESTINATION bin)
