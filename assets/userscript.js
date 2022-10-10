@@ -159,22 +159,28 @@ setInterval(() => {
   document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
 
   // Add event listener for keybind tab
-  for (const el of document.getElementsByClassName(
-    "item-3XjbnG themed-2-lozF"
-  )) {
-    if (el.innerText == "Keybinds") {
-      if (el.classList.contains("discord-screenaudio-cloned")) continue;
-      el.classList.add("discord-screenaudio-cloned");
-
-      const elClone = el.cloneNode(true);
-      elClone.addEventListener("click", (event) => {
-        event.preventDefault();
-        console.log("!discord-screenaudio-keybinds");
-      });
-
-      el.style.display = "none";
-      el.parentNode.insertBefore(elClone, el);
-    }
+  if (
+    document
+      .getElementById("keybinds-tab")
+      ?.getElementsByClassName(
+        "container-3jbRo5 info-1hMolH fontSize16-3zr6Io browserNotice-1u-Y5o"
+      ).length
+  ) {
+    const el = document
+      .getElementById("keybinds-tab")
+      .getElementsByClassName("children-1xdcWE")[0];
+    const div = document.createElement("div");
+    div.style.marginBottom = "50px";
+    const button = document.createElement("button");
+    button.classList =
+      "button-f2h6uQ lookFilled-yCfaCM colorBrand-I6CyqQ sizeSmall-wU2dO- grow-2sR_-F";
+    button.innerText = "Edit Global Keybinds";
+    button.addEventListener("click", () => {
+      console.log("!discord-screenaudio-keybinds");
+    });
+    div.appendChild(button);
+    el.innerHTML = "";
+    el.appendChild(div);
   }
 
   const muteBtn = document.getElementsByClassName(
