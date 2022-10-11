@@ -54,8 +54,6 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setUrl(QUrl("https://discord.com/app"));
 
   injectScriptFile("userscript.js", ":/assets/userscript.js");
-  injectScriptUrl("vencord.js", "https://github.com/Vendicated/Vencord/"
-                                "releases/download/devbuild/browser.js");
 
   injectScriptText("version.js",
                    QString("window.discordScreenaudioVersion = '%1';")
