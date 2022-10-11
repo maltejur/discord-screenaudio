@@ -1,13 +1,17 @@
 # discord-screenaudio
 
-A very WIP custom discord client that supports streaming with audio on Linux,
-made possible by the
+A custom discord client that supports streaming with audio on Linux, made
+possible by the
 [great work](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux)
 of [@edisionnano](https://github.com/edisionnano) and the
 [Rohrkabel library](https://github.com/Soundux/rohrkabel) by
 [@Curve](https://github.com/Curve).
 
-![Screenshot_20220718_194357](https://user-images.githubusercontent.com/48161361/179571245-11ea05f3-fb5e-4aef-9132-2736e122ef04.png)
+Unlike a lot of other solutions, the audio here is directly fed into the
+screenshare and not passed to the user microphone
+([see explanation](#how-it-works)).
+
+![Screenshot_20220925_112945](https://user-images.githubusercontent.com/48161361/192137080-33466cf7-8c56-4373-90c6-01ea74b6fb83.png)
 
 The purpose of this project is **not** to provide an alternative to the original
 Discord client. Rather, it should be used in addition to the original client in
@@ -23,8 +27,9 @@ told you and it's not my fault.
 ## Known Issues
 
 - Only works with **PipeWire**
-- Can only share primary screen on X11 (no other screens or specific applications)
-  (see [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
+- Can only share primary screen on X11 (no other screens or specific
+  applications) (see
+  [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
 
 ## Installation
 
@@ -59,6 +64,12 @@ On Debian **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
 
 On Arch **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
 `pacman -Sy --needed --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal-impl pipewire notification-daemon knotifications`
+=======
+- _Kf5Notifications (optional, for better notifications)_
+- _KXMLGui and KGlobalAccel (optional, for keybinds)_
+
+On Debian:
+`apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
 
 ### Building
 

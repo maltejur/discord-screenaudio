@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
+#ifdef KXMLGUI
+#include <KAboutData>
+#endif
+
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QLoggingCategory>
@@ -26,6 +30,7 @@ int main(int argc, char *argv[]) {
   QCommandLineOption degubOption("remote-debugging",
                                  "Open Chromium Remote Debugging on port 9222");
   parser.addOption(degubOption);
+
   parser.process(app);
 
   if (parser.isSet(virtmicOption)) {

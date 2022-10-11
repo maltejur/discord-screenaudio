@@ -23,6 +23,16 @@ if(KF5Notifications_FOUND)
   add_definitions( -DKNOTIFICATIONS )
 endif()
 
+find_package(KF5XmlGui)
+if(KF5XmlGui_FOUND)
+  add_definitions( -DKXMLGUI )
+endif()
+
+find_package(KF5GlobalAccel)
+if(KF5GlobalAccel_FOUND)
+  add_definitions( -DKGLOBALACCEL )
+endif()
+
 set(discord-screenaudio_SRC
   src/main.cpp
   src/mainwindow.cpp
@@ -61,6 +71,12 @@ target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets roh
 if(KF5Notifications_FOUND)
   target_link_libraries(discord-screenaudio KF5::Notifications)
   install(FILES assets/discord-screenaudio.notifyrc DESTINATION ${CMAKE_INSTALL_PREFIX}/share/knotifications5)
+endif()
+if(KF5XmlGui_FOUND)
+  target_link_libraries(discord-screenaudio KF5::XmlGui)
+endif()
+if(KF5GlobalAccel_FOUND)
+  target_link_libraries(discord-screenaudio KF5::GlobalAccel)
 endif()
 
 install(TARGETS discord-screenaudio DESTINATION bin)
