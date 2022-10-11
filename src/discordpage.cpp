@@ -20,6 +20,7 @@
 #include <QDesktopServices>
 #include <QFile>
 #include <QMessageBox>
+#include <QNetworkReply>
 #include <QTimer>
 #include <QWebChannel>
 #include <QWebEngineScript>
@@ -53,6 +54,8 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setUrl(QUrl("https://discord.com/app"));
 
   injectScriptFile("userscript.js", ":/assets/userscript.js");
+  injectScriptUrl("vencord.js", "https://github.com/Vendicated/Vencord/"
+                                "releases/download/devbuild/browser.js");
 
   injectScriptText("version.js",
                    QString("window.discordScreenaudioVersion = '%1';")
@@ -128,14 +131,13 @@ void DiscordPage::injectScriptText(QString name, QString content) {
 }
 
 void DiscordPage::injectScriptFile(QString name, QString source) {
-  QFile userscript(source);
+  QFile file(source);
 
-  if (!userscript.open(QIODevice::ReadOnly)) {
+  if (!file.open(QIODevice::ReadOnly)) {
     qFatal("Failed to load %s with error: %s", source.toLatin1().constData(),
-           userscript.errorString().toLatin1().constData());
+           file.errorString().toLatin1().constData());
   } else {
-    QByteArray userscriptJs = userscript.readAll();
-    injectScriptText(name, userscriptJs);
+    injectScriptText(name, file.readAll());
   }
 }
 

@@ -37,8 +37,8 @@ private:
   javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel level,
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
-  void injectScriptText(QString name, QString source);
-  void injectScriptFile(QString name, QString content);
+  void injectScriptText(QString name, QString content);
+  void injectScriptFile(QString name, QString source);
   void stopVirtmic();
   void startVirtmic(QString target);
   void toggleMute();
