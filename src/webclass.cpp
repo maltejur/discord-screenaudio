@@ -1,6 +1,9 @@
 #include "webclass.h"
 
 #include <QDesktopServices>
+#include <QDir>
+#include <QFile>
+#include <QStandardPaths>
 #include <QUrl>
 
 QVariant WebClass::vencordSend(QString event, QVariantList args) {
@@ -8,11 +11,20 @@ QVariant WebClass::vencordSend(QString event, QVariantList args) {
     return true;
   }
   if (event == "VencordGetSettingsDir") {
-    return "~/.config/discord-screenaudio/vencord";
+    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
   }
   if (event == "VencordGetQuickCss") {
-    // TODO
-    return "";
+    QString filename =
+        QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+        "/vencord/quickCss.css";
+    if (QFile::exists(filename)) {
+      QFile file(filename);
+      file.open(QIODevice::ReadOnly);
+      auto content = file.readAll();
+      file.close();
+      return QString(content);
+    } else
+      return "";
   }
   if (event == "VencordGetSettings") {
     return m_vencordSettings;

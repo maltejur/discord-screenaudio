@@ -21,8 +21,10 @@ window.VencordNative = {
       webclass.vencordSend(event, args);
     },
     sendSync: (event: string, ...args: any[]) => {
-      if (event === "VencordGetSettings") return "{}";
-      else throw new Error("Synchroneous IPC not implemented");
+      if (event === "VencordGetSettings") {
+        console.log("stub: IPC VencordGetSettings");
+        return "{}";
+      } else throw new Error("Synchroneous IPC not implemented");
     },
     on(event: string, listener: () => {}) {
       // TODO quickCss
@@ -30,11 +32,9 @@ window.VencordNative = {
     off(event: string, listener: () => {}) {
       // not used for now
     },
-    invoke:
-      (event: string, ...args: any[]) =>
-      async () => {
-        await prepareWebclass();
-        return webclass.vencordSend(event, args);
-      },
+    invoke: async (event: string, ...args: any[]) => {
+      await prepareWebclass();
+      return webclass.vencordSend(event, args);
+    },
   },
 };
