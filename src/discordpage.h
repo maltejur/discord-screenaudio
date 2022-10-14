@@ -2,6 +2,7 @@
 
 #include "streamdialog.h"
 #include "virtmic.h"
+#include "webclass.h"
 
 #ifdef KXMLGUI
 #include <KActionCollection>
@@ -12,6 +13,7 @@
 #include <QProcess>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
+#include <QWebEngineScript>
 
 class DiscordPage : public QWebEnginePage {
   Q_OBJECT
@@ -22,6 +24,7 @@ public:
 private:
   StreamDialog m_streamDialog;
   QProcess m_virtmicProcess;
+  WebClass m_webClass;
 #ifdef KXMLGUI
   KHelpMenu *m_helpMenu;
 #ifdef KGLOBALACCEL
@@ -37,8 +40,12 @@ private:
   javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel level,
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
-  void injectScriptText(QString name, QString content);
-  void injectScriptFile(QString name, QString source);
+  void injectScriptText(QString name, QString content,
+                        QWebEngineScript::InjectionPoint injectionPoint =
+                            QWebEngineScript::DocumentCreation);
+  void injectScriptFile(QString name, QString source,
+                        QWebEngineScript::InjectionPoint injectionPoint =
+                            QWebEngineScript::DocumentCreation);
   void stopVirtmic();
   void startVirtmic(QString target);
   void toggleMute();

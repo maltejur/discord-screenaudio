@@ -2,7 +2,7 @@
 <RCC>
   <qresource>
     <file>assets/userscript.js</file>
-    <file>assets/vencord.js</file>
+    <file>assets/vencord/vencord.js</file>
     <file>assets/de.shorsh.discord-screenaudio.png</file>
   </qresource>
 </RCC>

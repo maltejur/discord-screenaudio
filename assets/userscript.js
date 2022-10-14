@@ -131,28 +131,28 @@ setInterval(() => {
   }
 
   // Add about text in settings
-  if (
-    document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
-  ) {
-    for (const el of document.getElementsByClassName("info-3pQQBb")) {
-      let aboutEl;
-      if (window.discordScreenaudioKXMLGUI) {
-        aboutEl = document.createElement("a");
-        aboutEl.addEventListener("click", () => {
-          console.log("!discord-screenaudio-about");
-        });
-      } else {
-        aboutEl = document.createElement("div");
-      }
-      aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
-      aboutEl.style.fontSize = "12px";
-      aboutEl.style.color = "var(--text-muted)";
-      aboutEl.style.textTransform = "none";
-      aboutEl.classList.add("dirscordScreenaudioAboutText");
-      aboutEl.style.cursor = "pointer";
-      el.appendChild(aboutEl);
-    }
-  }
+  // if (
+  //   document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
+  // ) {
+  //   for (const el of document.getElementsByClassName("info-3pQQBb")) {
+  //     let aboutEl;
+  //     if (window.discordScreenaudioKXMLGUI) {
+  //       aboutEl = document.createElement("a");
+  //       aboutEl.addEventListener("click", () => {
+  //         console.log("!discord-screenaudio-about");
+  //       });
+  //     } else {
+  //       aboutEl = document.createElement("div");
+  //     }
+  //     aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
+  //     aboutEl.style.fontSize = "12px";
+  //     aboutEl.style.color = "var(--text-muted)";
+  //     aboutEl.style.textTransform = "none";
+  //     aboutEl.classList.add("dirscordScreenaudioAboutText");
+  //     aboutEl.style.cursor = "pointer";
+  //     el.appendChild(aboutEl);
+  //   }
+  // }
 
   // Remove stream settings if stream is active
   document.getElementById("manage-streams-change-windows")?.remove();

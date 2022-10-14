@@ -51,10 +51,15 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
 
+  injectScriptFile("qwebchannel.js", ":/qtwebchannel/qwebchannel.js");
+
   setUrl(QUrl("https://discord.com/app"));
 
+  setWebChannel(new QWebChannel(this));
+  webChannel()->registerObject("webclass", &m_webClass);
+
   injectScriptFile("userscript.js", ":/assets/userscript.js");
-  injectScriptFile("vencord.js", ":/assets/vencord.js");
+  injectScriptFile("vencord.js", ":/assets/vencord/vencord.js");
 
   injectScriptText("version.js",
                    QString("window.discordScreenaudioVersion = '%1';")
@@ -115,7 +120,9 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
           &DiscordPage::startStream);
 }
 
-void DiscordPage::injectScriptText(QString name, QString content) {
+void DiscordPage::injectScriptText(
+    QString name, QString content,
+    QWebEngineScript::InjectionPoint injectionPoint) {
   qDebug(mainLog) << "Injecting " << name;
 
   QWebEngineScript script;
@@ -123,20 +130,22 @@ void DiscordPage::injectScriptText(QString name, QString content) {
   script.setSourceCode(content);
   script.setName(name);
   script.setWorldId(QWebEngineScript::MainWorld);
-  script.setInjectionPoint(QWebEngineScript::DocumentCreation);
+  script.setInjectionPoint(injectionPoint);
   script.setRunsOnSubFrames(false);
 
   scripts().insert(script);
 }
 
-void DiscordPage::injectScriptFile(QString name, QString source) {
+void DiscordPage::injectScriptFile(
+    QString name, QString source,
+    QWebEngineScript::InjectionPoint injectionPoint) {
   QFile file(source);
 
   if (!file.open(QIODevice::ReadOnly)) {
     qFatal("Failed to load %s with error: %s", source.toLatin1().constData(),
            file.errorString().toLatin1().constData());
   } else {
-    injectScriptText(name, file.readAll());
+    injectScriptText(name, file.readAll(), injectionPoint);
   }
 }
 
