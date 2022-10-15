@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
   }
 
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
+          "--ignore-gpu-blacklist --enable-gpu-rasterization "
+          "--enable-native-gpu-memory-buffers --num-raster-threads=4 "
           "--enable-features=WebRTCPipeWireCapturer " +
               qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
 
