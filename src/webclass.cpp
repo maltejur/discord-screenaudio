@@ -1,5 +1,6 @@
 #include "webclass.h"
 
+#include <QDebug>
 #include <QDesktopServices>
 #include <QDir>
 #include <QFile>
@@ -7,19 +8,28 @@
 #include <QUrl>
 
 QVariant WebClass::vencordSend(QString event, QVariantList args) {
+  QString configFolder =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+      "/vencord";
+  QString quickCssFile = configFolder + "/quickCss.css";
+  QString settingsFile = configFolder + "/settings.json";
+
+  if (!QDir().exists(configFolder))
+    QDir().mkpath(configFolder);
+
   if (event == "VencordGetRepo") {
     return true;
   }
   if (event == "VencordGetSettingsDir") {
-    return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    return configFolder;
   }
   if (event == "VencordGetQuickCss") {
-    QString filename =
-        QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
-        "/vencord/quickCss.css";
-    if (QFile::exists(filename)) {
-      QFile file(filename);
-      file.open(QIODevice::ReadOnly);
+    if (QFile::exists(quickCssFile)) {
+      QFile file(quickCssFile);
+      if (!file.open(QIODevice::WriteOnly))
+        qFatal("Failed to load %s with error: %s",
+               quickCssFile.toLatin1().constData(),
+               file.errorString().toLatin1().constData());
       auto content = file.readAll();
       file.close();
       return QString(content);
@@ -27,10 +37,26 @@ QVariant WebClass::vencordSend(QString event, QVariantList args) {
       return "";
   }
   if (event == "VencordGetSettings") {
-    return m_vencordSettings;
+    if (QFile::exists(settingsFile)) {
+      QFile file(settingsFile);
+      if (!file.open(QIODevice::ReadOnly))
+        qFatal("Failed to load %s with error: %s",
+               settingsFile.toLatin1().constData(),
+               file.errorString().toLatin1().constData());
+      auto content = file.readAll();
+      file.close();
+      return QString(content);
+    } else
+      return "{}";
   }
   if (event == "VencordSetSettings") {
-    m_vencordSettings = args[0].toString();
+    QFile file(settingsFile);
+    if (!file.open(QIODevice::WriteOnly))
+      qFatal("Failed to load %s with error: %s",
+             settingsFile.toLatin1().constData(),
+             file.errorString().toLatin1().constData());
+    file.write(args[0].toString().toUtf8());
+    file.close();
     return true;
   }
   if (event == "VencordGetUpdates") {

@@ -21,9 +21,9 @@ window.VencordNative = {
       webclass.vencordSend(event, args);
     },
     sendSync: (event: string, ...args: any[]) => {
+      // We need this hack because Vencord requires its settings right when it starts
       if (event === "VencordGetSettings") {
-        console.log("stub: IPC VencordGetSettings");
-        return "{}";
+        return window.discordScreenaudioVencordSettings || "{}";
       } else throw new Error("Synchroneous IPC not implemented");
     },
     on(event: string, listener: () => {}) {
@@ -34,6 +34,9 @@ window.VencordNative = {
     },
     invoke: async (event: string, ...args: any[]) => {
       await prepareWebclass();
+      if (event === "VencordSetSettings") {
+        window.discordScreenaudioVencordSettings = args[0];
+      }
       return webclass.vencordSend(event, args);
     },
   },
