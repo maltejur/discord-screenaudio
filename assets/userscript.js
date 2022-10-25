@@ -183,14 +183,21 @@ setInterval(() => {
     el.appendChild(div);
   }
 
-  const muteBtn = document.getElementsByClassName(
+  const buttonContainer = document.getElementsByClassName("container-YkUktl")[0];
+  if (!buttonContainer) {
+    console.log('dsa: Cannot locate Mute/Deafen/Settings button container, please report this on GitHub');
+  }
+  
+  const muteBtn = buttonContainer ? buttonContainer.getElementsByClassName(
     "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-  )[0];
-  window.discordScreenaudioToggleMute = () => muteBtn.click();
-  const deafenBtn = document.getElementsByClassName(
+  )[0] : null;
+  window.discordScreenaudioToggleMute = () => muteBtn && muteBtn.click();
+  
+  const deafenBtn = buttonContainer ? buttonContainer.getElementsByClassName(
     "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-  )[1];
-  window.discordScreenaudioToggleDeafen = () => deafenBtn.click();
+  )[1] : null;
+  
+  window.discordScreenaudioToggleDeafen = () => deafenBtn && deafenBtn.click();
 
   if (window.discordScreenaudioResolutionString) {
     for (const el of document.getElementsByClassName(
