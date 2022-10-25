@@ -14,9 +14,9 @@ if [ ! -d "Vencord" ]; then
   git clone https://github.com/Vendicated/Vencord.git
   cd Vencord
 else
-  echo_status "Pulling Vencord changes"
+  echo_status "Fetching Vencord changes"
   cd Vencord
-  git pull
+  git fetch
 fi
 
 echo_status "Checking out latest commit"

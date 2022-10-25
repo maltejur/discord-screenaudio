@@ -26,7 +26,7 @@ QVariant WebClass::vencordSend(QString event, QVariantList args) {
   if (event == "VencordGetQuickCss") {
     if (QFile::exists(quickCssFile)) {
       QFile file(quickCssFile);
-      if (!file.open(QIODevice::WriteOnly))
+      if (!file.open(QIODevice::ReadOnly))
         qFatal("Failed to load %s with error: %s",
                quickCssFile.toLatin1().constData(),
                file.errorString().toLatin1().constData());
