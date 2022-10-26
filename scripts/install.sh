@@ -16,22 +16,21 @@ PURPLE="\e[1;35m"
 CYAN="\e[1;36m"
 RESET_COLOUR="\e[0m"
 
-# Set home based on user or root
+# Set repository directory based on user or root
 if [ ${CURRENT_USER} == "root" ]; then
-	CURRENT_HOME="/root"
+	REPOSITORY_DIRECTORY="/root/.local/share/discord-screenaudio/git"
 else
-	CURRENT_HOME="/home/${CURRENT_USER}"
+	REPOSITORY_DIRECTORY="/home/${CURRENT_USER}/.local/share/discord-screenaudio/git"
 fi
+mkdir -pv ${REPOSITORY_DIRECTORY}
 
 # Check if the repository already exists
-if ! [ -d ../discord-screenaudio ]; then
-	if ! [ -d ${CURRENT_HOME}/rtl8188eus ]; then
-		git clone --recursive https://github.com/maltejur/discord-screenaudio.git
-	else
-		printf "${YELLOW}""[!] Repository already exists.""${RESET_COLOUR}""\n"
-	fi
-	cd "${CURRENT_HOME}/discord-screenaudio"
+if ! [ -d ${REPOSITORY_DIRECTORY}/scripts ]; then
+	git clone --recursive https://github.com/maltejur/discord-screenaudio.git "${REPOSITORY_DIRECTORY}" 
+else
+	printf "${YELLOW}""[!] Repository already exists.""${RESET_COLOUR}""\n"
 fi
+cd "${REPOSITORY_DIRECTORY}"
 
 # Check the package manager.
 if type dpkg &>/dev/null; then
@@ -42,7 +41,7 @@ fi
 
 # Prepare the packages.
 de_packages="notification-daemon"
-if [ $1 == "--basic-notifications" ]; then
+if [ "$1" == "--basic-notifications" ]; then
 	case $XDG_CURRENT_DESKTOP in
 		"LXQt")
 			de_packages="lxqt-notificationd"
