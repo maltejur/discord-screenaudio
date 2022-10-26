@@ -64,36 +64,16 @@ else
 			;;
 	esac
 fi
-case $package_manager in
-	"apt")
-		packages="build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev $de_packages"
-		;;
-	"pacman")
-		packages="git cmake qt5-base qt5-webengine xdg-desktop-portal pipewire $de_packages"
-		;;
-esac
 
 # Install the packages.
-for package in $packages; do
-	case $package_manager in
-		"apt")
-			if [ -z "$(dpkg --list | grep "$package")" ]; then
-				sudo apt-get install -y $package
-				printf "$GREEN""$PURPLE""$package""$GREEN"" has been installed!""$RESET_COLOUR""\n"
-			else
-				printf "$PURPLE""$package""$RESET_COLOUR"" has already been satisfied!\n"
-			fi
-			;;
-		"pacman")
-			if [ -z "$(pacman -Q | grep "$package")" ]; then
-				sudo pacman -S --noconfirm $package
-				printf "$GREEN""$PURPLE""$package""$GREEN"" has been installed!""$RESET_COLOUR""\n"
-			else
-				printf "$PURPLE""$package""$RESET_COLOUR"" has already been satisfied!\n"
-			fi
-			;;
-	esac
-done
+case $package_manager in
+	"apt")
+		sudo apt-get install -y build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev $de_packages
+		;;
+	"pacman")
+		sudo pacman -S --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal pipewire $de_packages
+		;;
+esac
 
 # Installation process.
 cmake -B build
