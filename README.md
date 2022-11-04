@@ -55,21 +55,14 @@ You have multiple options:
 - **PipeWire** (it currently doesn't work with PulseAudio)
 - Git
 - notification-daemon (optional, for basic desktop notifications)
-- Kf5Notifications (optional, for better desktop notifications)
-
-Optional packages will appear at the end of the line. Remove them, if you wish.
-
-On Debian **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
-`apt update && apt install -y build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev notification-daemon libkf5notifications-dev`
-
-On Arch **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
-`pacman -Sy --needed --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal-impl pipewire notification-daemon knotifications`
-=======
 - _Kf5Notifications (optional, for better notifications)_
 - _KXMLGui and KGlobalAccel (optional, for keybinds)_
 
-On Debian:
+On Debian **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
 `apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
+
+On Arch **as [root](https://en.wikipedia.org/wiki/Superuser)**:<br>
+`pacman -Sy --needed --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal-impl pipewire knotifications kxmlgui kglobalaccel`
 
 ### Building
 
@@ -81,18 +74,12 @@ On Debian:
 
 Choose your URL fetcher:
 
-- curl:
-```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
-```
-- wget:
-```sh
-sh -c "$(wget -O- https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
-```
-- fetch:
-```sh
-sh -c "$(fetch -o - https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"
-```
+|   Package   |   URL                                                                                                             |
+|-------------|-------------------------------------------------------------------------------------------------------------------|
+|   curl      |   sh -c "$(curl -fsSL https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"  |
+|   wget      |   sh -c "$(wget -O- https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"    |
+|   fetch     |   sh -c "$(fetch -o - https://raw.githubusercontent.com/maltejur/discord-screenaudio/master/scripts/install.sh)"  |
+
 **Forks**: Change the `user/repo` URL, if the repository supports automatic installation.<br>
 **Important**: To use the basic desktop notification, append the `--basic-notifications` flag to the command.
 
