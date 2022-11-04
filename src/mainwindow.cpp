@@ -55,6 +55,7 @@ void MainWindow::setupWebView() {
                               {"--icon", image_path, "--app-name",
                                "discord-screenaudio", title, message});
           } else if (m_useKF5Notifications) {
+#ifdef KNOTIFICATIONS
             KNotification *notification =
                 new KNotification("discordNotification");
             notification->setTitle(notificationInfo->title());
@@ -68,6 +69,7 @@ void MainWindow::setupWebView() {
                       activateWindow();
                     });
             notification->sendEvent();
+#endif
           }
         });
 
