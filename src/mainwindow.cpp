@@ -24,9 +24,11 @@
 
 MainWindow *MainWindow::m_instance = nullptr;
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
+    : QMainWindow(parent) {
   assert(MainWindow::m_instance == nullptr);
   MainWindow::m_instance = this;
+  m_useNotifySend = useNotifySend;
   setupWebView();
   resize(1000, 700);
   showMaximized();
@@ -40,22 +42,34 @@ void MainWindow::setupWebView() {
   m_webView = new QWebEngineView(this);
   m_webView->setPage(page);
 
-#ifdef KNOTIFICATIONS
-  QWebEngineProfile::defaultProfile()->setNotificationPresenter(
-      [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
-        KNotification *notification = new KNotification("discordNotification");
-        notification->setTitle(notificationInfo->title());
-        notification->setText(notificationInfo->message());
-        notification->setPixmap(QPixmap::fromImage(notificationInfo->icon()));
-        notification->setDefaultAction("View");
-        connect(notification, &KNotification::defaultActivated,
-                [&, notificationInfo = std::move(notificationInfo)]() {
-                  notificationInfo->click();
-                  activateWindow();
-                });
-        notification->sendEvent();
-      });
-#endif
+  if (m_useKF5Notifications || m_useNotifySend)
+    QWebEngineProfile::defaultProfile()->setNotificationPresenter(
+        [&](std::unique_ptr<QWebEngineNotification> notificationInfo) {
+          if (m_useNotifySend) {
+            auto title = notificationInfo->title();
+            auto message = notificationInfo->message();
+            auto image_path =
+                QString("/tmp/discord-screenaudio-%1.png").arg(title);
+            notificationInfo->icon().save(image_path);
+            QProcess::execute("notify-send",
+                              {"--icon", image_path, "--app-name",
+                               "discord-screenaudio", title, message});
+          } else if (m_useKF5Notifications) {
+            KNotification *notification =
+                new KNotification("discordNotification");
+            notification->setTitle(notificationInfo->title());
+            notification->setText(notificationInfo->message());
+            notification->setPixmap(
+                QPixmap::fromImage(notificationInfo->icon()));
+            notification->setDefaultAction("View");
+            connect(notification, &KNotification::defaultActivated,
+                    [&, notificationInfo = std::move(notificationInfo)]() {
+                      notificationInfo->click();
+                      activateWindow();
+                    });
+            notification->sendEvent();
+          }
+        });
 
   setCentralWidget(m_webView);
 }

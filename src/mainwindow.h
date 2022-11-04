@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow(bool useNotifySend = false, QWidget *parent = nullptr);
   static MainWindow *instance();
 
 private:
@@ -25,6 +25,12 @@ private:
   void closeEvent(QCloseEvent *event) override;
   bool m_wasMaximized;
   static MainWindow *m_instance;
+  bool m_useNotifySend;
+#ifdef KNOTIFICATIONS
+  bool m_useKF5Notifications = true;
+#else
+  bool m_useKF5Notifications = false;
+#endif
 
 private Q_SLOTS:
   void fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest);

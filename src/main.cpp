@@ -30,6 +30,9 @@ int main(int argc, char *argv[]) {
   QCommandLineOption degubOption("remote-debugging",
                                  "Open Chromium Remote Debugging on port 9222");
   parser.addOption(degubOption);
+  QCommandLineOption notifySendOption(
+      "notify-send", "Use notify-send instead of QT/KF5 notifications");
+  parser.addOption(notifySendOption);
 
   parser.process(app);
 
@@ -46,7 +49,7 @@ int main(int argc, char *argv[]) {
             "--remote-debugging-port=9222 " +
                 qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
 
-  MainWindow w;
+  MainWindow w(parser.isSet(notifySendOption));
   w.show();
 
   return app.exec();
