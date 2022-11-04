@@ -43,26 +43,26 @@ elif type pacman &>/dev/null; then
 fi
 
 # Prepare the packages.
-de_packages="notification-daemon"
+DE_PACKAGES="notification-daemon"
 if [ "$1" == "--basic-notifications" ]; then
 	case $XDG_CURRENT_DESKTOP in
 		"LXQt")
-			de_packages="lxqt-notificationd"
+			DE_PACKAGES="lxqt-notificationd"
 			;;
 		"MATE")
-			de_packages="mate-notification-daemon"
+			DE_PACKAGES="mate-notification-daemon"
 			;;
 		"XFCE")
-			de_packages="xfce4-notifyd"
+			DE_PACKAGES="xfce4-notifyd"
 			;;
 	esac
 else
 	case $package_manager in
 		"apt")
-			de_packages="libkf5notifications-dev"
+			DE_PACKAGES="libkf5notifications-dev"
 			;;
 		"pacman")
-			de_packages="knotifications"
+			DE_PACKAGES="knotifications"
 			;;
 	esac
 fi
@@ -70,10 +70,10 @@ fi
 # Install the packages.
 case $package_manager in
 	"apt")
-		sudo apt-get install -y build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev $de_packages
+		sudo apt-get install -y build-essential git cmake qtbase5-dev qtwebengine5-dev pkg-config libpipewire-0.3-dev ${DE_PACKAGES}
 		;;
 	"pacman")
-		sudo pacman -S --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal pipewire $de_packages
+		sudo pacman -S --needed --noconfirm git cmake qt5-base qt5-webengine xdg-desktop-portal pipewire ${DE_PACKAGES}
 		;;
 esac
 
