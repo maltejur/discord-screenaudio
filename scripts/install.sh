@@ -59,10 +59,10 @@ if [ "$1" == "--basic-notifications" ]; then
 else
 	case $package_manager in
 		"apt")
-			DE_PACKAGES="libkf5notifications-dev"
+			DE_PACKAGES="libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev"
 			;;
 		"pacman")
-			DE_PACKAGES="knotifications"
+			DE_PACKAGES="knotifications kxmlgui kglobalaccel"
 			;;
 	esac
 fi
