@@ -5,7 +5,7 @@ export CMAKE_GENERATOR="Ninja"
 
 # Environment variables
 CURRENT_USER=$(whoami)
-CURRENT_PWD=$(pwd)
+REPOSITORY_NAME="discord-screenaudio"
 
 # Colours
 RED="\e[1;31m"
@@ -18,19 +18,22 @@ RESET_COLOUR="\e[0m"
 
 # Set repository directory based on user or root
 if [ ${CURRENT_USER} == "root" ]; then
-	REPOSITORY_DIRECTORY="/root/.local/share/discord-screenaudio/git"
+	REPOSITORY_DIRECTORY="/root/.local/share/${REPOSITORY_NAME}/git"
 else
-	REPOSITORY_DIRECTORY="/home/${CURRENT_USER}/.local/share/discord-screenaudio/git"
+	REPOSITORY_DIRECTORY="/home/${CURRENT_USER}/.local/share/${REPOSITORY_NAME}/git"
 fi
 mkdir -pv ${REPOSITORY_DIRECTORY}
 
 # Check if the repository already exists
-if ! [ -d ${REPOSITORY_DIRECTORY}/scripts ]; then
-	git clone --recursive https://github.com/maltejur/discord-screenaudio.git "${REPOSITORY_DIRECTORY}" 
+if ! [ -d ../${REPOSITORY_NAME} ]; then
+	if ! [ -d ${REPOSITORY_DIRECTORY}/src ]; then
+		git clone --recursive https://github.com/maltejur/${REPOSITORY_NAME}.git "${REPOSITORY_DIRECTORY}"
+	fi
 else
 	printf "${YELLOW}""[!] Repository already exists.""${RESET_COLOUR}""\n"
+	REPOSITORY_DIRECTORY=$(pwd)
 fi
-cd "${REPOSITORY_DIRECTORY}"
+cd ${REPOSITORY_DIRECTORY}
 
 # Check the package manager.
 if type dpkg &>/dev/null; then
@@ -78,6 +81,6 @@ esac
 cmake -B build
 cmake --build build --config Release
 sudo cmake --install build
-rm -rfv ./build/
-printf "$GREEN""discord-screenaudio has been installed!""$RESET_COLOUR""\n"
-notify-send --icon="$CURRENT_PWD/assets/de.shorsh.discord-screenaudio.png" --app-name="discord-screenaudio" "discord-screenaudio" "The application has been installed!"
+rm -rfv ${REPOSITORY_DIRECTORY}/build/
+printf "${GREEN}""${REPOSITORY_NAME} has been installed!""${RESET_COLOUR}""\n"
+notify-send --icon="${REPOSITORY_DIRECTORY}/assets/de.shorsh.discord-screenaudio.png" --app-name="${REPOSITORY_NAME}" "${REPOSITORY_NAME}" "The application has been installed!"
