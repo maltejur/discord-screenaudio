@@ -50,8 +50,6 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
                            false);
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
-  settings()->setAttribute(QWebEngineSettings::JavascriptCanAccessClipboard,
-                           true);
 
   setUrl(QUrl("https://discord.com/app"));
 
