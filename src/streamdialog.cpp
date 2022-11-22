@@ -12,70 +12,96 @@
 StreamDialog::StreamDialog() : QWidget() {
   setAttribute(Qt::WA_QuitOnClose, false);
 
-  auto layout = new QVBoxLayout(this);
-  layout->setSizeConstraint(QLayout::SetFixedSize);
+  {
+    auto layout = new QVBoxLayout(this);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
 
-  auto targetLabel = new QLabel(this);
-  targetLabel->setText("Which app do you want to stream sound from?");
-  layout->addWidget(targetLabel);
+    m_videoGroupBox = new QGroupBox(this);
+    m_videoGroupBox->setTitle("Video");
+    m_videoGroupBox->setCheckable(true);
+    layout->addWidget(m_videoGroupBox);
 
-  auto targetHBox = new QHBoxLayout(this);
-  layout->addLayout(targetHBox);
+    {
+      auto videoLayout = new QVBoxLayout(this);
+      m_videoGroupBox->setLayout(videoLayout);
 
-  m_targetComboBox = new QComboBox(this);
-  updateTargets();
-  targetHBox->addWidget(m_targetComboBox);
+      auto resolutionLabel = new QLabel(this);
+      resolutionLabel->setText("Stream Resolution");
+      videoLayout->addWidget(resolutionLabel);
 
-  auto refreshTargetsButton = new QPushButton(this);
-  refreshTargetsButton->setFixedSize(30, 30);
-  refreshTargetsButton->setIcon(QIcon::fromTheme("view-refresh"));
-  connect(refreshTargetsButton, &QPushButton::clicked, this,
-          &StreamDialog::updateTargets);
-  targetHBox->addWidget(refreshTargetsButton);
+      m_resolutionComboBox = new QComboBox(this);
+      m_resolutionComboBox->addItem("2160p", "3840x2160");
+      m_resolutionComboBox->addItem("1440p", "2560x1440");
+      m_resolutionComboBox->addItem("1080p", "1920x1080");
+      m_resolutionComboBox->addItem("720p", "1280x720");
+      m_resolutionComboBox->addItem("480p", "854x480");
+      m_resolutionComboBox->addItem("360p", "640x360");
+      m_resolutionComboBox->addItem("240p", "426x240");
+      m_resolutionComboBox->setCurrentText("720p");
+      videoLayout->addWidget(m_resolutionComboBox);
 
-  auto qualityLabel = new QLabel(this);
-  qualityLabel->setText("Stream Quality");
-  layout->addWidget(qualityLabel);
+      auto framerateLabel = new QLabel(this);
+      framerateLabel->setText("Stream Framerate");
+      videoLayout->addWidget(framerateLabel);
 
-  auto qualityHBox = new QHBoxLayout(this);
-  layout->addLayout(qualityHBox);
+      m_framerateComboBox = new QComboBox(this);
+      m_framerateComboBox->addItem("144 FPS", 144);
+      m_framerateComboBox->addItem("60 FPS", 60);
+      m_framerateComboBox->addItem("30 FPS", 30);
+      m_framerateComboBox->addItem("15 FPS", 15);
+      m_framerateComboBox->addItem("5 FPS", 5);
+      m_framerateComboBox->setCurrentText("30 FPS");
+      videoLayout->addWidget(m_framerateComboBox);
+    }
 
-  m_qualityResolutionComboBox = new QComboBox(this);
-  m_qualityResolutionComboBox->addItem("2160p", "3840x2160");
-  m_qualityResolutionComboBox->addItem("1440p", "2560x1440");
-  m_qualityResolutionComboBox->addItem("1080p", "1920x1080");
-  m_qualityResolutionComboBox->addItem("720p", "1280x720");
-  m_qualityResolutionComboBox->addItem("480p", "854x480");
-  m_qualityResolutionComboBox->addItem("360p", "640x360");
-  m_qualityResolutionComboBox->addItem("240p", "426x240");
-  m_qualityResolutionComboBox->setCurrentText("720p");
-  qualityHBox->addWidget(m_qualityResolutionComboBox);
+    m_audioGroupBox = new QGroupBox(this);
+    m_audioGroupBox->setCheckable(true);
+    m_audioGroupBox->setTitle("Audio");
+    layout->addWidget(m_audioGroupBox);
 
-  m_qualityFPSComboBox = new QComboBox(this);
-  m_qualityFPSComboBox->addItem("144 FPS", 144);
-  m_qualityFPSComboBox->addItem("60 FPS", 60);
-  m_qualityFPSComboBox->addItem("30 FPS", 30);
-  m_qualityFPSComboBox->addItem("15 FPS", 15);
-  m_qualityFPSComboBox->addItem("5 FPS", 5);
-  m_qualityFPSComboBox->setCurrentText("30 FPS");
-  qualityHBox->addWidget(m_qualityFPSComboBox);
+    {
+      auto audioLayout = new QVBoxLayout(this);
+      m_audioGroupBox->setLayout(audioLayout);
 
-  auto button = new QPushButton(this);
-  button->setText("Start Stream");
-  connect(button, &QPushButton::clicked, this, &StreamDialog::startStream);
-  layout->addWidget(button, Qt::AlignRight | Qt::AlignBottom);
+      auto targetLabel = new QLabel(this);
+      targetLabel->setText("Audio Source");
+      audioLayout->addWidget(targetLabel);
 
-  setLayout(layout);
+      {
+        auto targetLayout = new QHBoxLayout(this);
+        audioLayout->addLayout(targetLayout);
+
+        m_targetComboBox = new QComboBox(this);
+        updateTargets();
+        targetLayout->addWidget(m_targetComboBox);
+
+        auto refreshTargetsButton = new QPushButton(this);
+        refreshTargetsButton->setFixedSize(30, 30);
+        refreshTargetsButton->setIcon(QIcon::fromTheme("view-refresh"));
+        connect(refreshTargetsButton, &QPushButton::clicked, this,
+                &StreamDialog::updateTargets);
+        targetLayout->addWidget(refreshTargetsButton);
+      }
+    }
+
+    auto button = new QPushButton(this);
+    button->setText("Start Stream");
+    connect(button, &QPushButton::clicked, this, &StreamDialog::startStream);
+    layout->addWidget(button, Qt::AlignRight | Qt::AlignBottom);
+
+    setLayout(layout);
+  }
 
   setWindowTitle("discord-screenaudio Stream Dialog");
 }
 
 void StreamDialog::startStream() {
-  auto resolution =
-      m_qualityResolutionComboBox->currentData().toString().split('x');
-  emit requestedStreamStart(m_targetComboBox->currentText(),
+  auto resolution = m_resolutionComboBox->currentData().toString().split('x');
+  emit requestedStreamStart(m_videoGroupBox->isChecked(),
+                            m_audioGroupBox->isChecked(),
                             resolution[0].toUInt(), resolution[1].toUInt(),
-                            m_qualityFPSComboBox->currentData().toUInt());
+                            m_framerateComboBox->currentData().toUInt(),
+                            m_targetComboBox->currentText());
   setHidden(true);
 }
 
@@ -83,7 +109,6 @@ void StreamDialog::updateTargets() {
   auto lastTarget = m_targetComboBox->currentText();
 
   m_targetComboBox->clear();
-  m_targetComboBox->addItem("[None]");
   m_targetComboBox->addItem("[All Desktop Audio]");
   for (auto target : Virtmic::getTargets()) {
     m_targetComboBox->addItem(target);

@@ -25,7 +25,7 @@ const getAudioDevice = async (nameOfAudioDevice) => {
   return audioDevice;
 };
 
-function setGetDisplayMedia(overrideArgs = undefined) {
+function setGetDisplayMedia(video = true, overrideArgs = undefined) {
   const getDisplayMedia = async (...args) => {
     var id;
     try {
@@ -63,6 +63,7 @@ function setGetDisplayMedia(overrideArgs = undefined) {
         : args || [{ video: true, audio: true }])
     );
     gdm.addTrack(track);
+    if (!video) for (const track of gdm.getVideoTracks()) track.enabled = false;
     return gdm;
   };
   navigator.mediaDevices.getDisplayMedia = getDisplayMedia;
@@ -111,9 +112,16 @@ setInterval(() => {
 
       const initialDisplay = el.style.display;
 
-      window.discordScreenaudioStartStream = (width, height, frameRate) => {
-        window.discordScreenaudioResolutionString = `${height}p ${frameRate}FPS`;
-        setGetDisplayMedia({
+      window.discordScreenaudioStartStream = (
+        video,
+        width,
+        height,
+        frameRate
+      ) => {
+        window.discordScreenaudioResolutionString = video
+          ? `${height}p ${frameRate}FPS`
+          : "Audio Only";
+        setGetDisplayMedia(video, {
           audio: true,
           video: { width, height, frameRate },
         });
@@ -183,20 +191,27 @@ setInterval(() => {
     el.appendChild(div);
   }
 
-  const buttonContainer = document.getElementsByClassName("container-YkUktl")[0];
+  const buttonContainer =
+    document.getElementsByClassName("container-YkUktl")[0];
   if (!buttonContainer) {
-    console.log('dsa: Cannot locate Mute/Deafen/Settings button container, please report this on GitHub');
+    console.log(
+      "dsa: Cannot locate Mute/Deafen/Settings button container, please report this on GitHub"
+    );
   }
-  
-  const muteBtn = buttonContainer ? buttonContainer.getElementsByClassName(
-    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-  )[0] : null;
+
+  const muteBtn = buttonContainer
+    ? buttonContainer.getElementsByClassName(
+        "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+      )[0]
+    : null;
   window.discordScreenaudioToggleMute = () => muteBtn && muteBtn.click();
-  
-  const deafenBtn = buttonContainer ? buttonContainer.getElementsByClassName(
-    "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-  )[1] : null;
-  
+
+  const deafenBtn = buttonContainer
+    ? buttonContainer.getElementsByClassName(
+        "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+      )[1]
+    : null;
+
   window.discordScreenaudioToggleDeafen = () => deafenBtn && deafenBtn.click();
 
   if (window.discordScreenaudioResolutionString) {

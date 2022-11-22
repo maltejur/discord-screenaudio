@@ -186,10 +186,8 @@ void DiscordPage::stopVirtmic() {
 }
 
 void DiscordPage::startVirtmic(QString target) {
-  if (target != "None") {
-    qDebug(virtmicLog) << "Starting Virtmic with target" << target;
-    m_virtmicProcess.start(QApplication::arguments()[0], {"--virtmic", target});
-  }
+  qDebug(virtmicLog) << "Starting Virtmic with target" << target;
+  m_virtmicProcess.start(QApplication::arguments()[0], {"--virtmic", target});
 }
 
 void DiscordPage::javaScriptConsoleMessage(
@@ -230,16 +228,18 @@ void DiscordPage::javaScriptConsoleMessage(
   }
 }
 
-void DiscordPage::startStream(QString target, uint width, uint height,
-                              uint frameRate) {
+void DiscordPage::startStream(bool video, bool audio, uint width, uint height,
+                              uint frameRate, QString target) {
   stopVirtmic();
-  startVirtmic(target);
+  startVirtmic(audio ? target : "[None]");
   // Wait a bit for the virtmic to start
-  QTimer::singleShot(target == "None" ? 0 : 200, [=]() {
-    runJavaScript(QString("window.discordScreenaudioStartStream(%1, %2, %3);")
-                      .arg(width)
-                      .arg(height)
-                      .arg(frameRate));
+  QTimer::singleShot(200, [=]() {
+    runJavaScript(
+        QString("window.discordScreenaudioStartStream(%1, %2, %3, %4);")
+            .arg(video)
+            .arg(video ? width : 32)
+            .arg(video ? height : 16)
+            .arg(video ? frameRate : 1));
   });
 }
 

@@ -47,7 +47,8 @@ private:
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,
                                   QWebEnginePage::Feature feature);
-  void startStream(QString target, uint width, uint height, uint frameRate);
+  void startStream(bool video, bool audio, uint width, uint height,
+                   uint frameRate, QString target);
 };
 
 // Will immediately get destroyed again but is needed for navigation to
