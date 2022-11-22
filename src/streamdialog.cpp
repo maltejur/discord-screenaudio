@@ -26,7 +26,7 @@ StreamDialog::StreamDialog() : QWidget() {
       m_videoGroupBox->setLayout(videoLayout);
 
       auto resolutionLabel = new QLabel(this);
-      resolutionLabel->setText("Stream Resolution");
+      resolutionLabel->setText("Resolution");
       videoLayout->addWidget(resolutionLabel);
 
       m_resolutionComboBox = new QComboBox(this);
@@ -41,7 +41,7 @@ StreamDialog::StreamDialog() : QWidget() {
       videoLayout->addWidget(m_resolutionComboBox);
 
       auto framerateLabel = new QLabel(this);
-      framerateLabel->setText("Stream Framerate");
+      framerateLabel->setText("Framerate");
       videoLayout->addWidget(framerateLabel);
 
       m_framerateComboBox = new QComboBox(this);
