@@ -11,7 +11,7 @@ Unlike a lot of other solutions, the audio here is directly fed into the
 screenshare and not passed to the user microphone
 ([see explanation](#how-it-works)).
 
-![Screenshot_20220925_112945](https://user-images.githubusercontent.com/48161361/192137080-33466cf7-8c56-4373-90c6-01ea74b6fb83.png)
+![Screenshot_20221211_185028](https://user-images.githubusercontent.com/48161361/206920213-58a8091a-d8f9-4bb7-ae3d-3f8581b84d24.png)
 
 The purpose of this project is **not** to provide an alternative to the original
 Discord client. Rather, it should be used in addition to the original client in
