@@ -13,7 +13,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 string(TIMESTAMP TIMESTAMP %s)
 # set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS 
+find_package(Qt6 CONFIG REQUIRED COMPONENTS
   Widgets
   WebEngineWidgets
 )
@@ -66,7 +66,7 @@ add_subdirectory(submodules/rohrkabel)
 
 add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 
-target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
+target_link_libraries(discord-screenaudio Qt::Widgets Qt::WebEngineWidgets rohrkabel)
 
 if(KF5Notifications_FOUND)
   target_link_libraries(discord-screenaudio KF5::Notifications)
