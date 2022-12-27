@@ -13,24 +13,27 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 string(TIMESTAMP TIMESTAMP %s)
 # set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS 
-  Widgets
-  WebEngineWidgets
-)
+find_package(Qt5 COMPONENTS Widgets)
+if (Qt5_FOUND)
+  find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets WebEngineWidgets)
 
-find_package(KF5Notifications)
-if(KF5Notifications_FOUND)
-  add_definitions( -DKNOTIFICATIONS )
-endif()
+  find_package(KF5Notifications)
+  if(KF5Notifications_FOUND)
+    add_definitions( -DKNOTIFICATIONS )
+  endif()
 
-find_package(KF5XmlGui)
-if(KF5XmlGui_FOUND)
-  add_definitions( -DKXMLGUI )
-endif()
+  find_package(KF5XmlGui)
+  if(KF5XmlGui_FOUND)
+    add_definitions( -DKXMLGUI )
+  endif()
 
-find_package(KF5GlobalAccel)
-if(KF5GlobalAccel_FOUND)
-  add_definitions( -DKGLOBALACCEL )
+  find_package(KF5GlobalAccel)
+  if(KF5GlobalAccel_FOUND)
+    add_definitions( -DKGLOBALACCEL )
+  endif()
+else()
+  message(WARNING "Qt 5 was not found on your system and Qt 6 will be used. You will not be able to use any features using KDE Frameworks.")
+  find_package(Qt6 CONFIG REQUIRED COMPONENTS Widgets WebEngineWidgets)
 endif()
 
 set(discord-screenaudio_SRC
@@ -66,7 +69,7 @@ add_subdirectory(submodules/rohrkabel)
 
 add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 
-target_link_libraries(discord-screenaudio Qt5::Widgets Qt5::WebEngineWidgets rohrkabel)
+target_link_libraries(discord-screenaudio Qt::Widgets Qt::WebEngineWidgets rohrkabel)
 
 if(KF5Notifications_FOUND)
   target_link_libraries(discord-screenaudio KF5::Notifications)
