@@ -50,6 +50,8 @@ You have multiple options:
 ### Requirements
 
 - Basic building tools
+- An up-to-date system (I can't guarantee that it works on Debian or Ubuntu
+  20/21)
 - CMake
 - Qt5 and QtWebEngine
 - **PipeWire** (it currently doesn't work with PulseAudio)
@@ -57,7 +59,7 @@ You have multiple options:
 - _Kf5Notifications (optional, for better notifications)_
 - _KXMLGui and KGlobalAccel (optional, for keybinds)_
 
-On Debian:
+With apt:
 `apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
 
 ### Building
