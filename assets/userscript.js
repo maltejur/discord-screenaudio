@@ -171,7 +171,7 @@ setInterval(() => {
     document
       .getElementById("keybinds-tab")
       ?.getElementsByClassName(
-        "container-3jbRo5 info-1hMolH fontSize16-3zr6Io browserNotice-1u-Y5o"
+        "container-3jbRo5 info-1hMolH browserNotice-1u-Y5o"
       ).length
   ) {
     const el = document
