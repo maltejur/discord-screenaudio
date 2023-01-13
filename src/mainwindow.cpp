@@ -29,7 +29,9 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   assert(MainWindow::m_instance == nullptr);
   MainWindow::m_instance = this;
   m_useNotifySend = useNotifySend;
+  setupSettings();
   setupWebView();
+  setupTrayIcon();
   resize(1000, 700);
   showMaximized();
 }
@@ -66,6 +68,7 @@ void MainWindow::setupWebView() {
             connect(notification, &KNotification::defaultActivated,
                     [&, notificationInfo = std::move(notificationInfo)]() {
                       notificationInfo->click();
+                      show();
                       activateWindow();
                     });
             notification->sendEvent();
@@ -87,6 +90,70 @@ void MainWindow::fullScreenRequested(
   }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) { QApplication::quit(); }
+void MainWindow::setupTrayIcon() {
+  if (m_settings->value("trayIcon", false).toBool() == false ||
+      m_trayIcon != nullptr)
+    return;
+
+  auto aboutAction = new QAction(
+      "discord-screenaudio v" + QString(DISCORD_SCEENAUDIO_VERSION_FULL), this);
+  aboutAction->setIcon(QIcon(":assets/de.shorsh.discord-screenaudio.png"));
+  aboutAction->setEnabled(false);
+
+  auto exitAction = new QAction("Exit", this);
+  connect(exitAction, &QAction::triggered, []() { QApplication::quit(); });
+
+  m_trayIconMenu = new QMenu(this);
+  m_trayIconMenu->addAction(aboutAction);
+  m_trayIconMenu->addAction(exitAction);
+
+  m_trayIcon = new QSystemTrayIcon(this);
+  m_trayIcon->setContextMenu(m_trayIconMenu);
+  m_trayIcon->setIcon(QIcon(":assets/de.shorsh.discord-screenaudio.png"));
+  m_trayIcon->show();
+
+  connect(m_trayIcon, &QSystemTrayIcon::activated, [this](auto reason) {
+    if (reason == QSystemTrayIcon::Trigger) {
+      if (isVisible()) {
+        hide();
+      } else {
+        show();
+        activateWindow();
+      }
+    }
+  });
+}
+
+void MainWindow::cleanTrayIcon() {
+  m_trayIcon->hide();
+  m_trayIconMenu->deleteLater();
+  m_trayIcon->deleteLater();
+  m_trayIconMenu = nullptr;
+  m_trayIcon = nullptr;
+}
+
+void MainWindow::setupSettings() {
+  m_settings = new QSettings("maltejur", "discord-screenaudio", this);
+  m_settings->beginGroup("settings");
+  m_settings->endGroup();
+}
+
+QSettings *MainWindow::settings() const { return m_settings; }
+
+void MainWindow::setTrayIcon(bool enabled) {
+  m_settings->setValue("trayIcon", enabled);
+  if (enabled) {
+    setupTrayIcon();
+  } else {
+    cleanTrayIcon();
+  }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  if (m_settings->value("trayIcon", false).toBool()) {
+    hide();
+  } else
+    QApplication::quit();
+}
 
 MainWindow *MainWindow::instance() { return m_instance; }

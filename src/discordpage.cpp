@@ -55,9 +55,14 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   injectScriptFile("userscript.js", ":/assets/userscript.js");
 
-  injectScriptText("version.js",
-                   QString("window.discordScreenaudioVersion = '%1';")
-                       .arg(QApplication::applicationVersion()));
+  injectScriptText("vars.js",
+                   QString("window.discordScreenaudioVersion = '%1'; "
+                           "window.discordScreenaudioTrayEnabled = %2;")
+                       .arg(QApplication::applicationVersion())
+                       .arg(MainWindow::instance()
+                                ->settings()
+                                ->value("trayIcon", false)
+                                .toBool()));
 
 #ifdef KXMLGUI
   injectScriptText("xmlgui.js", "window.discordScreenaudioKXMLGUI = true;");
@@ -221,6 +226,10 @@ void DiscordPage::javaScriptConsoleMessage(
                              "(KXmlGui and KGlobalAccel are not available).",
                              QMessageBox::Ok);
 #endif
+  } else if (message == "!discord-screenaudio-tray-true") {
+    MainWindow::instance()->setTrayIcon(true);
+  } else if (message == "!discord-screenaudio-tray-false") {
+    MainWindow::instance()->setTrayIcon(false);
   } else if (message.startsWith("dsa: ")) {
     qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
   } else {
