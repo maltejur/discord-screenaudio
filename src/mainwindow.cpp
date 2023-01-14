@@ -125,6 +125,8 @@ void MainWindow::setupTrayIcon() {
 }
 
 void MainWindow::cleanTrayIcon() {
+  if (m_trayIcon == nullptr)
+    return;
   m_trayIcon->hide();
   m_trayIconMenu->deleteLater();
   m_trayIcon->deleteLater();

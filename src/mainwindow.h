@@ -30,7 +30,7 @@ private:
   QWebEngineProfile *prepareProfile();
   DiscordPage *m_discordPage;
   void closeEvent(QCloseEvent *event) override;
-  QSystemTrayIcon *m_trayIcon;
+  QSystemTrayIcon *m_trayIcon = nullptr;
   QMenu *m_trayIconMenu;
   QSettings *m_settings;
   bool m_wasMaximized;
