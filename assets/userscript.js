@@ -296,6 +296,7 @@ setInterval(() => {
             "Move discord-screenaudio to the system tray instead of closing",
             window.discordScreenaudioTrayEnabled,
             (enabled) => {
+              window.discordScreenaudioTrayEnabled = enabled;
               console.log(`!discord-screenaudio-tray-${enabled}`);
             }
           )
