@@ -88,22 +88,22 @@ function createButton(text, onClick) {
 function createSwitch(text, enabled, onClick) {
   const container = document.createElement("div");
   container.style.marginBottom = "20px";
-  container.className = "labelRow-2jl9gK";
+  container.className = "labelRow-NnoUIp";
 
   const label = document.createElement("label");
   label.innerText = text;
-  label.className = "title-2dsDLn";
+  label.className = "title-2yADjX";
   container.appendChild(label);
 
   const svg = document.createElement("div");
   container.appendChild(svg);
 
   function setSvgDisabled() {
-    svg.innerHTML = `<div class="container-2nx-BQ default-colors" style="opacity: 1; background-color: rgb(114, 118, 125);"><svg class="slider-32CRPX" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg></div>`;
+    svg.innerHTML = `<div class="container-1QtPKm default-colors disabled-3_3z1m" style="opacity: 0.3; background-color: rgb(114, 118, 125);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg><input id="uid_75" type="checkbox" class="input-125oad" tabindex="-1" disabled=""></div>`;
   }
 
   function setSvgEnabled() {
-    svg.innerHTML = `<div class="container-2nx-BQ default-colors checked-25WXMf" style="opacity: 1; background-color: rgb(59, 165, 92);"><svg class="slider-32CRPX" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: 12px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(59, 165, 92, 1)" d="M7.89561 14.8538L6.30462 13.2629L14.3099 5.25755L15.9009 6.84854L7.89561 14.8538Z"></path><path fill="rgba(59, 165, 92, 1)" d="M4.08643 11.0903L5.67742 9.49929L9.4485 13.2704L7.85751 14.8614L4.08643 11.0903Z"></path></svg></svg></div>`;
+    svg.innerHTML = `<div class="container-1QtPKm default-colors checked-16gMAN" style="opacity: 1; background-color: rgb(59, 165, 92);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: 12px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(59, 165, 92, 1)" d="M7.89561 14.8538L6.30462 13.2629L14.3099 5.25755L15.9009 6.84854L7.89561 14.8538Z"></path><path fill="rgba(59, 165, 92, 1)" d="M4.08643 11.0903L5.67742 9.49929L9.4485 13.2704L7.85751 14.8614L4.08643 11.0903Z"></path></svg></svg><input id="uid_74" type="checkbox" class="input-125oad" tabindex="0" checked=""></div>`;
   }
 
   function updateSvg() {
@@ -272,7 +272,7 @@ setInterval(() => {
     );
     if (!discordScreenaudioSettings) {
       const firstDivider = accountTab.getElementsByClassName(
-        "divider-_0um2u marginTop40-Q4o1tS"
+        "divider-3nqZNm marginTop40-Q4o1tS"
       )[0];
       if (firstDivider) {
         const section = document.createElement("div");
@@ -281,7 +281,7 @@ setInterval(() => {
 
         const title = document.createElement("h2");
         title.className =
-          "h1-34Txb0 title-3hptVQ defaultColor-2cKwKo defaultMarginh1-EURXsm";
+          "h1-3iMExa title-lXcL8p defaultColor-3Olr-9 defaultMarginh1-1UYutH";
         title.innerText = "discord-screenaudio";
         section.appendChild(title);
 
@@ -303,7 +303,7 @@ setInterval(() => {
         );
 
         const divider = document.createElement("div");
-        divider.className = "divider-_0um2u marginTop40-Q4o1tS";
+        divider.className = "divider-3nqZNm marginTop40-Q4o1tS";
 
         firstDivider.after(section);
         section.after(divider);
