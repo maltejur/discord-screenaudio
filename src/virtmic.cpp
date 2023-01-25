@@ -22,7 +22,12 @@ QVector<QString> getTargets() {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
-          auto name = QString::fromStdString(info.props["application.name"]);
+          QString name;
+          if (info.props.count("application.name"))
+            name = QString::fromStdString(info.props["application.name"]);
+          else
+            name = QString::fromStdString(
+                info.props["application.process.binary"]);
 
           if (name != "" && !EXCLUDE_TARGETS.contains(name) &&
               !targets.contains(name)) {
@@ -67,7 +72,11 @@ void start(QString _target) {
         continue;
 
       auto &parent = nodes.at(parent_id);
-      auto name = parent.props["application.name"];
+      std::string name;
+      if (parent.props.count("application.name"))
+        name = parent.props["application.name"];
+      else
+        name = parent.props["application.process.binary"];
 
       if (name == target ||
           (target == "[All Desktop Audio]" &&
@@ -78,8 +87,7 @@ void start(QString _target) {
             core.create<pipewire::link_factory>(
                 {fl ? virt_fl->info().id : virt_fr->info().id, port_id}));
         qDebug(virtmicLog) << QString("Link: %1:%2 -> %3")
-                                  .arg(QString::fromStdString(
-                                      parent.props["application.name"]))
+                                  .arg(QString::fromStdString(name))
                                   .arg(port_id)
                                   .arg(fl ? virt_fl->info().id
                                           : virt_fr->info().id)
@@ -112,11 +120,16 @@ void start(QString _target) {
       [&](const pipewire::global &global) {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
-          if (!node.info().props.count("application.name"))
+          auto info = node.info();
+          std::string name;
+          if (info.props.count("application.name"))
+            name = info.props["application.name"];
+          else if (info.props.count("application.process.binary"))
+            name = info.props["application.process.binary"];
+          else
             return;
           qDebug(virtmicLog) << QString("Added: %1")
-                                    .arg(QString::fromStdString(
-                                        node.info().props["application.name"]))
+                                    .arg(QString::fromStdString(name))
                                     .toUtf8()
                                     .data();
 
@@ -152,9 +165,13 @@ void start(QString _target) {
       [&](const std::uint32_t id) {
         if (nodes.count(id)) {
           auto info = nodes.at(id);
+          std::string name;
+          if (info.props.count("application.name"))
+            name = info.props["application.name"];
+          else
+            name = info.props["application.process.binary"];
           qDebug(virtmicLog) << QString("Removed: %1")
-                                    .arg(QString::fromStdString(
-                                        info.props["application.name"].data()))
+                                    .arg(QString::fromStdString(name))
                                     .toUtf8()
                                     .data();
           nodes.erase(id);
