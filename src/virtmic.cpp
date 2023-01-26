@@ -23,7 +23,8 @@ QVector<QString> getTargets() {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
           QString name;
-          if (info.props.count("application.name"))
+          if (info.props.count("application.name") &&
+              info.props["application.name"] != "")
             name = QString::fromStdString(info.props["application.name"]);
           else
             name = QString::fromStdString(
@@ -73,7 +74,8 @@ void start(QString _target) {
 
       auto &parent = nodes.at(parent_id);
       std::string name;
-      if (parent.props.count("application.name"))
+      if (parent.props.count("application.name") &&
+          parent.props["application.name"] != "")
         name = parent.props["application.name"];
       else
         name = parent.props["application.process.binary"];
@@ -122,11 +124,12 @@ void start(QString _target) {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
           std::string name;
-          if (info.props.count("application.name"))
+          if (info.props.count("application.name") &&
+              info.props["application.name"] != "")
             name = info.props["application.name"];
-          else if (info.props.count("application.process.binary"))
+          else if (info.props.count("application.process.binary")) {
             name = info.props["application.process.binary"];
-          else
+          } else
             return;
           qDebug(virtmicLog) << QString("Added: %1")
                                     .arg(QString::fromStdString(name))
@@ -166,7 +169,8 @@ void start(QString _target) {
         if (nodes.count(id)) {
           auto info = nodes.at(id);
           std::string name;
-          if (info.props.count("application.name"))
+          if (info.props.count("application.name") &&
+              info.props["application.name"] != "")
             name = info.props["application.name"];
           else
             name = info.props["application.process.binary"];
