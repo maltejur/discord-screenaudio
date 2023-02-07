@@ -99,7 +99,7 @@ function createSwitch(text, enabled, onClick) {
   container.appendChild(svg);
 
   function setSvgDisabled() {
-    svg.innerHTML = `<div class="container-1QtPKm default-colors disabled-3_3z1m" style="opacity: 0.3; background-color: rgb(114, 118, 125);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg><input id="uid_75" type="checkbox" class="input-125oad" tabindex="-1" disabled=""></div>`;
+    svg.innerHTML = `<div class="container-1QtPKm default-colors" style="opacity: 1; background-color: rgb(114, 118, 125);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg><input id="uid_84" type="checkbox" class="input-125oad" tabindex="0"></div>`;
   }
 
   function setSvgEnabled() {
@@ -298,6 +298,17 @@ setInterval(() => {
             (enabled) => {
               window.discordScreenaudioTrayEnabled = enabled;
               console.log(`!discord-screenaudio-tray-${enabled}`);
+            }
+          )
+        );
+
+        section.appendChild(
+          createSwitch(
+            "Start discord-screenaudio hidden to tray",
+            window.discordScreenaudioStartHidden,
+            (hidden) => {
+              window.discordScreenaudioStartHidden = hidden;
+              console.log(`!discord-screenaudio-starthidden-${hidden}`);
             }
           )
         );

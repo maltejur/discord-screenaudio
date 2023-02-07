@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QThread>
+#include <QTimer>
 #include <QUrl>
 #include <QWebEngineNotification>
 #include <QWebEngineProfile>
@@ -34,6 +35,11 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   setupTrayIcon();
   resize(1000, 700);
   showMaximized();
+  if (m_settings->value("trayIcon", false).toBool() &&
+      m_settings->value("startHidden", false).toBool()) {
+    hide();
+    QTimer::singleShot(0, [=]() { hide(); });
+  }
 }
 
 void MainWindow::setupWebView() {

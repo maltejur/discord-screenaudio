@@ -57,11 +57,16 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   injectScriptText("vars.js",
                    QString("window.discordScreenaudioVersion = '%1'; "
-                           "window.discordScreenaudioTrayEnabled = %2;")
+                           "window.discordScreenaudioTrayEnabled = %2; "
+                           "window.discordScreenaudioStartHidden = %3;")
                        .arg(QApplication::applicationVersion())
                        .arg(MainWindow::instance()
                                 ->settings()
                                 ->value("trayIcon", false)
+                                .toBool())
+                       .arg(MainWindow::instance()
+                                ->settings()
+                                ->value("startHidden", false)
                                 .toBool()));
 
 #ifdef KXMLGUI
@@ -230,6 +235,10 @@ void DiscordPage::javaScriptConsoleMessage(
     MainWindow::instance()->setTrayIcon(true);
   } else if (message == "!discord-screenaudio-tray-false") {
     MainWindow::instance()->setTrayIcon(false);
+  } else if (message == "!discord-screenaudio-starthidden-true") {
+    MainWindow::instance()->settings()->setValue("startHidden", true);
+  } else if (message == "!discord-screenaudio-starthidden-false") {
+    MainWindow::instance()->settings()->setValue("startHidden", false);
   } else if (message.startsWith("dsa: ")) {
     qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
   } else {
