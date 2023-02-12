@@ -3,19 +3,6 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
-#ifdef KXMLGUI
-#include <KAboutData>
-#include <KHelpMenu>
-#include <KShortcutsDialog>
-#include <KXmlGuiWindow>
-#include <QAction>
-
-#ifdef KGLOBALACCEL
-#include <KGlobalAccel>
-#endif
-
-#endif
-
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFile>
@@ -29,7 +16,6 @@
 
 DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setBackgroundColor(QColor("#202225"));
-  m_virtmicProcess.setProcessChannelMode(QProcess::ForwardedChannels);
 
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
@@ -51,77 +37,14 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
 
+  injectScriptFile("qwebchannel.js", ":/qtwebchannel/qwebchannel.js");
+
   setUrl(QUrl("https://discord.com/app"));
 
+  setWebChannel(new QWebChannel(this));
+  webChannel()->registerObject("userscript", &m_userScript);
+
   injectScriptFile("userscript.js", ":/assets/userscript.js");
-
-  injectScriptText("vars.js",
-                   QString("window.discordScreenaudioVersion = '%1'; "
-                           "window.discordScreenaudioTrayEnabled = %2; "
-                           "window.discordScreenaudioStartHidden = %3;")
-                       .arg(QApplication::applicationVersion())
-                       .arg(MainWindow::instance()
-                                ->settings()
-                                ->value("trayIcon", false)
-                                .toBool())
-                       .arg(MainWindow::instance()
-                                ->settings()
-                                ->value("startHidden", false)
-                                .toBool()));
-
-#ifdef KXMLGUI
-  injectScriptText("xmlgui.js", "window.discordScreenaudioKXMLGUI = true;");
-
-  KAboutData aboutData(
-      "discord-screenaudio", "discord-screenaudio",
-      QApplication::applicationVersion(),
-      "Custom Discord client with the ability to stream audio on Linux",
-      KAboutLicense::GPL_V3, "Copyright 2022 (C) Malte Jürgens");
-  aboutData.setBugAddress("https://github.com/maltejur/discord-screenaudio");
-  aboutData.addAuthor("Malte Jürgens", "Author", "maltejur@dismail.de",
-                      "https://github.com/maltejur");
-  aboutData.addCredit("edisionnano",
-                      "For creating and documenting the approach for streaming "
-                      "audio in Discord used in this project.",
-                      QString(),
-                      "https://github.com/edisionnano/"
-                      "Screenshare-with-audio-on-Discord-with-Linux");
-  aboutData.addCredit(
-      "Curve", "For creating the Rohrkabel library used in this project.",
-      QString(), "https://github.com/Curve");
-  aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.3",
-                         "https://github.com/Soundux/rohrkabel");
-  m_helpMenu = new KHelpMenu(parent, aboutData);
-
-#ifdef KGLOBALACCEL
-  injectScriptText("kglobalaccel.js",
-                   "window.discordScreenaudioKGLOBALACCEL = true;");
-
-  auto toggleMuteAction = new QAction(this);
-  toggleMuteAction->setText("Toggle Mute");
-  toggleMuteAction->setIcon(QIcon::fromTheme("microphone-sensitivity-muted"));
-  connect(toggleMuteAction, &QAction::triggered, this,
-          &DiscordPage::toggleMute);
-
-  auto toggleDeafenAction = new QAction(this);
-  toggleDeafenAction->setText("Toggle Deafen");
-  toggleDeafenAction->setIcon(QIcon::fromTheme("audio-volume-muted"));
-  connect(toggleDeafenAction, &QAction::triggered, this,
-          &DiscordPage::toggleDeafen);
-
-  m_actionCollection = new KActionCollection(this);
-  m_actionCollection->addAction("toggleMute", toggleMuteAction);
-  KGlobalAccel::setGlobalShortcut(toggleMuteAction, QList<QKeySequence>{});
-  m_actionCollection->addAction("toggleDeafen", toggleDeafenAction);
-  KGlobalAccel::setGlobalShortcut(toggleDeafenAction, QList<QKeySequence>{});
-
-  m_shortcutsDialog = new KShortcutsDialog(KShortcutsEditor::GlobalAction);
-  m_shortcutsDialog->addCollection(m_actionCollection);
-#endif
-#endif
-
-  connect(&m_streamDialog, &StreamDialog::requestedStreamStart, this,
-          &DiscordPage::startStream);
 }
 
 void DiscordPage::injectScriptText(QString name, QString content) {
@@ -156,11 +79,10 @@ void DiscordPage::featurePermissionRequested(const QUrl &securityOrigin,
                        QWebEnginePage::PermissionGrantedByUser);
 
   if (feature == QWebEnginePage::Feature::MediaAudioCapture) {
-    if (m_virtmicProcess.state() == QProcess::NotRunning) {
+    if (!m_userScript.isVirtmicRunning()) {
       qDebug(virtmicLog) << "Starting Virtmic with no target to make sure "
                             "Discord can find all the audio devices";
-      m_virtmicProcess.start(QApplication::arguments()[0],
-                             {"--virtmic", "None"});
+      m_userScript.startVirtmic("None");
     }
   }
 }
@@ -187,86 +109,8 @@ QWebEnginePage *DiscordPage::createWindow(QWebEnginePage::WebWindowType type) {
   return new ExternalPage;
 }
 
-void DiscordPage::stopVirtmic() {
-  if (m_virtmicProcess.state() == QProcess::Running) {
-    qDebug(virtmicLog) << "Stopping Virtmic";
-    m_virtmicProcess.kill();
-    m_virtmicProcess.waitForFinished();
-  }
-}
-
-void DiscordPage::startVirtmic(QString target) {
-  qDebug(virtmicLog) << "Starting Virtmic with target" << target;
-  m_virtmicProcess.start(QApplication::arguments()[0], {"--virtmic", target});
-}
-
 void DiscordPage::javaScriptConsoleMessage(
     QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString &message,
     int lineNumber, const QString &sourceID) {
-  if (message == "!discord-screenaudio-start-stream") {
-    if (m_streamDialog.isHidden())
-      m_streamDialog.setHidden(false);
-    else
-      m_streamDialog.activateWindow();
-    m_streamDialog.updateTargets();
-  } else if (message == "!discord-screenaudio-stream-stopped") {
-    stopVirtmic();
-  } else if (message == "!discord-screenaudio-about") {
-#ifdef KXMLGUI
-    m_helpMenu->aboutApplication();
-#endif
-  } else if (message == "!discord-screenaudio-keybinds") {
-#ifdef KXMLGUI
-#ifdef KGLOBALACCEL
-    m_shortcutsDialog->show();
-#else
-    QMessageBox::information(MainWindow::instance(), "discord-screenaudio",
-                             "Keybinds are not supported on this platform "
-                             "(KGlobalAccel is not available).",
-                             QMessageBox::Ok);
-#endif
-#else
-    QMessageBox::information(MainWindow::instance(), "discord-screenaudio",
-                             "Keybinds are not supported on this platform "
-                             "(KXmlGui and KGlobalAccel are not available).",
-                             QMessageBox::Ok);
-#endif
-  } else if (message == "!discord-screenaudio-tray-true") {
-    MainWindow::instance()->setTrayIcon(true);
-  } else if (message == "!discord-screenaudio-tray-false") {
-    MainWindow::instance()->setTrayIcon(false);
-  } else if (message == "!discord-screenaudio-starthidden-true") {
-    MainWindow::instance()->settings()->setValue("startHidden", true);
-  } else if (message == "!discord-screenaudio-starthidden-false") {
-    MainWindow::instance()->settings()->setValue("startHidden", false);
-  } else if (message.startsWith("dsa: ")) {
-    qDebug(userscriptLog) << message.mid(5).toUtf8().constData();
-  } else {
-    qDebug(discordLog) << message;
-  }
-}
-
-void DiscordPage::startStream(bool video, bool audio, uint width, uint height,
-                              uint frameRate, QString target) {
-  stopVirtmic();
-  startVirtmic(audio ? target : "[None]");
-  // Wait a bit for the virtmic to start
-  QTimer::singleShot(200, [=]() {
-    runJavaScript(
-        QString("window.discordScreenaudioStartStream(%1, %2, %3, %4);")
-            .arg(video)
-            .arg(video ? width : 32)
-            .arg(video ? height : 16)
-            .arg(video ? frameRate : 1));
-  });
-}
-
-void DiscordPage::toggleMute() {
-  qDebug(shortcutLog) << "Toggling mute";
-  runJavaScript("window.discordScreenaudioToggleMute();");
-}
-
-void DiscordPage::toggleDeafen() {
-  qDebug(shortcutLog) << "Toggling deafen";
-  runJavaScript("window.discordScreenaudioToggleDeafen();");
+  qDebug(discordLog) << message;
 }

@@ -1,5 +1,3 @@
-// From v0.4
-
 navigator.mediaDevices.chromiumGetDisplayMedia =
   navigator.mediaDevices.getDisplayMedia;
 
@@ -16,12 +14,12 @@ const getAudioDevice = async (nameOfAudioDevice) => {
     let devices = await navigator.mediaDevices.enumerateDevices();
     audioDevice = devices.find(({ label }) => label === nameOfAudioDevice);
     if (!audioDevice)
-      console.log(
-        `dsa: Did not find '${nameOfAudioDevice}', trying again in 100ms`
+      userscript.log(
+        `Did not find '${nameOfAudioDevice}', trying again in 100ms`
       );
     await sleep(100);
   }
-  console.log(`dsa: Found '${nameOfAudioDevice}'`);
+  userscript.log(`Found '${nameOfAudioDevice}'`);
   return audioDevice;
 };
 
@@ -71,6 +69,13 @@ function setGetDisplayMedia(video = true, overrideArgs = undefined) {
 
 setGetDisplayMedia();
 
+let userscript;
+let muteBtn;
+let deafenBtn;
+let streamStartBtn;
+let streamStartBtnInitialDisplay;
+let streamStartBtnClone;
+let resolutionString;
 const clonedElements = [];
 const hiddenElements = [];
 let wasStreamActive = false;
@@ -121,208 +126,216 @@ function createSwitch(text, enabled, onClick) {
   return container;
 }
 
-setInterval(() => {
-  const streamActive =
-    document.getElementsByClassName("panel-2ZFCRb activityPanel-9icbyU")
-      .length > 0;
-
-  if (!streamActive && wasStreamActive)
-    console.log("!discord-screenaudio-stream-stopped");
-  wasStreamActive = streamActive;
-
-  if (streamActive) {
-    clonedElements.forEach((el) => {
-      el.remove();
-    });
-    clonedElements.length = 0;
-
-    hiddenElements.forEach((el) => {
-      el.style.display = "block";
-    });
-    hiddenElements.length = 0;
-  } else {
-    for (const el of [
-      document.getElementsByClassName("actionButtons-2vEOUh")?.[0]?.children[1],
-      document.querySelector(
-        ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
-      ),
-    ]) {
-      if (!el) continue;
-      if (el.classList.contains("discord-screenaudio-cloned")) continue;
-      el.classList.add("discord-screenaudio-cloned");
-      elClone = el.cloneNode(true);
-      elClone.title = "Share Your Screen with Audio";
-      elClone.addEventListener("click", () => {
-        console.log("!discord-screenaudio-start-stream");
-      });
-
-      const initialDisplay = el.style.display;
-
-      window.discordScreenaudioStartStream = (
-        video,
-        width,
-        height,
-        frameRate
-      ) => {
-        window.discordScreenaudioResolutionString = video
-          ? `${height}p ${frameRate}FPS`
-          : "Audio Only";
-        setGetDisplayMedia(video, {
-          audio: true,
-          video: { width, height, frameRate },
-        });
-        el.click();
-        el.style.display = initialDisplay;
-        elClone.remove();
-      };
-
-      el.style.display = "none";
-      el.parentNode.insertBefore(elClone, el);
-
-      clonedElements.push(elClone);
-      hiddenElements.push(el);
-    }
-  }
-
-  // Add about text in settings
-  if (
-    document.getElementsByClassName("dirscordScreenaudioAboutText").length == 0
-  ) {
-    for (const el of document.getElementsByClassName("info-3pQQBb")) {
-      let aboutEl;
-      if (window.discordScreenaudioKXMLGUI) {
-        aboutEl = document.createElement("a");
-        aboutEl.addEventListener("click", () => {
-          console.log("!discord-screenaudio-about");
-        });
-      } else {
-        aboutEl = document.createElement("div");
-      }
-      aboutEl.innerText = `discord-screenaudio ${window.discordScreenaudioVersion}`;
-      aboutEl.style.fontSize = "12px";
-      aboutEl.style.color = "var(--text-muted)";
-      aboutEl.style.textTransform = "none";
-      aboutEl.classList.add("dirscordScreenaudioAboutText");
-      aboutEl.style.cursor = "pointer";
-      el.appendChild(aboutEl);
-    }
-  }
-
-  // Remove stream settings if stream is active
-  document.getElementById("manage-streams-change-windows")?.remove();
-  document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
-
-  // Add event listener for keybind tab
-  if (
-    document
-      .getElementById("keybinds-tab")
-      ?.getElementsByClassName(
-        "container-3jbRo5 info-1hMolH browserNotice-1u-Y5o"
-      ).length
-  ) {
-    const el = document
-      .getElementById("keybinds-tab")
-      .getElementsByClassName("children-1xdcWE")[0];
-    const div = document.createElement("div");
-    div.style.marginBottom = "50px";
-    div.appendChild(
-      createButton("Edit Global Keybinds", () => {
-        console.log("!discord-screenaudio-keybinds");
-      })
-    );
-    el.innerHTML = "";
-    el.appendChild(div);
-  }
-
-  const buttonContainer =
-    document.getElementsByClassName("container-YkUktl")[0];
-  if (!buttonContainer) {
-    console.log(
-      "dsa: Cannot locate Mute/Deafen/Settings button container, please report this on GitHub"
-    );
-  }
-
-  const muteBtn = buttonContainer
-    ? buttonContainer.getElementsByClassName(
-        "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-      )[0]
-    : null;
-  window.discordScreenaudioToggleMute = () => muteBtn && muteBtn.click();
-
-  const deafenBtn = buttonContainer
-    ? buttonContainer.getElementsByClassName(
-        "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-      )[1]
-    : null;
-
-  window.discordScreenaudioToggleDeafen = () => deafenBtn && deafenBtn.click();
-
-  if (window.discordScreenaudioResolutionString) {
-    for (const el of document.getElementsByClassName(
-      "qualityIndicator-39wQDy"
-    )) {
-      el.innerHTML = window.discordScreenaudioResolutionString;
-    }
-  }
-
-  const accountTab = document.getElementById("my-account-tab");
-  if (accountTab) {
-    const discordScreenaudioSettings = document.getElementById(
-      "discord-screenaudio-settings"
-    );
-    if (!discordScreenaudioSettings) {
-      const firstDivider = accountTab.getElementsByClassName(
-        "divider-3nqZNm marginTop40-Q4o1tS"
-      )[0];
-      if (firstDivider) {
-        const section = document.createElement("div");
-        section.className = "marginTop40-Q4o1tS";
-        section.id = "discord-screenaudio-settings";
-
-        const title = document.createElement("h2");
-        title.className =
-          "h1-3iMExa title-lXcL8p defaultColor-3Olr-9 defaultMarginh1-1UYutH";
-        title.innerText = "discord-screenaudio";
-        section.appendChild(title);
-
-        section.appendChild(
-          createButton("Edit Global Keybinds", () => {
-            console.log("!discord-screenaudio-keybinds");
-          })
-        );
-
-        section.appendChild(
-          createSwitch(
-            "Move discord-screenaudio to the system tray instead of closing",
-            window.discordScreenaudioTrayEnabled,
-            (enabled) => {
-              window.discordScreenaudioTrayEnabled = enabled;
-              console.log(`!discord-screenaudio-tray-${enabled}`);
-            }
-          )
-        );
-
-        section.appendChild(
-          createSwitch(
-            "Start discord-screenaudio hidden to tray",
-            window.discordScreenaudioStartHidden,
-            (hidden) => {
-              window.discordScreenaudioStartHidden = hidden;
-              console.log(`!discord-screenaudio-starthidden-${hidden}`);
-            }
-          )
-        );
-
-        const divider = document.createElement("div");
-        divider.className = "divider-3nqZNm marginTop40-Q4o1tS";
-
-        firstDivider.after(section);
-        section.after(divider);
-      }
-    }
-  }
-}, 500);
-
 // Fix for broken discord notifications after restart
 // (https://github.com/maltejur/discord-screenaudio/issues/17)
 Notification.requestPermission();
+
+setTimeout(() => {
+  new QWebChannel(qt.webChannelTransport, (channel) => {
+    userscript = channel.objects.userscript;
+    main();
+  });
+});
+
+function main() {
+  userscript.muteToggled.connect(() => {
+    muteBtn && muteBtn.click();
+  });
+
+  userscript.deafenToggled.connect(() => {
+    deafenBtn && deafenBtn.click();
+  });
+
+  userscript.streamStarted.connect((video, width, height, frameRate) => {
+    resolutionString = video ? `${height}p ${frameRate}FPS` : "Audio Only";
+    setGetDisplayMedia(video, {
+      audio: true,
+      video: { width, height, frameRate },
+    });
+    streamStartBtn.click();
+    streamStartBtn.style.display = streamStartBtnInitialDisplay;
+    streamStartBtnClone.remove();
+  });
+
+  setInterval(async () => {
+    const streamActive =
+      document.getElementsByClassName("panel-2ZFCRb activityPanel-9icbyU")
+        .length > 0;
+
+    if (!streamActive && wasStreamActive) userscript.stopVirtmic();
+    wasStreamActive = streamActive;
+
+    if (streamActive) {
+      clonedElements.forEach((el) => {
+        el.remove();
+      });
+      clonedElements.length = 0;
+
+      hiddenElements.forEach((el) => {
+        el.style.display = "block";
+      });
+      hiddenElements.length = 0;
+    } else {
+      for (const el of [
+        document.getElementsByClassName("actionButtons-2vEOUh")?.[0]
+          ?.children[1],
+        document.querySelector(
+          ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
+        ),
+      ]) {
+        if (!el) continue;
+        if (el.classList.contains("discord-screenaudio-cloned")) continue;
+        streamStartBtn = el;
+        streamStartBtn.classList.add("discord-screenaudio-cloned");
+
+        streamStartBtnClone = streamStartBtn.cloneNode(true);
+        streamStartBtnClone.title = "Share Your Screen with Audio";
+        streamStartBtnClone.addEventListener("click", () => {
+          userscript.showStreamDialog();
+        });
+
+        streamStartBtnInitialDisplay = streamStartBtn.style.display;
+
+        streamStartBtn.style.display = "none";
+        streamStartBtn.parentNode.insertBefore(streamStartBtnClone, el);
+
+        clonedElements.push(streamStartBtnClone);
+        hiddenElements.push(streamStartBtn);
+      }
+    }
+
+    // Add about text in settings
+    if (
+      document.getElementsByClassName("dirscordScreenaudioAboutText").length ==
+      0
+    ) {
+      for (const el of document.getElementsByClassName("info-3pQQBb")) {
+        let aboutEl;
+        if (userscript.kxmlgui) {
+          aboutEl = document.createElement("a");
+          aboutEl.addEventListener("click", () => {
+            userscript.showHelpMenu();
+          });
+        } else {
+          aboutEl = document.createElement("div");
+        }
+        aboutEl.innerText = `discord-screenaudio ${userscript.version}`;
+        aboutEl.style.fontSize = "12px";
+        aboutEl.style.color = "var(--text-muted)";
+        aboutEl.style.textTransform = "none";
+        aboutEl.classList.add("dirscordScreenaudioAboutText");
+        aboutEl.style.cursor = "pointer";
+        el.appendChild(aboutEl);
+      }
+    }
+
+    // Remove stream settings if stream is active
+    document.getElementById("manage-streams-change-windows")?.remove();
+    document.querySelector(`[aria-label="Stream Settings"]`)?.remove();
+
+    // Add event listener for keybind tab
+    if (
+      document
+        .getElementById("keybinds-tab")
+        ?.getElementsByClassName(
+          "container-3jbRo5 info-1hMolH browserNotice-1u-Y5o"
+        ).length
+    ) {
+      const el = document
+        .getElementById("keybinds-tab")
+        .getElementsByClassName("children-1xdcWE")[0];
+      const div = document.createElement("div");
+      div.style.marginBottom = "50px";
+      div.appendChild(
+        createButton("Edit Global Keybinds", () => {
+          userscript.log("!discord-screenaudio-keybinds");
+        })
+      );
+      el.innerHTML = "";
+      el.appendChild(div);
+    }
+
+    const buttonContainer =
+      document.getElementsByClassName("container-YkUktl")[0];
+    if (!buttonContainer) {
+      userscript.log(
+        "Cannot locate Mute/Deafen/Settings button container, please report this on GitHub"
+      );
+    }
+
+    muteBtn = buttonContainer
+      ? buttonContainer.getElementsByClassName(
+          "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+        )[0]
+      : null;
+
+    deafenBtn = buttonContainer
+      ? buttonContainer.getElementsByClassName(
+          "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
+        )[1]
+      : null;
+
+    if (resolutionString) {
+      for (const el of document.getElementsByClassName(
+        "qualityIndicator-39wQDy"
+      )) {
+        el.innerHTML = resolutionString;
+      }
+    }
+
+    const accountTab = document.getElementById("my-account-tab");
+    if (accountTab) {
+      const discordScreenaudioSettings = document.getElementById(
+        "discord-screenaudio-settings"
+      );
+      if (!discordScreenaudioSettings) {
+        const firstDivider = accountTab.getElementsByClassName(
+          "divider-3nqZNm marginTop40-Q4o1tS"
+        )[0];
+        if (firstDivider) {
+          const section = document.createElement("div");
+          section.className = "marginTop40-Q4o1tS";
+          section.id = "discord-screenaudio-settings";
+
+          const title = document.createElement("h2");
+          title.className =
+            "h1-3iMExa title-lXcL8p defaultColor-3Olr-9 defaultMarginh1-1UYutH";
+          title.innerText = "discord-screenaudio";
+          section.appendChild(title);
+
+          section.appendChild(
+            createButton("Edit Global Keybinds", () => {
+              userscript.log("!discord-screenaudio-keybinds");
+            })
+          );
+
+          section.appendChild(
+            createSwitch(
+              "Move discord-screenaudio to the system tray instead of closing",
+              await userscript.getBoolPref("trayIcon", false),
+              (enabled) => {
+                userscript.setTrayIcon(enabled);
+              }
+            )
+          );
+
+          section.appendChild(
+            createSwitch(
+              "Start discord-screenaudio hidden to tray",
+              await userscript.getPref("startHidden", false),
+              (hidden) => {
+                userscript.setPref("startHidden", hidden);
+              }
+            )
+          );
+
+          const divider = document.createElement("div");
+          divider.className = "divider-3nqZNm marginTop40-Q4o1tS";
+
+          firstDivider.after(section);
+          section.after(divider);
+        }
+      }
+    }
+  }, 500);
+}

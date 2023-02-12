@@ -19,8 +19,8 @@ private:
   QGroupBox *m_audioGroupBox;
 
 Q_SIGNALS:
-  void requestedStreamStart(bool video, bool audio, uint width, uint height,
-                            uint frameRate, QString target);
+  void requestedStreamStart(bool video, bool audio, int width, int height,
+                            int frameRate, QString target);
 
 public Q_SLOTS:
   void updateTargets();

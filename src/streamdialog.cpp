@@ -98,9 +98,9 @@ StreamDialog::StreamDialog() : QWidget() {
 void StreamDialog::startStream() {
   auto resolution = m_resolutionComboBox->currentData().toString().split('x');
   emit requestedStreamStart(m_videoGroupBox->isChecked(),
-                            m_audioGroupBox->isChecked(),
-                            resolution[0].toUInt(), resolution[1].toUInt(),
-                            m_framerateComboBox->currentData().toUInt(),
+                            m_audioGroupBox->isChecked(), resolution[0].toInt(),
+                            resolution[1].toInt(),
+                            m_framerateComboBox->currentData().toInt(),
                             m_targetComboBox->currentText());
   setHidden(true);
 }
