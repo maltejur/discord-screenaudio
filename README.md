@@ -84,7 +84,9 @@ And then to optionally install it, run:
 sudo cmake --install build
 ```
 
-## How it works
+## FAQ
+
+### How does this work?
 
 This whole project is based on
 [this](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux)
@@ -92,6 +94,14 @@ repository, which very nicely explains how to stream audio in the web version of
 Discord. Basically: a virtual microphone is created which captures the
 application audio, and this microphone is then fed to the Discord stream by
 intercepting a API call of Discord.
+
+### Drag and drop doesn't work in the Flatpak
+
+This is due to sandboxing limitations of Flatpak. The main Discord Flatpak has
+the same problem. If you still want to use drag and drop, you can disable most
+of Flatpak's sandboxing by installing
+[Flatseal](https://flathub.org/apps/details/com.github.tchx84.Flatseal) and
+allowing access to "All system files" under the "Filesystem" section.
 
 ## License
 
