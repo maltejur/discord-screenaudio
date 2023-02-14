@@ -24,9 +24,9 @@ class UserScript : public QObject {
 public:
   UserScript();
   bool isVirtmicRunning();
-  Q_PROPERTY(QString version READ version);
-  Q_PROPERTY(bool kxmlgui MEMBER m_kxmlgui);
-  Q_PROPERTY(bool kglobalaccel MEMBER m_kglobalaccel);
+  Q_PROPERTY(QString version READ version CONSTANT);
+  Q_PROPERTY(bool kxmlgui MEMBER m_kxmlgui CONSTANT);
+  Q_PROPERTY(bool kglobalaccel MEMBER m_kglobalaccel CONSTANT);
 
 private:
   QProcess m_virtmicProcess;
