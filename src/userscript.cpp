@@ -74,7 +74,8 @@ void UserScript::setupShortcutsDialog() {
 }
 
 void UserScript::setupStreamDialog() {
-  connect(&m_streamDialog, &StreamDialog::requestedStreamStart, this,
+  m_streamDialog = new StreamDialog(MainWindow::instance());
+  connect(m_streamDialog, &StreamDialog::requestedStreamStart, this,
           &UserScript::startStream);
 }
 
@@ -156,9 +157,9 @@ void UserScript::startStream(bool video, bool audio, int width, int height,
 }
 
 void UserScript::showStreamDialog() {
-  if (m_streamDialog.isHidden())
-    m_streamDialog.setHidden(false);
+  if (m_streamDialog->isHidden())
+    m_streamDialog->setHidden(false);
   else
-    m_streamDialog.activateWindow();
-  m_streamDialog.updateTargets();
+    m_streamDialog->activateWindow();
+  m_streamDialog->updateTargets();
 }

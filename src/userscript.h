@@ -30,7 +30,7 @@ public:
 
 private:
   QProcess m_virtmicProcess;
-  StreamDialog m_streamDialog;
+  StreamDialog *m_streamDialog;
   bool m_kxmlgui = false;
   bool m_kglobalaccel = false;
 #ifdef KXMLGUI

@@ -5,11 +5,11 @@
 #include <QGroupBox>
 #include <QWidget>
 
-class StreamDialog : public QWidget {
+class StreamDialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit StreamDialog();
+  explicit StreamDialog(QWidget *parent = nullptr);
 
 private:
   QComboBox *m_targetComboBox;

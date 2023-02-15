@@ -9,7 +9,7 @@
 #include <QSizePolicy>
 #include <QVBoxLayout>
 
-StreamDialog::StreamDialog() : QWidget() {
+StreamDialog::StreamDialog(QWidget *parent) : QDialog(parent) {
   setAttribute(Qt::WA_QuitOnClose, false);
 
   {
@@ -22,8 +22,7 @@ StreamDialog::StreamDialog() : QWidget() {
     layout->addWidget(m_videoGroupBox);
 
     {
-      auto videoLayout = new QVBoxLayout(this);
-      m_videoGroupBox->setLayout(videoLayout);
+      auto videoLayout = new QVBoxLayout(m_videoGroupBox);
 
       auto resolutionLabel = new QLabel(this);
       resolutionLabel->setText("Resolution");
@@ -60,15 +59,14 @@ StreamDialog::StreamDialog() : QWidget() {
     layout->addWidget(m_audioGroupBox);
 
     {
-      auto audioLayout = new QVBoxLayout(this);
-      m_audioGroupBox->setLayout(audioLayout);
+      auto audioLayout = new QVBoxLayout(m_audioGroupBox);
 
       auto targetLabel = new QLabel(this);
       targetLabel->setText("Audio Source");
       audioLayout->addWidget(targetLabel);
 
       {
-        auto targetLayout = new QHBoxLayout(this);
+        auto targetLayout = new QHBoxLayout();
         audioLayout->addLayout(targetLayout);
 
         m_targetComboBox = new QComboBox(this);
@@ -88,8 +86,6 @@ StreamDialog::StreamDialog() : QWidget() {
     button->setText("Start Stream");
     connect(button, &QPushButton::clicked, this, &StreamDialog::startStream);
     layout->addWidget(button, Qt::AlignRight | Qt::AlignBottom);
-
-    setLayout(layout);
   }
 
   setWindowTitle("discord-screenaudio Stream Dialog");
