@@ -249,6 +249,10 @@ void DiscordPage::javaScriptConsoleMessage(
     QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString &message,
     int lineNumber, const QString &sourceID) {
   auto colorSegments = message.split("%c");
+  if (colorSegments[0] != "") {
+    for (auto line : colorSegments[0].split("\n"))
+      qDebug(discordLog) << line.toUtf8().constData();
+  }
   for (auto segment : colorSegments.mid(1)) {
     auto lines = segment.split("\n");
     QString ansi;
