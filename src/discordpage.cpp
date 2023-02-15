@@ -109,8 +109,79 @@ QWebEnginePage *DiscordPage::createWindow(QWebEnginePage::WebWindowType type) {
   return new ExternalPage;
 }
 
+const QMap<QString, QString> cssAnsiColorMap = {{"black", "30"},
+                                                {"red", "31"},
+                                                {"green", "32"},
+                                                {"yellow", "33"},
+                                                {"blue", "34"},
+                                                {"magenta", "35"},
+                                                {"cyan", "36"},
+                                                {"white", "37"},
+                                                {"gray", "90"},
+                                                {"bright-red", "91"},
+                                                {"bright-green", "92"},
+                                                {"bright-yellow", "93"},
+                                                {"bright-blue", "94"},
+                                                {"bright-magenta", "95"},
+                                                {"bright-cyan", "96"},
+                                                {"bright-white", "97"},
+                                                {"orange", "38;5;208"},
+                                                {"pink", "38;5;205"},
+                                                {"brown", "38;5;94"},
+                                                {"light-gray", "38;5;251"},
+                                                {"dark-gray", "38;5;239"},
+                                                {"light-red", "38;5;203"},
+                                                {"light-green", "38;5;83"},
+                                                {"light-yellow", "38;5;227"},
+                                                {"light-blue", "38;5;75"},
+                                                {"light-magenta", "38;5;207"},
+                                                {"light-cyan", "38;5;87"},
+                                                {"turquoise", "38;5;80"},
+                                                {"violet", "38;5;92"},
+                                                {"purple", "38;5;127"},
+                                                {"lavender", "38;5;183"},
+                                                {"maroon", "38;5;124"},
+                                                {"beige", "38;5;230"},
+                                                {"olive", "38;5;142"},
+                                                {"indigo", "38;5;54"},
+                                                {"teal", "38;5;30"},
+                                                {"gold", "38;5;220"},
+                                                {"silver", "38;5;7"},
+                                                {"navy", "38;5;17"},
+                                                {"steel", "38;5;188"},
+                                                {"salmon", "38;5;173"},
+                                                {"peach", "38;5;217"},
+                                                {"khaki", "38;5;179"},
+                                                {"coral", "38;5;209"},
+                                                {"crimson", "38;5;160"}};
+
 void DiscordPage::javaScriptConsoleMessage(
     QWebEnginePage::JavaScriptConsoleMessageLevel level, const QString &message,
     int lineNumber, const QString &sourceID) {
-  qDebug(discordLog) << message;
+  auto colorSegments = message.split("%c");
+  for (auto segment : colorSegments.mid(1)) {
+    auto lines = segment.split("\n");
+    QString ansi;
+    uint endOfStyles = lines.length();
+    for (size_t line = 1; line < lines.length(); line++) {
+      if (!lines[line].endsWith(";")) {
+        endOfStyles = line;
+        break;
+      }
+      if (lines[line] == "font-weight: bold;")
+        ansi += "\033[1m";
+      else if (lines[line].startsWith("color: ")) {
+        auto color = lines[line].mid(7).chopped(1);
+        if (cssAnsiColorMap.find(color) != cssAnsiColorMap.end())
+          ansi += "\033[" + cssAnsiColorMap[color] + "m";
+      }
+    }
+    qDebug(discordLog) << (ansi + lines[0].trimmed() + "\033[0m " +
+                           lines[endOfStyles].trimmed())
+                              .toUtf8()
+                              .constData();
+    for (auto line : lines.mid(endOfStyles + 1)) {
+      qDebug(discordLog) << line.toUtf8().constData();
+    }
+  }
 }
