@@ -2,6 +2,8 @@
 
 #include "userscript.h"
 
+#include <QFile>
+#include <QNetworkAccessManager>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 #include <QWebEngineScript>
@@ -14,8 +16,10 @@ public:
 
 private:
   UserScript m_userScript;
+  QNetworkAccessManager m_networkAccessManager;
   void setupPermissions();
   void setupUserStyles();
+  void fetchUserStyles(QFile *file);
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;

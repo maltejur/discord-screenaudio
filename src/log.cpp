@@ -5,3 +5,4 @@ Q_LOGGING_CATEGORY(discordLog, "discord");
 Q_LOGGING_CATEGORY(userscriptLog, "userscript");
 Q_LOGGING_CATEGORY(virtmicLog, "virtmic");
 Q_LOGGING_CATEGORY(shortcutLog, "shortcut");
+Q_LOGGING_CATEGORY(userstylesLog, "userstyles");

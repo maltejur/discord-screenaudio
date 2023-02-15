@@ -52,13 +52,70 @@ void DiscordPage::setupPermissions() {
 }
 
 void DiscordPage::setupUserStyles() {
-  QString file =
+  auto file = new QFile(
       QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
-      "/userstyles.css";
-  if (QFileInfo(file).exists()) {
-    qDebug(mainLog) << "Found userstyles:" << file;
-    injectFile(&DiscordPage::injectStylesheet, "userstyles.js", file);
+      "/userstyles.css");
+  if (file->exists()) {
+    qDebug(userstylesLog) << "Found userstyles:" << file->fileName();
+    fetchUserStyles(file);
   }
+}
+
+void DiscordPage::fetchUserStyles(QFile *file) {
+  file->open(QIODevice::ReadOnly);
+  auto fileContent = file->readAll();
+  file->close();
+  QRegularExpression importRegex(
+      R"r(@import url\(['"]{0,1}([^'"]+?)['"]{0,1}\);)r");
+  QRegularExpression urlRegex(
+      R"r(url\(['"]{0,1}((?!data:)[^'"]+?)['"]{0,1}\))r");
+  bool foundImport = true;
+  auto match = importRegex.match(fileContent);
+  if (!match.hasMatch()) {
+    foundImport = false;
+    match = urlRegex.match(fileContent);
+  }
+  if (match.hasMatch()) {
+    auto url = match.captured(1);
+    if (url.toLower().contains("usrbg.css") ||
+        url.toLower().contains("usrbgs.css")) {
+      qDebug(userstylesLog)
+          << "Skipping" << url << "because it we can't prefetch it";
+    } else {
+      qDebug(userstylesLog) << "Fetching" << url;
+      QNetworkRequest request(url);
+      auto reply = m_networkAccessManager.get(request);
+      connect(reply, &QNetworkReply::finished, [=]() {
+        QByteArray content = "";
+        if (reply->error() == QNetworkReply::NoError) {
+          if (!reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
+                   .isNull())
+            content =
+                reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
+                    .toByteArray();
+          else
+            content = reply->readAll();
+        } else
+          qDebug(userstylesLog) << reply->errorString().toUtf8().constData();
+        file->open(QIODevice::WriteOnly);
+        file->write(
+            QString(fileContent)
+                .replace(match.captured(0),
+                         foundImport
+                             ? content
+                             : "url(data:application/octet-stream;base64," +
+                                   content.toBase64() + ")")
+                .toUtf8()
+                .constData());
+        file->close();
+        fetchUserStyles(file);
+      });
+      return;
+    }
+  }
+  injectFile(&DiscordPage::injectStylesheet, "userstyles.js", file->fileName());
+  file->close();
+  file->deleteLater();
 }
 
 void DiscordPage::injectScript(
