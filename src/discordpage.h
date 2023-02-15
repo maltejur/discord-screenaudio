@@ -4,6 +4,7 @@
 
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
+#include <QWebEngineScript>
 
 class DiscordPage : public QWebEnginePage {
   Q_OBJECT
@@ -13,6 +14,8 @@ public:
 
 private:
   UserScript m_userScript;
+  void setupPermissions();
+  void setupUserStyles();
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;
@@ -21,8 +24,12 @@ private:
   javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel level,
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
-  void injectScriptText(QString name, QString content);
-  void injectScriptFile(QString name, QString source);
+  void injectScript(QString name, QString content,
+                    QWebEngineScript::InjectionPoint injectionPoint);
+  void injectScript(QString name, QString content);
+  void injectStylesheet(QString name, QString content);
+  void injectFile(void (DiscordPage::*inject)(QString, QString), QString name,
+                  QString source);
 
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,

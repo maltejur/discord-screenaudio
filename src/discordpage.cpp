@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFile>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QNetworkReply>
 #include <QTimer>
@@ -20,11 +21,23 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
 
-  connect(this, &QWebEnginePage::loadStarted, [=]() {
-    runJavaScript(QString("window.discordScreenaudioVersion = '%1';")
-                      .arg(QApplication::applicationVersion()));
-  });
+  setupPermissions();
 
+  injectFile(&DiscordPage::injectScript, "qwebchannel.js",
+             ":/qtwebchannel/qwebchannel.js");
+
+  setUrl(QUrl("https://discord.com/app"));
+
+  setWebChannel(new QWebChannel(this));
+  webChannel()->registerObject("userscript", &m_userScript);
+
+  injectFile(&DiscordPage::injectScript, "userscript.js",
+             ":/assets/userscript.js");
+
+  setupUserStyles();
+}
+
+void DiscordPage::setupPermissions() {
   settings()->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, true);
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
   settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent,
@@ -36,18 +49,21 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
                            false);
   settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, false);
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
-
-  injectScriptFile("qwebchannel.js", ":/qtwebchannel/qwebchannel.js");
-
-  setUrl(QUrl("https://discord.com/app"));
-
-  setWebChannel(new QWebChannel(this));
-  webChannel()->registerObject("userscript", &m_userScript);
-
-  injectScriptFile("userscript.js", ":/assets/userscript.js");
 }
 
-void DiscordPage::injectScriptText(QString name, QString content) {
+void DiscordPage::setupUserStyles() {
+  QString file =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+      "/userstyles.css";
+  if (QFileInfo(file).exists()) {
+    qDebug(mainLog) << "Found userstyles:" << file;
+    injectFile(&DiscordPage::injectStylesheet, "userstyles.js", file);
+  }
+}
+
+void DiscordPage::injectScript(
+    QString name, QString content,
+    QWebEngineScript::InjectionPoint injectionPoint) {
   qDebug(mainLog) << "Injecting " << name;
 
   QWebEngineScript script;
@@ -55,20 +71,37 @@ void DiscordPage::injectScriptText(QString name, QString content) {
   script.setSourceCode(content);
   script.setName(name);
   script.setWorldId(QWebEngineScript::MainWorld);
-  script.setInjectionPoint(QWebEngineScript::DocumentCreation);
+  script.setInjectionPoint(injectionPoint);
   script.setRunsOnSubFrames(false);
 
   scripts().insert(script);
 }
 
-void DiscordPage::injectScriptFile(QString name, QString source) {
+void DiscordPage::injectScript(QString name, QString content) {
+  injectScript(name, content, QWebEngineScript::DocumentCreation);
+}
+
+void DiscordPage::injectStylesheet(QString name, QString content) {
+  auto script = QString(R"(const stylesheet = document.createElement("style");
+stylesheet.type = "text/css";
+stylesheet.id = "%1";
+stylesheet.innerText = `%2`;
+document.head.appendChild(stylesheet);
+)")
+                    .arg(name)
+                    .arg(content);
+  injectScript(name, script, QWebEngineScript::DocumentReady);
+}
+
+void DiscordPage::injectFile(void (DiscordPage::*inject)(QString, QString),
+                             QString name, QString source) {
   QFile file(source);
 
   if (!file.open(QIODevice::ReadOnly)) {
     qFatal("Failed to load %s with error: %s", source.toLatin1().constData(),
            file.errorString().toLatin1().constData());
   } else {
-    injectScriptText(name, file.readAll());
+    (this->*inject)(name, file.readAll());
   }
 }
 
