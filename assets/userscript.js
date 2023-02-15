@@ -223,6 +223,8 @@ function main() {
         aboutEl.style.fontSize = "12px";
         aboutEl.style.color = "var(--text-muted)";
         aboutEl.style.textTransform = "none";
+        aboutEl.style.display = "inline-block";
+        aboutEl.style.width = "100%";
         aboutEl.classList.add("dirscordScreenaudioAboutText");
         aboutEl.style.cursor = "pointer";
         el.appendChild(aboutEl);
