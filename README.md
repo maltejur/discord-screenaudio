@@ -103,6 +103,13 @@ of Flatpak's sandboxing by installing
 [Flatseal](https://flathub.org/apps/details/com.github.tchx84.Flatseal) and
 allowing access to "All system files" under the "Filesystem" section.
 
+### Is there any way to add custom CSS / a theme?
+
+Yes, you can add all your styles into
+`~/.config/discord-screenaudio/userstyles.css`. But please note that due to
+QtWebEngine limitations concerning content security policies, you can't use any
+external files (like `@import` or `url()`).
+
 ## License
 
 Copyright (C) 2022 Malte Jürgens
