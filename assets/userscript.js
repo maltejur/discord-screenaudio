@@ -84,7 +84,7 @@ function createButton(text, onClick) {
   const button = document.createElement("button");
   button.style.marginBottom = "20px";
   button.classList =
-    "button-f2h6uQ lookFilled-yCfaCM colorBrand-I6CyqQ sizeSmall-wU2dO- grow-2sR_-F";
+    "button-ejjZWC lookFilled-1H2Jvj colorBrand-2M3O3N sizeSmall-3R2P2p grow-2T4nbg";
   button.innerText = text;
   button.addEventListener("click", onClick);
   return button;
@@ -248,7 +248,7 @@ function main() {
       div.style.marginBottom = "50px";
       div.appendChild(
         createButton("Edit Global Keybinds", () => {
-          userscript.log("!discord-screenaudio-keybinds");
+          userscript.showShortcutsDialog();
         })
       );
       el.innerHTML = "";
@@ -305,7 +305,7 @@ function main() {
 
           section.appendChild(
             createButton("Edit Global Keybinds", () => {
-              userscript.log("!discord-screenaudio-keybinds");
+              userscript.showShortcutsDialog();
             })
           );
 
