@@ -9,7 +9,7 @@ of [@edisionnano](https://github.com/edisionnano) and the
 
 Unlike a lot of other solutions, the audio here is directly fed into the
 screenshare and not passed to the user microphone
-([see explanation](#how-it-works)).
+([see explanation](#how-does-this-work)).
 
 ![Screenshot_20221211_185028](https://user-images.githubusercontent.com/48161361/206920213-58a8091a-d8f9-4bb7-ae3d-3f8581b84d24.png)
 
