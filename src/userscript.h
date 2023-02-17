@@ -18,6 +18,12 @@
 
 #endif
 
+#ifdef KNOTIFICATIONS
+#include <KNotification>
+#endif
+
+#include <KJob>
+
 class UserScript : public QObject {
   Q_OBJECT
 
@@ -27,18 +33,26 @@ public:
   Q_PROPERTY(QString version READ version CONSTANT);
   Q_PROPERTY(bool kxmlgui MEMBER m_kxmlgui CONSTANT);
   Q_PROPERTY(bool kglobalaccel MEMBER m_kglobalaccel CONSTANT);
+  Q_PROPERTY(QString userstyles MEMBER m_userstyles NOTIFY userstylesChanged);
+  Q_PROPERTY(QString loadingMessage MEMBER m_loadingMessage NOTIFY
+                 loadingMessageChanged);
 
 private:
   QProcess m_virtmicProcess;
   StreamDialog *m_streamDialog;
   bool m_kxmlgui = false;
   bool m_kglobalaccel = false;
+  QString m_userstyles;
+  QString m_loadingMessage;
 #ifdef KXMLGUI
   KHelpMenu *m_helpMenu;
 #ifdef KGLOBALACCEL
   KActionCollection *m_actionCollection;
   KShortcutsDialog *m_shortcutsDialog;
 #endif
+#endif
+#ifdef KNOTIFICATIONS
+  KJob *m_loadingJob = nullptr;
 #endif
   void setupHelpMenu();
   void setupShortcutsDialog();
@@ -49,6 +63,8 @@ Q_SIGNALS:
   void muteToggled();
   void deafenToggled();
   void streamStarted(bool video, int width, int height, int frameRate);
+  void userstylesChanged();
+  void loadingMessageChanged();
 
 public Q_SLOTS:
   void log(QString message);

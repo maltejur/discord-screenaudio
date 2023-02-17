@@ -157,6 +157,22 @@ function main() {
     streamStartBtnClone.remove();
   });
 
+  function updateUserstyles() {
+    userscript.log("Loading userstyles...");
+    let stylesheet = document.getElementById("discordScreenaudioUserstyles");
+    if (!stylesheet) {
+      stylesheet = document.createElement("style");
+      stylesheet.id = "discordScreenaudioUserstyles";
+      stylesheet.type = "text/css";
+      document.head.appendChild(stylesheet);
+    }
+    stylesheet.innerText = userscript.userstyles;
+    userscript.log("Finished loading userstyles");
+  }
+
+  userscript.userstylesChanged.connect(updateUserstyles);
+  setTimeout(() => updateUserstyles());
+
   setInterval(async () => {
     const streamActive =
       document.getElementsByClassName("panel-2ZFCRb activityPanel-9icbyU")

@@ -20,6 +20,8 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
+  connect(this, &DiscordPage::fullScreenRequested, MainWindow::instance(),
+          &MainWindow::fullScreenRequested);
 
   setupPermissions();
 
@@ -113,8 +115,8 @@ void DiscordPage::fetchUserStyles(QFile *file) {
       return;
     }
   }
-  injectFile(&DiscordPage::injectStylesheet, "userstyles.js", file->fileName());
-  file->close();
+  qDebug(userstylesLog) << "Injecting userstyles";
+  m_userScript.setProperty("userstyles", fileContent);
   file->deleteLater();
 }
 
