@@ -9,7 +9,7 @@
 #include <QWebEngineSettings>
 
 CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent) {
-  setStyleSheet("background-color:#202225;");
+  setStyleSheet("background-color:#313338;");
   m_layout = new QVBoxLayout(this);
   m_layout->setMargin(0);
   m_layout->setSpacing(0);
@@ -70,6 +70,7 @@ void CentralWidget::setLoadingIndicator(QString text) {
       m_loadingLabel = new QLabel(this);
       m_loadingLabel->setMaximumHeight(20);
       m_loadingLabel->setAlignment(Qt::AlignHCenter);
+      m_loadingLabel->setStyleSheet("color:#dedede;");
       m_layout->addWidget(m_loadingLabel);
     }
     m_loadingLabel->setText(text);

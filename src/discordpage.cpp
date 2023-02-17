@@ -16,7 +16,7 @@
 #include <QWebEngineSettings>
 
 DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
-  setBackgroundColor(QColor("#202225"));
+  setBackgroundColor(QColor("#313338"));
 
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
@@ -53,24 +53,29 @@ void DiscordPage::setupPermissions() {
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
 }
 
+QString fileContent;
+
 void DiscordPage::setupUserStyles() {
   auto file = new QFile(
       QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
       "/userstyles.css");
   if (file->exists()) {
     qDebug(userstylesLog) << "Found userstyles:" << file->fileName();
+    file->open(QIODevice::ReadOnly);
+    fileContent = file->readAll();
+    file->close();
     fetchUserStyles(file);
   }
 }
 
+const QRegularExpression
+    importRegex(R"r(@import url\(['"]{0,1}([^'"]+?)['"]{0,1}\);)r");
+const QRegularExpression urlRegex(
+    R"r(url\(['"]{0,1}((?!https:\/\/fonts.gstatic.com)(?!data:)(?!.*usrbgs?\.css)(?!.*\.woff2)(?!.*\.ttf)[^'"]+?)['"]{0,1}\))r");
+
 void DiscordPage::fetchUserStyles(QFile *file) {
-  file->open(QIODevice::ReadOnly);
-  auto fileContent = file->readAll();
-  file->close();
-  QRegularExpression importRegex(
-      R"r(@import url\(['"]{0,1}([^'"]+?)['"]{0,1}\);)r");
-  QRegularExpression urlRegex(
-      R"r(url\(['"]{0,1}((?!data:)[^'"]+?)['"]{0,1}\))r");
+  m_userScript.setProperty(
+      "loadingMessage", "Loading userstyles: Fetching additional resources...");
   bool foundImport = true;
   auto match = importRegex.match(fileContent);
   if (!match.hasMatch()) {
@@ -79,47 +84,39 @@ void DiscordPage::fetchUserStyles(QFile *file) {
   }
   if (match.hasMatch()) {
     auto url = match.captured(1);
-    if (url.toLower().contains("usrbg.css") ||
-        url.toLower().contains("usrbgs.css")) {
-      qDebug(userstylesLog)
-          << "Skipping" << url << "because it we can't prefetch it";
-    } else {
-      qDebug(userstylesLog) << "Fetching" << url;
-      m_userScript.setProperty(
-          "loadingMessage",
-          QString("Loading userstyles: Fetching %1").arg(url));
-      QNetworkRequest request(url);
-      auto reply = m_networkAccessManager.get(request);
-      connect(reply, &QNetworkReply::finished, [=]() {
-        QByteArray content = "";
-        if (reply->error() == QNetworkReply::NoError) {
-          if (!reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
-                   .isNull())
-            content =
-                reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
-                    .toByteArray();
-          else
-            content = reply->readAll();
-        } else
-          qDebug(userstylesLog) << reply->errorString().toUtf8().constData();
-        file->open(QIODevice::WriteOnly);
-        file->write(
-            QString(fileContent)
-                .replace(match.captured(0),
-                         foundImport
-                             ? content
-                             : "url(data:application/octet-stream;base64," +
-                                   content.toBase64() + ")")
-                .toUtf8()
-                .constData());
-        file->close();
-        fetchUserStyles(file);
-      });
-      return;
-    }
+    qDebug(userstylesLog) << "Fetching" << url;
+    m_userScript.setProperty(
+        "loadingMessage",
+        QString("Loading userstyles: Fetching %1...").arg(url));
+    QNetworkRequest request(url);
+    auto reply = m_networkAccessManager.get(request);
+    connect(reply, &QNetworkReply::finished, [=]() {
+      QByteArray content = "";
+      if (reply->error() == QNetworkReply::NoError) {
+        if (!reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
+                 .isNull())
+          content =
+              reply->attribute(QNetworkRequest::RedirectionTargetAttribute)
+                  .toByteArray();
+        else
+          content = reply->readAll();
+      } else
+        qDebug(userstylesLog) << reply->errorString().toUtf8().constData();
+      reply->deleteLater();
+      fileContent = fileContent.replace(
+          match.captured(0), foundImport
+                                 ? content
+                                 : "url(data:application/octet-stream;base64," +
+                                       content.toBase64() + ")");
+      fetchUserStyles(file);
+    });
+    return;
   }
   qDebug(userstylesLog) << "Injecting userstyles";
   m_userScript.setProperty("userstyles", fileContent);
+  file->open(QIODevice::WriteOnly);
+  file->write(fileContent.toUtf8().constData());
+  file->close();
   file->deleteLater();
 }
 
