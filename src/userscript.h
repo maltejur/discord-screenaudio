@@ -64,7 +64,7 @@ Q_SIGNALS:
   void deafenToggled();
   void streamStarted(bool video, int width, int height, int frameRate);
   void userstylesChanged();
-  void loadingMessageChanged();
+  void loadingMessageChanged(QString message);
 
 public Q_SLOTS:
   void log(QString message);

@@ -13,6 +13,7 @@ class DiscordPage : public QWebEnginePage {
 
 public:
   explicit DiscordPage(QWidget *parent = nullptr);
+  UserScript *userScript();
 
 private:
   UserScript m_userScript;

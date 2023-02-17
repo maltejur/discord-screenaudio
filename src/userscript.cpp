@@ -15,8 +15,6 @@ UserScript::UserScript() : QObject() {
   setupShortcutsDialog();
   setupStreamDialog();
   setupVirtmic();
-  // connect(this, &UserScript::loadingMessageChanged, MainWindow::instance(),
-  // &MainWindow::setLoadingIndicator);
 }
 
 void UserScript::setupHelpMenu() {

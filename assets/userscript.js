@@ -159,6 +159,7 @@ function main() {
 
   function updateUserstyles() {
     userscript.log("Loading userstyles...");
+    userscript.loadingMessage = "Loading userstyles...";
     let stylesheet = document.getElementById("discordScreenaudioUserstyles");
     if (!stylesheet) {
       stylesheet = document.createElement("style");
@@ -168,6 +169,7 @@ function main() {
     }
     stylesheet.innerText = userscript.userstyles;
     userscript.log("Finished loading userstyles");
+    userscript.loadingMessage = "";
   }
 
   userscript.userstylesChanged.connect(updateUserstyles);

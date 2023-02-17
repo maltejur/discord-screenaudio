@@ -85,6 +85,9 @@ void DiscordPage::fetchUserStyles(QFile *file) {
           << "Skipping" << url << "because it we can't prefetch it";
     } else {
       qDebug(userstylesLog) << "Fetching" << url;
+      m_userScript.setProperty(
+          "loadingMessage",
+          QString("Loading userstyles: Fetching %1").arg(url));
       QNetworkRequest request(url);
       auto reply = m_networkAccessManager.get(request);
       connect(reply, &QNetworkReply::finished, [=]() {
@@ -281,3 +284,5 @@ void DiscordPage::javaScriptConsoleMessage(
     }
   }
 }
+
+UserScript *DiscordPage::userScript() { return &m_userScript; }

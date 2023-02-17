@@ -44,6 +44,7 @@ set(discord-screenaudio_SRC
   src/streamdialog.cpp
   src/log.cpp
   src/userscript.cpp
+  src/centralwidget.cpp
   resources.qrc
 )
 
