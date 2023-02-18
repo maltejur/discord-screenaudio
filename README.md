@@ -106,9 +106,11 @@ allowing access to "All system files" under the "Filesystem" section.
 ### Is there any way to add custom CSS / a theme?
 
 Yes, you can add all your styles into
-`~/.config/discord-screenaudio/userstyles.css`. But please note that due to
-QtWebEngine limitations concerning content security policies, you can't use any
-external files (like `@import` or `url()`).
+`~/.config/discord-screenaudio/userstyles.css` (or
+`~/.var/app/de.shorsh.discord-screenaudio/config/discord-screenaudio/userstyles.css`
+if you are using the Flatpak). But please note that due to QtWebEngine
+limitations concerning content security policies, you can't use any external
+files (like `@import` or `url()`).
 
 ## License
 
