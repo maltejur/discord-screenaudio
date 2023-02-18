@@ -1,16 +1,9 @@
 #pragma once
 
 #include "streamdialog.h"
+#include "userscript.h"
 #include "virtmic.h"
-#include "webclass.h"
 
-#ifdef KXMLGUI
-#include <KActionCollection>
-#include <KHelpMenu>
-#include <KShortcutsDialog>
-#endif
-
-#include <QProcess>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 #include <QWebEngineScript>
@@ -22,16 +15,9 @@ public:
   explicit DiscordPage(QWidget *parent = nullptr);
 
 private:
-  StreamDialog m_streamDialog;
-  QProcess m_virtmicProcess;
-  WebClass m_webClass;
-#ifdef KXMLGUI
-  KHelpMenu *m_helpMenu;
-#ifdef KGLOBALACCEL
-  KActionCollection *m_actionCollection;
-  KShortcutsDialog *m_shortcutsDialog;
-#endif
-#endif
+  UserScript m_userScript;
+  void setupPermissions();
+  void setupUserStyles();
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;
@@ -40,21 +26,16 @@ private:
   javaScriptConsoleMessage(QWebEnginePage::JavaScriptConsoleMessageLevel level,
                            const QString &message, int lineNumber,
                            const QString &sourceID) override;
-  void injectScriptText(QString name, QString content,
-                        QWebEngineScript::InjectionPoint injectionPoint =
-                            QWebEngineScript::DocumentCreation);
-  void injectScriptFile(QString name, QString source,
-                        QWebEngineScript::InjectionPoint injectionPoint =
-                            QWebEngineScript::DocumentCreation);
-  void stopVirtmic();
-  void startVirtmic(QString target);
-  void toggleMute();
-  void toggleDeafen();
+  void injectScript(QString name, QString content,
+                    QWebEngineScript::InjectionPoint injectionPoint);
+  void injectScript(QString name, QString content);
+  void injectStylesheet(QString name, QString content);
+  void injectFile(void (DiscordPage::*inject)(QString, QString), QString name,
+                  QString source);
 
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,
                                   QWebEnginePage::Feature feature);
-  void startStream(QString target, uint width, uint height, uint frameRate);
 };
 
 // Will immediately get destroyed again but is needed for navigation to

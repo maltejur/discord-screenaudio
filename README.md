@@ -11,7 +11,7 @@ Unlike a lot of other solutions, the audio here is directly fed into the
 screenshare and not passed to the user microphone
 ([see explanation](#how-it-works)).
 
-![Screenshot_20220925_112945](https://user-images.githubusercontent.com/48161361/192137080-33466cf7-8c56-4373-90c6-01ea74b6fb83.png)
+![Screenshot_20221211_185028](https://user-images.githubusercontent.com/48161361/206920213-58a8091a-d8f9-4bb7-ae3d-3f8581b84d24.png)
 
 The purpose of this project is **not** to provide an alternative to the original
 Discord client. Rather, it should be used in addition to the original client in
@@ -50,6 +50,8 @@ You have multiple options:
 ### Requirements
 
 - Basic building tools
+- An up-to-date system (I can't guarantee that it works on Debian or Ubuntu
+  20/21)
 - CMake
 - Qt5 and QtWebEngine
 - **PipeWire** (it currently doesn't work with PulseAudio)
@@ -57,7 +59,7 @@ You have multiple options:
 - _Kf5Notifications (optional, for better notifications)_
 - _KXMLGui and KGlobalAccel (optional, for keybinds)_
 
-On Debian:
+With apt:
 `apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
 
 ### Building
@@ -82,7 +84,9 @@ And then to optionally install it, run:
 sudo cmake --install build
 ```
 
-## How it works
+## FAQ
+
+### How does this work?
 
 This whole project is based on
 [this](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux)
@@ -90,6 +94,21 @@ repository, which very nicely explains how to stream audio in the web version of
 Discord. Basically: a virtual microphone is created which captures the
 application audio, and this microphone is then fed to the Discord stream by
 intercepting a API call of Discord.
+
+### Drag and drop doesn't work in the Flatpak
+
+This is due to sandboxing limitations of Flatpak. The main Discord Flatpak has
+the same problem. If you still want to use drag and drop, you can disable most
+of Flatpak's sandboxing by installing
+[Flatseal](https://flathub.org/apps/details/com.github.tchx84.Flatseal) and
+allowing access to "All system files" under the "Filesystem" section.
+
+### Is there any way to add custom CSS / a theme?
+
+Yes, you can add all your styles into
+`~/.config/discord-screenaudio/userstyles.css`. But please note that due to
+QtWebEngine limitations concerning content security policies, you can't use any
+external files (like `@import` or `url()`).
 
 ## License
 

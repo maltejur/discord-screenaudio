@@ -2,22 +2,25 @@
 
 #include <QComboBox>
 #include <QDialog>
+#include <QGroupBox>
 #include <QWidget>
 
-class StreamDialog : public QWidget {
+class StreamDialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit StreamDialog();
+  explicit StreamDialog(QWidget *parent = nullptr);
 
 private:
   QComboBox *m_targetComboBox;
-  QComboBox *m_qualityResolutionComboBox;
-  QComboBox *m_qualityFPSComboBox;
+  QComboBox *m_resolutionComboBox;
+  QComboBox *m_framerateComboBox;
+  QGroupBox *m_videoGroupBox;
+  QGroupBox *m_audioGroupBox;
 
 Q_SIGNALS:
-  void requestedStreamStart(QString target, uint width, uint height,
-                            uint frameRate);
+  void requestedStreamStart(bool video, bool audio, int width, int height,
+                            int frameRate, QString target);
 
 public Q_SLOTS:
   void updateTargets();
