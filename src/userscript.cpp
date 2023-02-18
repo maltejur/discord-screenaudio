@@ -4,6 +4,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QMessageBox>
 #include <QTimer>
 
 #ifdef KXMLGUI
