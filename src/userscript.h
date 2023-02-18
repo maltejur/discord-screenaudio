@@ -20,9 +20,7 @@
 
 #ifdef KNOTIFICATIONS
 #include <KNotification>
-#include <KJob>
 #endif
-
 
 class UserScript : public QObject {
   Q_OBJECT
@@ -50,9 +48,6 @@ private:
   KActionCollection *m_actionCollection;
   KShortcutsDialog *m_shortcutsDialog;
 #endif
-#endif
-#ifdef KNOTIFICATIONS
-  KJob *m_loadingJob = nullptr;
 #endif
   void setupHelpMenu();
   void setupShortcutsDialog();
