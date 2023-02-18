@@ -65,6 +65,7 @@ Q_SIGNALS:
   void streamStarted(bool video, int width, int height, int frameRate);
   void userstylesChanged();
   void loadingMessageChanged(QString message);
+  void shouldInstallUserStyles(QString url);
 
 public Q_SLOTS:
   void log(QString message);
@@ -78,6 +79,8 @@ public Q_SLOTS:
   void showStreamDialog();
   void stopVirtmic();
   void startVirtmic(QString target);
+  void showThemeDialog();
+  void installUserStyles(QString url);
 
 private Q_SLOTS:
   void startStream(bool video, bool audio, int width, int height, int frameRate,

@@ -53,34 +53,35 @@ void DiscordPage::setupPermissions() {
   settings()->setAttribute(QWebEngineSettings::ScrollAnimatorEnabled, true);
 }
 
-QString fileContent;
-
 void DiscordPage::setupUserStyles() {
-  auto file = new QFile(
+  m_userStylesFile = new QFile(
       QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
       "/userstyles.css");
-  if (file->exists()) {
-    qDebug(userstylesLog) << "Found userstyles:" << file->fileName();
-    file->open(QIODevice::ReadOnly);
-    fileContent = file->readAll();
-    file->close();
-    fetchUserStyles(file);
+  if (m_userStylesFile->exists()) {
+    qDebug(userstylesLog) << "Found userstyles:"
+                          << m_userStylesFile->fileName();
+    m_userStylesFile->open(QIODevice::ReadOnly);
+    m_userStylesContent = m_userStylesFile->readAll();
+    m_userStylesFile->close();
+    fetchUserStyles();
   }
+  connect(&m_userScript, &UserScript::shouldInstallUserStyles, this,
+          &DiscordPage::getUserStyles);
 }
 
-const QRegularExpression
-    importRegex(R"r(@import url\(['"]{0,1}([^'"]+?)['"]{0,1}\);)r");
+const QRegularExpression importRegex(
+    R"r(@import (?:url\(|)['"]{0,1}(?!.*usrbgs?\.css)([^'"]+?)['"]{0,1}(?:|\));)r");
 const QRegularExpression urlRegex(
-    R"r(url\(['"]{0,1}((?!https:\/\/fonts.gstatic.com)(?!data:)(?!.*usrbgs?\.css)(?!.*\.woff2)(?!.*\.ttf)[^'"]+?)['"]{0,1}\))r");
+    R"r(url\(['"]{0,1}((?!https:\/\/fonts.gstatic.com)(?!data:)(?!.*\.woff2)(?!.*\.ttf)[^'"]+?)['"]{0,1}\))r");
 
-void DiscordPage::fetchUserStyles(QFile *file) {
+void DiscordPage::fetchUserStyles() {
   m_userScript.setProperty(
       "loadingMessage", "Loading userstyles: Fetching additional resources...");
   bool foundImport = true;
-  auto match = importRegex.match(fileContent);
+  auto match = importRegex.match(m_userStylesContent);
   if (!match.hasMatch()) {
     foundImport = false;
-    match = urlRegex.match(fileContent);
+    match = urlRegex.match(m_userStylesContent);
   }
   if (match.hasMatch()) {
     auto url = match.captured(1);
@@ -103,21 +104,26 @@ void DiscordPage::fetchUserStyles(QFile *file) {
       } else
         qDebug(userstylesLog) << reply->errorString().toUtf8().constData();
       reply->deleteLater();
-      fileContent = fileContent.replace(
+      m_userStylesContent = m_userStylesContent.replace(
           match.captured(0), foundImport
                                  ? content
                                  : "url(data:application/octet-stream;base64," +
                                        content.toBase64() + ")");
-      fetchUserStyles(file);
+      fetchUserStyles();
     });
     return;
   }
   qDebug(userstylesLog) << "Injecting userstyles";
-  m_userScript.setProperty("userstyles", fileContent);
-  file->open(QIODevice::WriteOnly);
-  file->write(fileContent.toUtf8().constData());
-  file->close();
-  file->deleteLater();
+  m_userScript.setProperty("userstyles", m_userStylesContent);
+  m_userScript.setProperty("loadingMessage", "");
+  m_userStylesFile->open(QIODevice::WriteOnly);
+  m_userStylesFile->write(m_userStylesContent.toUtf8());
+  m_userStylesFile->close();
+}
+
+void DiscordPage::getUserStyles(QString url) {
+  m_userStylesContent = url == "" ? "" : QString("@import url(%1);").arg(url);
+  fetchUserStyles();
 }
 
 void DiscordPage::injectScript(
@@ -142,7 +148,6 @@ void DiscordPage::injectScript(QString name, QString content) {
 
 void DiscordPage::injectStylesheet(QString name, QString content) {
   auto script = QString(R"(const stylesheet = document.createElement("style");
-stylesheet.type = "text/css";
 stylesheet.id = "%1";
 stylesheet.innerText = `%2`;
 document.head.appendChild(stylesheet);

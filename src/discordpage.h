@@ -17,10 +17,12 @@ public:
 
 private:
   UserScript m_userScript;
+  QFile *m_userStylesFile;
+  QString m_userStylesContent;
   QNetworkAccessManager m_networkAccessManager;
   void setupPermissions();
   void setupUserStyles();
-  void fetchUserStyles(QFile *file);
+  void fetchUserStyles();
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
                                bool isMainFrame) override;
@@ -39,6 +41,9 @@ private:
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,
                                   QWebEnginePage::Feature feature);
+
+public Q_SLOTS:
+  void getUserStyles(QString url);
 };
 
 // Will immediately get destroyed again but is needed for navigation to

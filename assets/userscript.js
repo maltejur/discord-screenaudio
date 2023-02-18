@@ -161,13 +161,14 @@ function main() {
     userscript.log("Loading userstyles...");
     userscript.loadingMessage = "Loading userstyles...";
     let stylesheet = document.getElementById("discordScreenaudioUserstyles");
-    if (!stylesheet) {
-      stylesheet = document.createElement("style");
-      stylesheet.id = "discordScreenaudioUserstyles";
-      stylesheet.type = "text/css";
-      document.head.appendChild(stylesheet);
+    if (stylesheet) {
+      userscript.log("Removing old userstyles...");
+      stylesheet.remove();
     }
+    stylesheet = document.createElement("style");
+    stylesheet.id = "discordScreenaudioUserstyles";
     stylesheet.innerText = userscript.userstyles;
+    document.head.appendChild(stylesheet);
     userscript.log("Finished loading userstyles");
     userscript.loadingMessage = "";
   }
@@ -326,6 +327,18 @@ function main() {
           section.appendChild(
             createButton("Edit Global Keybinds", () => {
               userscript.showShortcutsDialog();
+            })
+          );
+
+          section.appendChild(
+            createButton("Install Theme", () => {
+              userscript.showThemeDialog();
+            })
+          );
+
+          section.appendChild(
+            createButton("Uninstall Theme", () => {
+              userscript.installUserStyles("");
             })
           );
 

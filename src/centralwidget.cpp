@@ -73,7 +73,7 @@ void CentralWidget::setLoadingIndicator(QString text) {
       m_loadingLabel->setStyleSheet("color:#dedede;");
       m_layout->addWidget(m_loadingLabel);
     }
-    m_loadingLabel->setText(text);
+    m_loadingLabel->setText(text.mid(0, 100));
   } else {
     if (m_loadingLabel != nullptr) {
       m_layout->removeWidget(m_loadingLabel);

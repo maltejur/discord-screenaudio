@@ -4,6 +4,9 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QFile>
+#include <QInputDialog>
+#include <QStandardPaths>
 #include <QTimer>
 
 #ifdef KXMLGUI
@@ -162,4 +165,15 @@ void UserScript::showStreamDialog() {
   else
     m_streamDialog->activateWindow();
   m_streamDialog->updateTargets();
+}
+
+void UserScript::showThemeDialog() {
+  auto url = QInputDialog::getText(MainWindow::instance(), "Theme Installation",
+                                   "Please enter the URL of the Theme");
+  if (url != "")
+    emit shouldInstallUserStyles(url);
+}
+
+void UserScript::installUserStyles(QString url) {
+  emit shouldInstallUserStyles(url);
 }
