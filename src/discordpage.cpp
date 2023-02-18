@@ -55,7 +55,7 @@ void DiscordPage::setupPermissions() {
 
 void DiscordPage::setupUserStyles() {
   qDebug(userstylesLog).noquote()
-      << "Looking for userstyles in" << m_configLocation;
+      << "Looking for userstyles in" << m_configLocation.absolutePath();
   m_userStylesFile =
       new QFile(m_configLocation.absoluteFilePath("userstyles.css"));
   if (m_userStylesFile->exists()) {

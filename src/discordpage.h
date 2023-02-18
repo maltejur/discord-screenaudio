@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QNetworkAccessManager>
+#include <QStandardPaths>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
 #include <QWebEngineScript>
