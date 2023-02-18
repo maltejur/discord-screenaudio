@@ -264,7 +264,7 @@ void DiscordPage::javaScriptConsoleMessage(
     auto lines = segment.split("\n");
     QString ansi;
     uint endOfStyles = lines.length();
-    for (size_t line = 1; line < lines.length(); line++) {
+    for (auto line = 1; line < lines.length(); line++) {
       if (!lines[line].endsWith(";")) {
         endOfStyles = line;
         break;

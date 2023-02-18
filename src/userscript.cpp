@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QInputDialog>
+#include <QMessageBox>
 #include <QStandardPaths>
 #include <QTimer>
 

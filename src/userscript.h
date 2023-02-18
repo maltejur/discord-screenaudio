@@ -20,9 +20,9 @@
 
 #ifdef KNOTIFICATIONS
 #include <KNotification>
+#include <KJob>
 #endif
 
-#include <KJob>
 
 class UserScript : public QObject {
   Q_OBJECT
