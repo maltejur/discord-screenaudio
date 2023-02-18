@@ -55,11 +55,9 @@ void DiscordPage::setupPermissions() {
 
 void DiscordPage::setupUserStyles() {
   qDebug(userstylesLog).noquote()
-      << "Looking for userstyles in"
-      << QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-  m_userStylesFile = new QFile(
-      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
-      "/userstyles.css");
+      << "Looking for userstyles in" << m_configLocation;
+  m_userStylesFile =
+      new QFile(m_configLocation.absoluteFilePath("userstyles.css"));
   if (m_userStylesFile->exists()) {
     qDebug(userstylesLog).noquote()
         << "Found userstyles:" << m_userStylesFile->fileName();
@@ -119,6 +117,8 @@ void DiscordPage::fetchUserStyles() {
   qDebug(userstylesLog) << "Injecting userstyles";
   m_userScript.setProperty("userstyles", m_userStylesContent);
   m_userScript.setProperty("loadingMessage", "");
+  if (!m_configLocation.exists())
+    m_configLocation.mkpath(".");
   m_userStylesFile->open(QIODevice::WriteOnly);
   m_userStylesFile->write(m_userStylesContent.toUtf8());
   m_userStylesFile->close();

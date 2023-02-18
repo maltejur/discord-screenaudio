@@ -2,6 +2,7 @@
 
 #include "userscript.h"
 
+#include <QDir>
 #include <QFile>
 #include <QNetworkAccessManager>
 #include <QWebEngineFullScreenRequest>
@@ -20,6 +21,8 @@ private:
   QFile *m_userStylesFile;
   QString m_userStylesContent;
   QNetworkAccessManager m_networkAccessManager;
+  const QDir m_configLocation =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
   void setupPermissions();
   void setupUserStyles();
   void fetchUserStyles();
