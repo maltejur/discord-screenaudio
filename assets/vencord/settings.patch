@@ -1,46 +1,15 @@
-diff --git a/src/components/Settings.tsx b/src/components/Settings.tsx
-index 8ffe111..8f037bd 100644
---- a/src/components/Settings.tsx
-+++ b/src/components/Settings.tsx
-@@ -61,37 +61,22 @@ export default ErrorBoundary.wrap(function Settings() {
-                 Settings Directory: <code style={{ userSelect: "text", cursor: "text" }}>{settingsDir}</code>
-             </Forms.FormText>
- 
--            {!IS_WEB && <Flex className={Margins.marginBottom20} style={{ marginTop: 8 }}>
-+            <Flex className={Margins.marginBottom20} style={{ marginTop: 8 }}>
-                 <Button
--                    onClick={() => window.DiscordNative.app.relaunch()}
--                    size={Button.Sizes.SMALL}
--                    color={Button.Colors.GREEN}
--                >
--                    Reload
--                </Button>
--                <Button
--                    onClick={() => window.DiscordNative.fileManager.showItemInFolder(settingsDir)}
-+                    onClick={() => VencordNative.ipc.send(IpcEvents.OPEN_EXTERNAL, settingsDir)}
-                     size={Button.Sizes.SMALL}
-                     disabled={settingsDirPending}
-                 >
-                     Launch Directory
-                 </Button>
-                 <Button
--                    onClick={() => VencordNative.ipc.invoke(IpcEvents.OPEN_MONACO_EDITOR)}
-+                    onClick={() => VencordNative.ipc.send(IpcEvents.OPEN_EXTERNAL, settingsDir + "/quickCss.css")}
-                     size={Button.Sizes.SMALL}
-                     disabled={settingsDir === "Loading..."}
-                 >
-                     Open QuickCSS File
-                 </Button>
--            </Flex>}
--
--            {IS_WEB && <Button
--                onClick={launchMonacoEditor}
--                size={Button.Sizes.SMALL}
--                disabled={settingsDir === "Loading..."}
--            >
--                Open QuickCSS File
--            </Button>}
-+            </Flex>
- 
-             <Forms.FormDivider />
-             <Switch
+--- a/src/components/VencordSettings/VencordTab.tsx
++++ b/src/components/VencordSettings/VencordTab.tsx
+@@ -87,10 +87,10 @@ function VencordSettings() {
+                 <Card className={cl("quick-actions-card")}>
+                     {IS_WEB ? (
+                         <Button
+-                            onClick={() => require("../Monaco").launchMonacoEditor()}
++                            onClick={() => VencordNative.ipc.send(IpcEvents.OPEN_EXTERNAL, settingsDir)}
+                             size={Button.Sizes.SMALL}
+                             disabled={settingsDir === "Loading..."}>
+-                            Open QuickCSS File
++                            Launch Directory
+                         </Button>
+                     ) : (
+                         <React.Fragment>
