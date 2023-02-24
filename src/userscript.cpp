@@ -42,8 +42,12 @@ void UserScript::setupHelpMenu() {
   aboutData.addCredit(
       "Curve", "For creating the Rohrkabel library used in this project.",
       QString(), "https://github.com/Curve");
-  aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.3",
+  aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.5",
                          "https://github.com/Soundux/rohrkabel");
+  aboutData.addComponent(
+      "Soundux/channel ",
+      "A C++ implementation of Rust's std::sync::mpsc::channel", nullptr,
+      "https://github.com/Soundux/channel");
   m_helpMenu = new KHelpMenu(MainWindow::instance(), aboutData);
 #endif
 }

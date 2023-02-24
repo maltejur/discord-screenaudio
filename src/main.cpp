@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
 
   if (parser.isSet(virtmicOption)) {
     Virtmic::start(parser.value(virtmicOption));
+    return 0;
   }
 
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
