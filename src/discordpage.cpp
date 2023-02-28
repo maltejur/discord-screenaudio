@@ -35,6 +35,9 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   injectFile(&DiscordPage::injectScript, "userscript.js",
              ":/assets/userscript.js");
+             
+  injectFile(&DiscordPage::injectScript, "bridge_mod.js",
+             ":/assets/bridge_mod.js");
 
   setupUserStyles();
 }
