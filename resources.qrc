@@ -2,6 +2,7 @@
 <RCC>
   <qresource>
     <file>assets/userscript.js</file>
+    <file>assets/bridge_mod.js</file>
     <file>assets/de.shorsh.discord-screenaudio.png</file>
   </qresource>
 </RCC>
