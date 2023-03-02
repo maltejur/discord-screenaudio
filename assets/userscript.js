@@ -328,17 +328,17 @@ function main() {
             })
           );
 
-          section.appendChild(
-            createButton("Install Theme", () => {
-              userscript.showThemeDialog();
-            })
-          );
+          // section.appendChild(
+          //   createButton("Install Theme", () => {
+          //     userscript.showThemeDialog();
+          //   })
+          // );
 
-          section.appendChild(
-            createButton("Uninstall Theme", () => {
-              userscript.installUserStyles("");
-            })
-          );
+          // section.appendChild(
+          //   createButton("Uninstall Theme", () => {
+          //     userscript.installUserStyles("");
+          //   })
+          // );
 
           section.appendChild(
             createSwitch(
