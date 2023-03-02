@@ -62,7 +62,7 @@ void UserScript::setupShortcutsDialog() {
   auto toggleDeafenAction = new QAction(this);
   toggleDeafenAction->setText("Toggle Deafen");
   toggleDeafenAction->setIcon(QIcon::fromTheme("audio-volume-muted"));
-  connect(toggleMuteAction, &QAction::triggered, this,
+  connect(toggleDeafenAction, &QAction::triggered, this,
           &UserScript::deafenToggled);
 
   m_actionCollection = new KActionCollection(this);
