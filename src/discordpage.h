@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QNetworkAccessManager>
+#include <QProcess>
 #include <QStandardPaths>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEnginePage>
@@ -22,10 +23,12 @@ private:
   QFile *m_userStylesFile;
   QString m_userStylesContent;
   QNetworkAccessManager m_networkAccessManager;
+  QProcess m_arrpcProcess;
   const QDir m_configLocation =
       QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
   void setupPermissions();
   void setupUserStyles();
+  void setupArrpc();
   void fetchUserStyles();
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,
