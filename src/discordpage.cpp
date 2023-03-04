@@ -9,6 +9,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include <QTemporaryFile>
 #include <QTimer>
 #include <QWebChannel>
 #include <QWebEngineScript>
@@ -35,11 +36,9 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
 
   injectFile(&DiscordPage::injectScript, "userscript.js",
              ":/assets/userscript.js");
-             
-  injectFile(&DiscordPage::injectScript, "bridge_mod.js",
-             ":/assets/bridge_mod.js");
 
   setupUserStyles();
+  setupArrpc();
 }
 
 void DiscordPage::setupPermissions() {
@@ -294,3 +293,19 @@ void DiscordPage::javaScriptConsoleMessage(
 }
 
 UserScript *DiscordPage::userScript() { return &m_userScript; }
+
+void DiscordPage::setupArrpc() {
+  QFile nodejs("/usr/bin/node");
+  if (nodejs.exists()) {
+    auto arrpcSource = QTemporaryFile::createNativeFile(":/assets/arrpc.js");
+    qDebug(mainLog).noquote()
+        << "NodeJS found, starting arRPC located at" << arrpcSource->fileName();
+    m_arrpcProcess.setProcessChannelMode(QProcess::ForwardedChannels);
+    m_arrpcProcess.setProgram(nodejs.fileName());
+    m_arrpcProcess.setArguments(QStringList{arrpcSource->fileName()});
+    m_arrpcProcess.start();
+
+    injectFile(&DiscordPage::injectScript, "arrpc_bridge_mod.js",
+               ":/assets/arrpc_bridge_mod.js");
+  }
+}
