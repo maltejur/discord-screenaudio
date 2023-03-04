@@ -99,7 +99,8 @@ void MainWindow::cleanTrayIcon() {
 }
 
 void MainWindow::setupSettings() {
-  m_settings = new QSettings("maltejur", "discord-screenaudio", this);
+  m_settings =
+      new QSettings("discord-screenaudio", "discord-screenaudio", this);
   m_settings->beginGroup("settings");
   m_settings->endGroup();
 }
