@@ -14,26 +14,27 @@ string(TIMESTAMP TIMESTAMP %s)
 # set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 COMPONENTS Widgets)
-if (Qt5_FOUND)
+if (Qt5_FOUND AND NOT DEFINED USE_QT6)
+  message(STATUS "Using Qt 5")
   find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets WebEngineWidgets)
-
-  find_package(KF5Notifications)
-  if(KF5Notifications_FOUND)
-    add_definitions( -DKNOTIFICATIONS )
-  endif()
-
-  find_package(KF5XmlGui)
-  if(KF5XmlGui_FOUND)
-    add_definitions( -DKXMLGUI )
-  endif()
-
-  find_package(KF5GlobalAccel)
-  if(KF5GlobalAccel_FOUND)
-    add_definitions( -DKGLOBALACCEL )
-  endif()
 else()
-  message(WARNING "Qt 5 was not found on your system and Qt 6 will be used. You will not be able to use any features using KDE Frameworks.")
+  message(STATUS "Using Qt 6")
   find_package(Qt6 CONFIG REQUIRED COMPONENTS Widgets WebEngineWidgets)
+endif()
+
+find_package(KF5Notifications)
+if(KF5Notifications_FOUND)
+  add_definitions( -DKNOTIFICATIONS )
+endif()
+
+find_package(KF5XmlGui)
+if(KF5XmlGui_FOUND)
+  add_definitions( -DKXMLGUI )
+endif()
+
+find_package(KF5GlobalAccel)
+if(KF5GlobalAccel_FOUND)
+  add_definitions( -DKGLOBALACCEL )
 endif()
 
 set(discord-screenaudio_SRC
