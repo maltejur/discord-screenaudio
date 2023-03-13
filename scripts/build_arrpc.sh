@@ -30,7 +30,7 @@ echo_status "Patching arRPC"
 sed -i 's/"type": "module",//' package.json
 
 echo_status "Building arRPC"
-pnpm exec ncc build src/index.js
+pnpm exec ncc build -m src/index.js
 
 echo_status "Copying built file"
 cp -v ./dist/index.js ../../assets/arrpc.js
