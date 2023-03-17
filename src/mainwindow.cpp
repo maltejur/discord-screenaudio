@@ -30,8 +30,12 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   m_centralWidget = new CentralWidget(this);
   setCentralWidget(m_centralWidget);
   setupTrayIcon();
-  resize(1000, 700);
-  showMaximized();
+  if (m_settings->contains("geometry")) {
+    restoreGeometry(m_settings->value("geometry").toByteArray());
+  } else {
+    resize(1000, 700);
+    showMaximized();
+  }
   if (m_settings->value("trayIcon", false).toBool() &&
       m_settings->value("startHidden", false).toBool()) {
     hide();
@@ -95,7 +99,8 @@ void MainWindow::cleanTrayIcon() {
 }
 
 void MainWindow::setupSettings() {
-  m_settings = new QSettings("maltejur", "discord-screenaudio", this);
+  m_settings =
+      new QSettings("discord-screenaudio", "discord-screenaudio", this);
   m_settings->beginGroup("settings");
   m_settings->endGroup();
 }
@@ -114,8 +119,10 @@ void MainWindow::setTrayIcon(bool enabled) {
 void MainWindow::closeEvent(QCloseEvent *event) {
   if (m_settings->value("trayIcon", false).toBool()) {
     hide();
-  } else
+  } else {
+    m_settings->setValue("geometry", saveGeometry());
     QApplication::quit();
+  }
 }
 
 MainWindow *MainWindow::instance() { return m_instance; }

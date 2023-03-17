@@ -139,10 +139,12 @@ setTimeout(() => {
 
 function main() {
   userscript.muteToggled.connect(() => {
+    console.log("Toggling mute");
     muteBtn && muteBtn.click();
   });
 
   userscript.deafenToggled.connect(() => {
+    console.log("Toggling deafen");
     deafenBtn && deafenBtn.click();
   });
 
@@ -285,15 +287,11 @@ function main() {
     }
 
     muteBtn = buttonContainer
-      ? buttonContainer.getElementsByClassName(
-          "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-        )[0]
+      ? buttonContainer.getElementsByTagName("button")[0]
       : null;
 
     deafenBtn = buttonContainer
-      ? buttonContainer.getElementsByClassName(
-          "button-12Fmur enabled-9OeuTA button-f2h6uQ lookBlank-21BCro colorBrand-I6CyqQ grow-2sR_-F"
-        )[1]
+      ? buttonContainer.getElementsByTagName("button")[1]
       : null;
 
     if (resolutionString) {
@@ -330,17 +328,17 @@ function main() {
             })
           );
 
-          section.appendChild(
-            createButton("Install Theme", () => {
-              userscript.showThemeDialog();
-            })
-          );
+          // section.appendChild(
+          //   createButton("Install Theme", () => {
+          //     userscript.showThemeDialog();
+          //   })
+          // );
 
-          section.appendChild(
-            createButton("Uninstall Theme", () => {
-              userscript.installUserStyles("");
-            })
-          );
+          // section.appendChild(
+          //   createButton("Uninstall Theme", () => {
+          //     userscript.installUserStyles("");
+          //   })
+          // );
 
           section.appendChild(
             createSwitch(
