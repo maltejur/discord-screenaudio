@@ -1,3 +1,4 @@
+#include "dependencycheck.h"
 #include "mainwindow.h"
 #include "virtmic.h"
 
@@ -48,6 +49,8 @@ int main(int argc, char *argv[]) {
     qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
             "--remote-debugging-port=9222 " +
                 qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
+
+  checkDependencies();
 
   MainWindow w(parser.isSet(notifySendOption));
   w.show();
