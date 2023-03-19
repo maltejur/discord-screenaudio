@@ -30,6 +30,7 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   m_centralWidget = new CentralWidget(this);
   setCentralWidget(m_centralWidget);
   setupTrayIcon();
+  setMinimumSize(800, 300);
   if (m_settings->contains("geometry")) {
     restoreGeometry(m_settings->value("geometry").toByteArray());
   } else {
