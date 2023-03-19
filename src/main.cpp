@@ -24,9 +24,6 @@ int main(int argc, char *argv[]) {
       "Custom Discord client with the ability to stream audio on Linux");
   parser.addHelpOption();
   parser.addVersionOption();
-  QCommandLineOption virtmicOption("virtmic", "Start the Virtual Microphone",
-                                   "target");
-  parser.addOption(virtmicOption);
   QCommandLineOption degubOption("remote-debugging",
                                  "Open Chromium Remote Debugging on port 9222");
   parser.addOption(degubOption);
@@ -35,11 +32,6 @@ int main(int argc, char *argv[]) {
   parser.addOption(notifySendOption);
 
   parser.process(app);
-
-  if (parser.isSet(virtmicOption)) {
-    Virtmic::start(parser.value(virtmicOption));
-    return 0;
-  }
 
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
           "--enable-features=WebRTCPipeWireCapturer " +

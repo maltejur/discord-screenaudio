@@ -1,6 +1,7 @@
 #pragma once
 
 #include "centralwidget.h"
+#include "virtmic.h"
 
 #include <QMainWindow>
 #include <QMenu>

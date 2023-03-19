@@ -1,4 +1,5 @@
 #include "streamdialog.h"
+#include "mainwindow.h"
 #include "virtmic.h"
 
 #include <QComboBox>
