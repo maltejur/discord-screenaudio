@@ -44,6 +44,10 @@ void UserScript::setupHelpMenu() {
       QString(), "https://github.com/Curve");
   aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.3",
                          "https://github.com/Soundux/rohrkabel");
+  aboutData.addComponent("arRPC",
+                         "An open implementation of Discord's local RPC "
+                         "servers<br>Copyright (c) 2022 OpenAsar",
+                         nullptr, "https://github.com/OpenAsar/arrpc");
   m_helpMenu = new KHelpMenu(MainWindow::instance(), aboutData);
 #endif
 }
