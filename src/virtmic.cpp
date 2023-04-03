@@ -99,7 +99,7 @@ void start(QString _target) {
     }
   };
 
-  std::string target = _target.toLatin1().toStdString();
+  std::string target = _target.toUtf8().toStdString();
 
   auto virtual_mic = core.create("adapter",
                                  {{"node.name", "discord-screenaudio-virtmic"},
