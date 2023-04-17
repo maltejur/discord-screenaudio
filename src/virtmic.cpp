@@ -8,6 +8,25 @@ namespace Virtmic {
 
 const QStringList EXCLUDE_TARGETS{"Chromium input", "discord-screenaudio"};
 
+const std::string nullstr = "";
+const std::string &getTarget(const pipewire::spa::dict &props) {
+  if (props.count("media.class") &&
+      props.at("media.class") == "Stream/Output/Audio") {
+    if (props.count("application.name") && props.at("application.name") != "")
+      return props.at("application.name");
+    else if (props.count("application.process.binary") &&
+             props.at("application.process.binary") != "")
+      return props.at("application.process.binary");
+    else
+      return props.at("node.name");
+  } else
+    return nullstr;
+}
+
+QString qGetTarget(const pipewire::spa::dict &props) {
+  return QString::fromStdString(getTarget(props));
+}
+
 QVector<QString> getTargets() {
   auto main_loop = pipewire::main_loop();
   auto context = pipewire::context(main_loop);
@@ -22,14 +41,7 @@ QVector<QString> getTargets() {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
-          QString name;
-          if (info.props.count("application.name") &&
-              info.props["application.name"] != "")
-            name = QString::fromStdString(info.props["application.name"]);
-          else
-            name = QString::fromStdString(
-                info.props["application.process.binary"]);
-
+          QString name = qGetTarget(info.props);
           if (name != "" && !EXCLUDE_TARGETS.contains(name) &&
               !targets.contains(name)) {
             targets.append(name);
@@ -73,13 +85,7 @@ void start(QString _target) {
         continue;
 
       auto &parent = nodes.at(parent_id);
-      std::string name;
-      if (parent.props.count("application.name") &&
-          parent.props["application.name"] != "")
-        name = parent.props["application.name"];
-      else
-        name = parent.props["application.process.binary"];
-
+      std::string name = getTarget(parent.props);
       if (name == target ||
           (target == "[All Desktop Audio]" &&
            !EXCLUDE_TARGETS.contains(QString::fromStdString(name)))) {
@@ -123,13 +129,8 @@ void start(QString _target) {
         if (global.type == pipewire::node::type) {
           auto node = reg.bind<pipewire::node>(global.id);
           auto info = node.info();
-          std::string name;
-          if (info.props.count("application.name") &&
-              info.props["application.name"] != "")
-            name = info.props["application.name"];
-          else if (info.props.count("application.process.binary")) {
-            name = info.props["application.process.binary"];
-          } else
+          std::string name = getTarget(info.props);
+          if (name == nullstr)
             return;
           qDebug(virtmicLog) << QString("Added: %1")
                                     .arg(QString::fromStdString(name))
@@ -168,12 +169,9 @@ void start(QString _target) {
       [&](const std::uint32_t id) {
         if (nodes.count(id)) {
           auto info = nodes.at(id);
-          std::string name;
-          if (info.props.count("application.name") &&
-              info.props["application.name"] != "")
-            name = info.props["application.name"];
-          else
-            name = info.props["application.process.binary"];
+          std::string name = getTarget(info.props);
+          if (name == nullstr)
+            return;
           qDebug(virtmicLog) << QString("Removed: %1")
                                     .arg(QString::fromStdString(name))
                                     .toUtf8()
