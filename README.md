@@ -62,6 +62,9 @@ You have multiple options:
 With apt:
 `apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git`
 
+With dnf:
+`dnf install @development-tools cmake qt5-qtbase-devel qt5-qtwebengine-devel kf5-knotifications-devel kf5-kxmlgui-devel kf5-kglobalaccel-devel pkgconfig pipewire-devel git`
+
 ### Building
 
 First, clone the repository:
