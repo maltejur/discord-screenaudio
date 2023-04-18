@@ -282,10 +282,11 @@ void DiscordPage::javaScriptConsoleMessage(
           ansi += "\033[" + cssAnsiColorMap[color] + "m";
       }
     }
-    qDebug(discordLog) << (ansi + lines[0].trimmed() + "\033[0m " +
-                           lines[endOfStyles].trimmed())
-                              .toUtf8()
-                              .constData();
+    if (endOfStyles < lines.length())
+      qDebug(discordLog) << (ansi + lines[0].trimmed() + "\033[0m " +
+                             lines[endOfStyles].trimmed())
+                                .toUtf8()
+                                .constData();
     for (auto line : lines.mid(endOfStyles + 1)) {
       qDebug(discordLog) << line.toUtf8().constData();
     }
