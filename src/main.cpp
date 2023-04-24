@@ -7,33 +7,30 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <QLoggingCategory>
 #include <QMessageBox>
-#include <QLocalSocket>
-#include <QLocalServer>
 
-void showErrorMessage(const char* text) {
+void showErrorMessage(const char *text) {
   QMessageBox msgBox;
 
   msgBox.setIcon(QMessageBox::Critical);
   msgBox.setText(text);
   msgBox.setStandardButtons(QMessageBox::Ok);
   msgBox.setDefaultButton(QMessageBox::Ok);
-  msgBox.setWindowIcon(
-      QIcon(":assets/de.shorsh.discord-screenaudio.png"));
+  msgBox.setWindowIcon(QIcon(":assets/de.shorsh.discord-screenaudio.png"));
 
   msgBox.exec();
 }
 
-
-bool isProgramRunning(const QString& program_name)
-{
-    QLocalSocket socket;
-    socket.connectToServer(program_name);
-    if (socket.waitForConnected()) {
-        return true; // program is already running
-    }
-    return false;
+bool isProgramRunning(const QString &program_name) {
+  QLocalSocket socket;
+  socket.connectToServer(program_name);
+  if (socket.waitForConnected()) {
+    return true; // program is already running
+  }
+  return false;
 }
 
 int main(int argc, char *argv[]) {
@@ -42,15 +39,15 @@ int main(int argc, char *argv[]) {
   // Check if discord is already running
   QString program_name = "discord-screenaudio";
   if (isProgramRunning(program_name)) {
-      // if running show error message
-      showErrorMessage("Discord is already running");
-      return 1;
+    // if running show error message
+    showErrorMessage("Discord is already running");
+    return 1;
   }
 
   // open server so we can check if discord is running
   QLocalServer server;
   server.listen(program_name);
-  QObject::connect(&server, &QLocalServer::newConnection, [](){});
+  QObject::connect(&server, &QLocalServer::newConnection, []() {});
 
   QApplication::setApplicationName("discord-screenaudio");
   QApplication::setWindowIcon(
