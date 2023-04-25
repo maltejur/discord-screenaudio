@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   QString program_name = "discord-screenaudio";
   if (isProgramRunning(program_name)) {
     // if running show error message
-    showErrorMessage("Discord is already running");
+    showErrorMessage("discord-screenaudio is already running");
     return 1;
   }
 
