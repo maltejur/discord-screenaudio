@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "virtmic.h"
+#include "utils.h"
 
 #ifdef KXMLGUI
 #include <KAboutData>
@@ -11,27 +12,6 @@
 #include <QLocalSocket>
 #include <QLoggingCategory>
 #include <QMessageBox>
-
-void showErrorMessage(const char *text) {
-  QMessageBox msgBox;
-
-  msgBox.setIcon(QMessageBox::Critical);
-  msgBox.setText(text);
-  msgBox.setStandardButtons(QMessageBox::Ok);
-  msgBox.setDefaultButton(QMessageBox::Ok);
-  msgBox.setWindowIcon(QIcon(":assets/de.shorsh.discord-screenaudio.png"));
-
-  msgBox.exec();
-}
-
-bool isProgramRunning(const QString &program_name) {
-  QLocalSocket socket;
-  socket.connectToServer(program_name);
-  if (socket.waitForConnected()) {
-    return true; // program is already running
-  }
-  return false;
-}
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
