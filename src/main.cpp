@@ -1,6 +1,6 @@
+#include "localserver.h"
 #include "mainwindow.h"
 #include "virtmic.h"
-#include "localserver.h"
 
 #ifdef KXMLGUI
 #include <KAboutData>
@@ -15,8 +15,6 @@
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
-
-
 
   QApplication::setApplicationName("discord-screenaudio");
   QApplication::setWindowIcon(
