@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "virtmic.h"
-#include "utils.h"
+#include "localserver.h"
 
 #ifdef KXMLGUI
 #include <KAboutData>
@@ -16,18 +16,7 @@
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
 
-  // Check if discord is already running
-  QString program_name = "discord-screenaudio";
-  if (isProgramRunning(program_name)) {
-    // if running show error message
-    showErrorMessage("discord-screenaudio is already running");
-    return 1;
-  }
 
-  // open server so we can check if discord is running
-  QLocalServer server;
-  server.listen(program_name);
-  QObject::connect(&server, &QLocalServer::newConnection, []() {});
 
   QApplication::setApplicationName("discord-screenaudio");
   QApplication::setWindowIcon(
@@ -68,6 +57,20 @@ int main(int argc, char *argv[]) {
                 qgetenv("QTWEBENGINE_CHROMIUM_FLAGS"));
 
   MainWindow w(parser.isSet(notifySendOption));
+
+  // Check if discord is already running
+  QString program_name = "discord-screenaudio";
+  if (isProgramRunning(program_name)) {
+    // if running show error message
+    showErrorMessage("discord-screenaudio is already running");
+    return 1;
+  }
+
+  // open server so we can check if discord is running
+  QLocalServer server;
+  server.listen(program_name);
+  QObject::connect(&server, &QLocalServer::newConnection, []() {});
+
   w.show();
 
   return app.exec();

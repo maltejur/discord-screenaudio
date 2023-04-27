@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "localserver.h"
 
 bool isProgramRunning(const QString &program_name) {
   QLocalSocket socket;
