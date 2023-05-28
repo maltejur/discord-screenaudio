@@ -72,6 +72,7 @@ public Q_SLOTS:
   void showShortcutsDialog();
   void showHelpMenu();
   void showStreamDialog();
+  void showInformation(QString title, QString message);
   void stopVirtmic();
   void startVirtmic(QString target);
   void showThemeDialog();

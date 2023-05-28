@@ -182,3 +182,7 @@ void UserScript::showThemeDialog() {
 void UserScript::installUserStyles(QString url) {
   emit shouldInstallUserStyles(url);
 }
+
+void UserScript::showInformation(QString title, QString message) {
+  QMessageBox::information(MainWindow::instance(), title, message);
+}

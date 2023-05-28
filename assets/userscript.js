@@ -1,12 +1,14 @@
 navigator.mediaDevices.chromiumGetDisplayMedia =
   navigator.mediaDevices.getDisplayMedia;
+navigator.mediaDevices.chromiumGetUserMedia =
+  navigator.mediaDevices.getUserMedia;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 const getAudioDevice = async (nameOfAudioDevice) => {
-  await navigator.mediaDevices.getUserMedia({
+  await navigator.mediaDevices.chromiumGetUserMedia({
     audio: true,
   });
   let audioDevice;
@@ -23,6 +25,16 @@ const getAudioDevice = async (nameOfAudioDevice) => {
   return audioDevice;
 };
 
+function setGetUserMedia() {
+  const getUserMedia = async (constraints) => {
+    return await navigator.mediaDevices.chromiumGetUserMedia({
+      video: constraints?.video || false,
+      audio: { ...constraints?.audio, autoGainControl },
+    });
+  };
+  navigator.mediaDevices.getUserMedia = getUserMedia;
+}
+
 function setGetDisplayMedia(video = true, overrideArgs = undefined) {
   const getDisplayMedia = async (...args) => {
     var id;
@@ -34,26 +46,27 @@ function setGetDisplayMedia(video = true, overrideArgs = undefined) {
     } catch (error) {
       id = "default";
     }
-    let captureSystemAudioStream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        // We add our audio constraints here, to get a list of supported constraints use navigator.mediaDevices.getSupportedConstraints();
-        // We must capture a microphone, we use default since its the only deviceId that is the same for every Chromium user
-        deviceId: {
-          exact: id,
+    let captureSystemAudioStream =
+      await navigator.mediaDevices.chromiumGetUserMedia({
+        audio: {
+          // We add our audio constraints here, to get a list of supported constraints use navigator.mediaDevices.getSupportedConstraints();
+          // We must capture a microphone, we use default since its the only deviceId that is the same for every Chromium user
+          deviceId: {
+            exact: id,
+          },
+          // We want auto gain control, noise cancellation and noise suppression disabled so that our stream won't sound bad
+          autoGainControl: false,
+          echoCancellation: false,
+          noiseSuppression: false,
+          // By default Chromium sets channel count for audio devices to 1, we want it to be stereo in case we find a way for Discord to accept stereo screenshare too
+          channelCount: 2,
+          // You can set more audio constraints here, bellow are some examples
+          //latency: 0,
+          //sampleRate: 48000,
+          //sampleSize: 16,
+          //volume: 1.0
         },
-        // We want auto gain control, noise cancellation and noise suppression disabled so that our stream won't sound bad
-        autoGainControl: false,
-        echoCancellation: false,
-        noiseSuppression: false,
-        // By default Chromium sets channel count for audio devices to 1, we want it to be stereo in case we find a way for Discord to accept stereo screenshare too
-        channelCount: 2,
-        // You can set more audio constraints here, bellow are some examples
-        //latency: 0,
-        //sampleRate: 48000,
-        //sampleSize: 16,
-        //volume: 1.0
-      },
-    });
+      });
     let [track] = captureSystemAudioStream.getAudioTracks();
     const gdm = await navigator.mediaDevices.chromiumGetDisplayMedia(
       ...(overrideArgs
@@ -68,6 +81,7 @@ function setGetDisplayMedia(video = true, overrideArgs = undefined) {
 }
 
 setGetDisplayMedia();
+setGetUserMedia();
 
 let userscript;
 let muteBtn;
@@ -76,6 +90,7 @@ let streamStartBtn;
 let streamStartBtnInitialDisplay;
 let streamStartBtnClone;
 let resolutionString;
+let autoGainControl = true;
 const clonedElements = [];
 const hiddenElements = [];
 let wasStreamActive = false;
@@ -157,6 +172,10 @@ function main() {
     streamStartBtn.click();
     streamStartBtn.style.display = streamStartBtnInitialDisplay;
     streamStartBtnClone.remove();
+  });
+
+  userscript.getPref("disableAutomaticGain", false).then((disabled) => {
+    autoGainControl = !disabled;
   });
 
   function updateUserstyles() {
@@ -366,6 +385,30 @@ function main() {
           firstDivider.after(section);
           section.after(divider);
         }
+      }
+    }
+
+    for (const el of document.getElementsByClassName("sensitivity-3A7Gs9")) {
+      if (
+        el.getElementsByTagName("div").length > 0 &&
+        !document.getElementById("discord-screenaudio-gaintoggle")
+      ) {
+        const toggle = createSwitch(
+          "Disable automatic gain",
+          await userscript.getPref("disableAutomaticGain", false),
+          async (disabled) => {
+            await userscript.setPref("disableAutomaticGain", disabled);
+            autoGainControl = !disabled;
+            setGetUserMedia();
+            if (disabled)
+              userscript.showInformation(
+                "discord-screenaudio",
+                "If you are currently in a call, this setting may only take effect after you rejoin the call or restart discord-screenaudio."
+              );
+          }
+        );
+        toggle.id = "discord-screenaudio-gaintoggle";
+        el.getElementsByTagName("div")[0].appendChild(toggle);
       }
     }
   }, 500);
