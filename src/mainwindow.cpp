@@ -12,6 +12,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QShortcut>
 #include <QSpacerItem>
 #include <QThread>
 #include <QTimer>
@@ -31,6 +32,8 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   setCentralWidget(m_centralWidget);
   setupTrayIcon();
   setMinimumSize(800, 300);
+  connect(new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this),
+          &QShortcut::activated, this, &MainWindow::toggleOrCloseWindow);
   if (m_settings->contains("geometry")) {
     restoreGeometry(m_settings->value("geometry").toByteArray());
   } else {
@@ -79,12 +82,7 @@ void MainWindow::setupTrayIcon() {
 
   connect(m_trayIcon, &QSystemTrayIcon::activated, [this](auto reason) {
     if (reason == QSystemTrayIcon::Trigger) {
-      if (isVisible()) {
-        hide();
-      } else {
-        show();
-        activateWindow();
-      }
+      toggleOrCloseWindow();
     }
   });
 }
@@ -131,3 +129,15 @@ MainWindow *MainWindow::instance() { return m_instance; }
 CentralWidget *MainWindow::centralWidget() {
   return instance()->m_centralWidget;
 };
+
+void MainWindow::toggleOrCloseWindow() {
+  if (isVisible()) {
+    if (m_trayIcon == nullptr)
+      QApplication::quit();
+    else
+      hide();
+  } else {
+    show();
+    activateWindow();
+  }
+}

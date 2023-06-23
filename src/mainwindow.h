@@ -36,4 +36,5 @@ private:
 public Q_SLOTS:
   void setTrayIcon(bool enabled);
   void fullScreenRequested(QWebEngineFullScreenRequest fullScreenRequest);
+  void toggleOrCloseWindow();
 };
