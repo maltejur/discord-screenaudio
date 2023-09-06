@@ -68,7 +68,7 @@ if(NOT EXISTS "${PROJECT_SOURCE_DIR}/submodules/rohrkabel/CMakeLists.txt")
   message(FATAL_ERROR "Rohrkabel was not found since you are not in a Git checkout or have GIT_SUBMODULE disabled. Please provide rohrkabel manually to `./submodules/rohrkabel`.")
 endif()
 
-add_subdirectory(submodules/rohrkabel)
+add_subdirectory(submodules/rohrkabel EXCLUDE_FROM_ALL)
 
 add_executable(discord-screenaudio ${discord-screenaudio_SRC})
 
