@@ -11,7 +11,7 @@
 CentralWidget::CentralWidget(QWidget *parent) : QWidget(parent) {
   setStyleSheet("background-color:#313338;");
   m_layout = new QVBoxLayout(this);
-  m_layout->setMargin(0);
+  m_layout->setContentsMargins(0, 0, 0, 0);
   m_layout->setSpacing(0);
   setupWebView();
 }
