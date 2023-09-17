@@ -47,7 +47,7 @@ void UserScript::setupHelpMenu() {
   aboutData.addComponent("arRPC",
                          "An open implementation of Discord's local RPC "
                          "servers<br>Copyright (c) 2022 OpenAsar",
-                         nullptr, "https://github.com/OpenAsar/arrpc");
+                         "3.2.0", "https://github.com/OpenAsar/arrpc");
   m_helpMenu = new KHelpMenu(MainWindow::instance(), aboutData);
 #endif
 }

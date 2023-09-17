@@ -19,8 +19,8 @@ else
   git fetch
 fi
 
-echo_status "Checking out latest commit"
-git reset --hard HEAD
+echo_status "Checking out commit"
+git reset --hard 9c3e981437b75606c74ef058c67d1a8c083ce49a
 git checkout main
 
 echo_status "Installing dependencies"
