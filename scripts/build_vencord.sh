@@ -22,7 +22,7 @@ fi
 echo_status "Checking out latest commit"
 git reset --hard HEAD
 git checkout main
-git reset --hard devbuild
+git reset --hard origin/main
 
 echo_status "Installing dependencies"
 pnpm i
@@ -30,7 +30,7 @@ pnpm i
 echo_status "Patching Vencord"
 cp -v ../../assets/vencord/plugin.js ./src/plugins/discord-screenaudio.js
 cp -v ../../assets/vencord/VencordNativeStub.ts ./browser/VencordNativeStub.ts
-patch -p1 -i ../../assets/vencord/settings.patch
+# patch -p1 -i ../../assets/vencord/settings.patch
 
 echo_status "Building Vencord"
 pnpm run buildWeb

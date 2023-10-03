@@ -249,3 +249,38 @@ QVariant UserScript::vencordSend(QString event, QVariantList args) {
   }
   assert(false);
 }
+
+QString UserScript::getQuickCSS() {
+  QString configFolder =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+      "/vencord";
+  QString quickCssPath = configFolder + "/quickCss.css";
+  QFile quickCssFile(quickCssPath);
+
+  if (quickCssFile.exists()) {
+    if (!quickCssFile.open(QIODevice::ReadOnly))
+      qFatal("Failed to load %s with error: %s",
+             quickCssPath.toLatin1().constData(),
+             quickCssFile.errorString().toLatin1().constData());
+    auto content = quickCssFile.readAll();
+    quickCssFile.close();
+    return QString(content);
+  } else
+    return "";
+}
+
+void UserScript::editQuickCSS() {
+  QString configFolder =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) +
+      "/vencord";
+  QString quickCssPath = configFolder + "/quickCss.css";
+  QFile quickCssFile(quickCssPath);
+
+  if (!quickCssFile.exists()) {
+    quickCssFile.open(QIODevice::WriteOnly);
+    quickCssFile.close();
+  }
+  QDesktopServices::openUrl(QUrl::fromLocalFile(quickCssPath));
+}
+
+void UserScript::openURL(QString url) { QDesktopServices::openUrl(url); }
