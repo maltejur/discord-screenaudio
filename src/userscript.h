@@ -49,6 +49,7 @@ private:
   KShortcutsDialog *m_shortcutsDialog;
 #endif
 #endif
+  QString m_vencordSettings;
   void setupHelpMenu();
   void setupShortcutsDialog();
   void setupStreamDialog();
@@ -76,6 +77,7 @@ public Q_SLOTS:
   void startVirtmic(QString target);
   void showThemeDialog();
   void installUserStyles(QString url);
+  QVariant vencordSend(QString event, QVariantList args);
 
 private Q_SLOTS:
   void startStream(bool video, bool audio, int width, int height, int frameRate,

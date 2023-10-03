@@ -37,6 +37,19 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   injectFile(&DiscordPage::injectScript, "userscript.js",
              ":/assets/userscript.js");
 
+  injectFile(&DiscordPage::injectScript, "userscript.js",
+             ":/assets/userscript.js");
+  QFile vencord(":/assets/vencord/vencord.js");
+  if (!vencord.open(QIODevice::ReadOnly))
+    qFatal("Failed to load vencord source with error: %s",
+           vencord.errorString().toLatin1().constData());
+  injectScript(
+      "vencord.js",
+      QString("window.discordScreenaudioVencordSettings = `%1`; %2")
+          .arg(m_userScript.vencordSend("VencordGetSettings", {}).toString(),
+               vencord.readAll()));
+  vencord.close();
+
   setupUserStyles();
   setupArrpc();
 }

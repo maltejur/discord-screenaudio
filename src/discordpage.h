@@ -1,6 +1,8 @@
 #pragma once
 
+#include "streamdialog.h"
 #include "userscript.h"
+#include "virtmic.h"
 
 #include <QDir>
 #include <QFile>
