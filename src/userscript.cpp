@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "userscript.h"
 #include "log.h"
 #include "mainwindow.h"
@@ -31,7 +35,8 @@ void UserScript::setupHelpMenu() {
       "discord-screenaudio", "discord-screenaudio",
       QApplication::applicationVersion(),
       "Custom Discord client with the ability to stream audio on Linux",
-      KAboutLicense::GPL_V3, "Copyright 2022 (C) Malte Jürgens");
+      KAboutLicense::GPL_V3,
+      "Copyright (c) 2022 Malte Jürgens and contributors");
   aboutData.setBugAddress("https://github.com/maltejur/discord-screenaudio");
   aboutData.addAuthor("Malte Jürgens", "Author", "maltejur@dismail.de",
                       "https://github.com/maltejur");
@@ -41,17 +46,22 @@ void UserScript::setupHelpMenu() {
                       QString(),
                       "https://github.com/edisionnano/"
                       "Screenshare-with-audio-on-Discord-with-Linux");
-  aboutData.addCredit(
-      "Curve", "For creating the Rohrkabel library used in this project.",
-      QString(), "https://github.com/Curve");
-  aboutData.addComponent("Rohrkabel", "A C++ RAII Pipewire-API Wrapper", "1.3",
-                         "https://github.com/Soundux/rohrkabel");
+  aboutData.addCredit("Curve",
+                      "For creating the Rohrkabel library "
+                      "used in this project.",
+                      QString(), "https://github.com/Curve");
+  aboutData.addComponent("Rohrkabel",
+                         "A C++ RAII Pipewire-API Wrapper<br>"
+                         "Copyright (c) 2022 Soundux",
+                         "1.3", "https://github.com/Soundux/rohrkabel");
   aboutData.addComponent("arRPC",
-                         "An open implementation of Discord's local RPC "
-                         "servers<br>Copyright (c) 2022 OpenAsar",
-                         getVersion("arrpc"),
-                         "https://github.com/OpenAsar/arrpc");
-  aboutData.addComponent("Vencord", "A modification for Discord's desktop app",
+                         "An open implementation of Discord's "
+                         "local RPC servers<br>"
+                         "Copyright (c) 2022 OpenAsar",
+                         getVersion("arrpc"), "https://arrpc.openasar.dev/");
+  aboutData.addComponent("Vencord",
+                         "A modification for Discord's desktop app<br>"
+                         "Copyright (c) 2022 Vendicated and contributors",
                          getVersion("vencord"), "https://vencord.dev/");
   m_helpMenu = new KHelpMenu(MainWindow::instance(), aboutData);
 #endif

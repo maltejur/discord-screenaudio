@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+
+    env:
+      BUILD_TYPE: Release
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: apt update && apt install -y build-essential cmake qtbase5-dev qtwebengine5-dev libkf5notifications-dev libkf5xmlgui-dev libkf5globalaccel-dev pkg-config libpipewire-0.3-dev git
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+  Lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: clang-format
+        uses: DoozyX/clang-format-lint-action@v0.16.2
+        with:
+          source: src
+
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v2.0.0

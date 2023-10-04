@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 [submodule "submodules/rohrkabel"]
-	path = submodules/rohrkabel
-	url = https://github.com/Soundux/rohrkabel
+path = submodules/rohrkabel
+url = https://github.com/Soundux/rohrkabel

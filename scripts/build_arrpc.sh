@@ -1,4 +1,9 @@
 #!/usr/bin/bash
+
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set -e
 
 checkout="89f4da610ccfac93f461826a446a17cd3b23953d"

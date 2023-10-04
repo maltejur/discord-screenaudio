@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 --- a/src/components/VencordSettings/VencordTab.tsx
 +++ b/src/components/VencordSettings/VencordTab.tsx
 @@ -87,10 +87,10 @@ function VencordSettings() {

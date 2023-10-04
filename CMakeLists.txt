@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required(VERSION 3.5)
 project(discord-screenaudio)
 

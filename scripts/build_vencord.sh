@@ -1,4 +1,9 @@
 #!/usr/bin/bash
+
+# SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set -e
 
 cd "$(dirname "$0")/../submodules"
