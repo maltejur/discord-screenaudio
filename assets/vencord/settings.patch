@@ -1,0 +1,15 @@
+--- a/src/components/VencordSettings/VencordTab.tsx
++++ b/src/components/VencordSettings/VencordTab.tsx
+@@ -87,10 +87,10 @@ function VencordSettings() {
+                 <Card className={cl("quick-actions-card")}>
+                     {IS_WEB ? (
+                         <Button
+-                            onClick={() => require("../Monaco").launchMonacoEditor()}
++                            onClick={() => VencordNative.ipc.send(IpcEvents.OPEN_EXTERNAL, settingsDir)}
+                             size={Button.Sizes.SMALL}
+                             disabled={settingsDir === "Loading..."}>
+-                            Open QuickCSS File
++                            Launch Directory
+                         </Button>
+                     ) : (
+                         <React.Fragment>

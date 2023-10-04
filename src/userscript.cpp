@@ -4,6 +4,8 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QDir>
 #include <QFile>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -47,7 +49,10 @@ void UserScript::setupHelpMenu() {
   aboutData.addComponent("arRPC",
                          "An open implementation of Discord's local RPC "
                          "servers<br>Copyright (c) 2022 OpenAsar",
-                         "3.2.0", "https://github.com/OpenAsar/arrpc");
+                         getVersion("arrpc"),
+                         "https://github.com/OpenAsar/arrpc");
+  aboutData.addComponent("Vencord", "A modification for Discord's desktop app",
+                         getVersion("vencord"), "https://vencord.dev/");
   m_helpMenu = new KHelpMenu(MainWindow::instance(), aboutData);
 #endif
 }
@@ -181,4 +186,69 @@ void UserScript::showThemeDialog() {
 
 void UserScript::installUserStyles(QString url) {
   emit shouldInstallUserStyles(url);
+}
+
+QString UserScript::getConfigPath(QString name) {
+  QString configPath =
+      QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+  if (name == nullptr)
+    return configPath;
+  return configPath + "/" + name;
+}
+
+QString UserScript::getConfigFile(QString name) {
+  QFile file(getConfigPath(name));
+
+  if (file.exists()) {
+    if (!file.open(QIODevice::ReadOnly))
+      qFatal("Failed to load %s with error: %s",
+             file.fileName().toUtf8().constData(),
+             file.errorString().toUtf8().constData());
+    auto content = file.readAll();
+    file.close();
+    return QString(content);
+  } else
+    return "";
+}
+
+void UserScript::setConfigFile(QString name, QByteArray &value) {
+  QFile file(getConfigPath(name));
+  if (!file.open(QIODevice::WriteOnly))
+    qFatal("Failed to open %s with error: %s",
+           file.fileName().toUtf8().constData(),
+           file.errorString().toUtf8().constData());
+  file.write(value);
+  file.close();
+}
+
+void UserScript::editConfigFile(QString name) {
+  QFile file(getConfigPath(name));
+
+  if (!file.exists()) {
+    file.open(QIODevice::WriteOnly);
+    file.close();
+  }
+  QDesktopServices::openUrl(QUrl::fromLocalFile(file.fileName()));
+}
+
+void UserScript::openURL(QString url) { QDesktopServices::openUrl(url); }
+
+QString UserScript::getVersion(QString component) {
+  QFile versionFile(":/assets/" + component + "/version.txt");
+  versionFile.open(QIODevice::ReadOnly);
+  QString version = versionFile.readAll().trimmed();
+  versionFile.close();
+  return version;
+}
+
+void UserScript::promptRestart(QString message) {
+  QMessageBox messageBox(MainWindow::instance());
+  messageBox.setText(message);
+  messageBox.setIcon(QMessageBox::Information);
+  messageBox.addButton("Restart Now", QMessageBox::AcceptRole);
+  messageBox.addButton("Later", QMessageBox::RejectRole);
+  if (messageBox.exec() == 0) {
+    QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+    QApplication::quit();
+  }
 }

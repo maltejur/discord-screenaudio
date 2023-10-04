@@ -1,0 +1,13 @@
+diff --git a/src/plugins/arRPC.web/index.tsx b/src/plugins/arRPC.web/index.tsx
+index f0d4841..0b9327b 100644
+--- a/src/plugins/arRPC.web/index.tsx
++++ b/src/plugins/arRPC.web/index.tsx
+@@ -48,6 +48,8 @@ export default definePlugin({
+     name: "WebRichPresence (arRPC)",
+     description: "Client plugin for arRPC to enable RPC on Discord Web (experimental)",
+     authors: [Devs.Ducko],
++    required: true,
++    enabledByDefault: false,
+ 
+     settingsAboutComponent: () => (
+         <>
