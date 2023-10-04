@@ -1,6 +1,9 @@
 #!/usr/bin/bash
 set -e
 
+checkout="89f4da610ccfac93f461826a446a17cd3b23953d"
+version="3.2.0"
+
 cd "$(dirname "$0")/../submodules"
 
 echo_status() {
@@ -20,7 +23,7 @@ else
 fi
 
 echo_status "Checking out commit"
-git reset --hard 9c3e981437b75606c74ef058c67d1a8c083ce49a
+git reset --hard $checkout
 git checkout main
 
 echo_status "Installing dependencies"
@@ -33,4 +36,7 @@ echo_status "Building arRPC"
 pnpm exec ncc build -m src/index.js
 
 echo_status "Copying built file"
-cp -v ./dist/index.js ../../assets/arrpc.js
+cp -v ./dist/index.js ../../assets/arrpc/arrpc.js
+
+echo_status "Saving version"
+echo "$version" >../../assets/arrpc/version.txt

@@ -53,6 +53,7 @@ private:
   void setupShortcutsDialog();
   void setupStreamDialog();
   void setupVirtmic();
+  QString getVersion(QString component);
 
 Q_SIGNALS:
   void muteToggled();
@@ -76,10 +77,12 @@ public Q_SLOTS:
   void startVirtmic(QString target);
   void showThemeDialog();
   void installUserStyles(QString url);
-  QVariant vencordSend(QString event, QVariantList args);
-  QString getQuickCSS();
-  void editQuickCSS();
+  QString getConfigPath(QString name = nullptr);
+  QString getConfigFile(QString name);
+  void setConfigFile(QString name, QByteArray &value);
+  void editConfigFile(QString name);
   void openURL(QString url);
+  void promptRestart(QString message);
 
 private Q_SLOTS:
   void startStream(bool video, bool audio, int width, int height, int frameRate,

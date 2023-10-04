@@ -34,21 +34,28 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setWebChannel(new QWebChannel(this));
   webChannel()->registerObject("userscript", &m_userScript);
 
-  injectFile(&DiscordPage::injectScript, "userscript.js",
-             ":/assets/userscript.js");
-
-  injectFile(&DiscordPage::injectScript, "userscript.js",
-             ":/assets/userscript.js");
-  QFile vencord(":/assets/vencord/vencord.js");
-  if (!vencord.open(QIODevice::ReadOnly))
+  QByteArray content;
+  QFile userscript(":/assets/userscript.js");
+  if (!userscript.open(QIODevice::ReadOnly))
     qFatal("Failed to load vencord source with error: %s",
-           vencord.errorString().toLatin1().constData());
-  injectScript(
-      "vencord.js",
-      QString("window.discordScreenaudioVencordSettings = `%1`; %2")
-          .arg(m_userScript.vencordSend("VencordGetSettings", {}).toString(),
-               vencord.readAll()));
-  vencord.close();
+           userscript.errorString().toLatin1().constData());
+  content.append(userscript.readAll());
+  userscript.close();
+  if (MainWindow::instance()->settings()->value("vencord", false).toBool()) {
+    qDebug(mainLog) << "Vencord is enabled";
+    QFile vencord(":/assets/vencord/vencord.js");
+    if (!vencord.open(QIODevice::ReadOnly))
+      qFatal("Failed to load vencord source with error: %s",
+             vencord.errorString().toLatin1().constData());
+    content.append(";");
+    content.append(vencord.readAll());
+    vencord.close();
+  }
+  injectScript("userscript.js", content);
+
+  injectFile(&DiscordPage::injectStylesheet, "style.css", ":/assets/style.css");
+  injectFile(&DiscordPage::injectStylesheet, "vencord.css",
+             ":/assets/vencord/vencord.css");
 
   setupUserStyles();
   setupArrpc();
@@ -165,10 +172,10 @@ void DiscordPage::injectScript(QString name, QString content) {
 }
 
 void DiscordPage::injectStylesheet(QString name, QString content) {
-  auto script = QString(R"(const stylesheet = document.createElement("style");
+  auto script = QString(R"({const stylesheet = document.createElement("style");
 stylesheet.id = "%1";
 stylesheet.innerText = `%2`;
-document.head.appendChild(stylesheet);
+document.head.appendChild(stylesheet);}
 )")
                     .arg(name)
                     .arg(content);
@@ -311,7 +318,8 @@ UserScript *DiscordPage::userScript() { return &m_userScript; }
 void DiscordPage::setupArrpc() {
   QFile nodejs("/usr/bin/node");
   if (nodejs.exists()) {
-    auto arrpcSource = QTemporaryFile::createNativeFile(":/assets/arrpc.js");
+    auto arrpcSource =
+        QTemporaryFile::createNativeFile(":/assets/arrpc/arrpc.js");
     qDebug(mainLog).noquote()
         << "NodeJS found, starting arRPC located at" << arrpcSource->fileName();
     m_arrpcProcess.setProcessChannelMode(QProcess::ForwardedChannels);
@@ -320,6 +328,6 @@ void DiscordPage::setupArrpc() {
     m_arrpcProcess.start();
 
     injectFile(&DiscordPage::injectScript, "arrpc_bridge_mod.js",
-               ":/assets/arrpc_bridge_mod.js");
+               ":/assets/arrpc/arrpc_bridge_mod.js");
   }
 }

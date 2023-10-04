@@ -2,9 +2,13 @@
 <RCC>
   <qresource>
     <file>assets/userscript.js</file>
-    <file>assets/arrpc_bridge_mod.js</file>
-    <file>assets/arrpc.js</file>
+    <file>assets/style.css</file>
+    <file>assets/arrpc/arrpc_bridge_mod.js</file>
+    <file>assets/arrpc/arrpc.js</file>
+    <file>assets/arrpc/version.txt</file>
     <file>assets/vencord/vencord.js</file>
+    <file>assets/vencord/vencord.css</file>
+    <file>assets/vencord/version.txt</file>
     <file>assets/de.shorsh.discord-screenaudio.png</file>
   </qresource>
 </RCC>
