@@ -26,35 +26,45 @@ StreamDialog::StreamDialog(QWidget *parent) : QDialog(parent) {
     layout->addWidget(m_videoGroupBox);
 
     {
-      auto videoLayout = new QVBoxLayout(m_videoGroupBox);
+      auto videoLayout = new QHBoxLayout(m_videoGroupBox);
 
-      auto resolutionLabel = new QLabel(this);
-      resolutionLabel->setText("Resolution");
-      videoLayout->addWidget(resolutionLabel);
+      {
+        auto resolutionLayout = new QVBoxLayout(this);
+        videoLayout->addLayout(resolutionLayout);
 
-      m_resolutionComboBox = new QComboBox(this);
-      m_resolutionComboBox->addItem("2160p", "3840x2160");
-      m_resolutionComboBox->addItem("1440p", "2560x1440");
-      m_resolutionComboBox->addItem("1080p", "1920x1080");
-      m_resolutionComboBox->addItem("720p", "1280x720");
-      m_resolutionComboBox->addItem("480p", "854x480");
-      m_resolutionComboBox->addItem("360p", "640x360");
-      m_resolutionComboBox->addItem("240p", "426x240");
-      m_resolutionComboBox->setCurrentText("720p");
-      videoLayout->addWidget(m_resolutionComboBox);
+        auto resolutionLabel = new QLabel(this);
+        resolutionLabel->setText("Resolution");
+        resolutionLayout->addWidget(resolutionLabel);
 
-      auto framerateLabel = new QLabel(this);
-      framerateLabel->setText("Framerate");
-      videoLayout->addWidget(framerateLabel);
+        m_resolutionComboBox = new QComboBox(this);
+        m_resolutionComboBox->addItem("2160p", "3840x2160");
+        m_resolutionComboBox->addItem("1440p", "2560x1440");
+        m_resolutionComboBox->addItem("1080p", "1920x1080");
+        m_resolutionComboBox->addItem("720p", "1280x720");
+        m_resolutionComboBox->addItem("480p", "854x480");
+        m_resolutionComboBox->addItem("360p", "640x360");
+        m_resolutionComboBox->addItem("240p", "426x240");
+        m_resolutionComboBox->setCurrentText("720p");
+        resolutionLayout->addWidget(m_resolutionComboBox);
+      }
 
-      m_framerateComboBox = new QComboBox(this);
-      m_framerateComboBox->addItem("144 FPS", 144);
-      m_framerateComboBox->addItem("60 FPS", 60);
-      m_framerateComboBox->addItem("30 FPS", 30);
-      m_framerateComboBox->addItem("15 FPS", 15);
-      m_framerateComboBox->addItem("5 FPS", 5);
-      m_framerateComboBox->setCurrentText("30 FPS");
-      videoLayout->addWidget(m_framerateComboBox);
+      {
+        auto framerateLayout = new QVBoxLayout(this);
+        videoLayout->addLayout(framerateLayout);
+
+        auto framerateLabel = new QLabel(this);
+        framerateLabel->setText("Framerate");
+        framerateLayout->addWidget(framerateLabel);
+
+        m_framerateComboBox = new QComboBox(this);
+        m_framerateComboBox->addItem("144 FPS", 144);
+        m_framerateComboBox->addItem("60 FPS", 60);
+        m_framerateComboBox->addItem("30 FPS", 30);
+        m_framerateComboBox->addItem("15 FPS", 15);
+        m_framerateComboBox->addItem("5 FPS", 5);
+        m_framerateComboBox->setCurrentText("30 FPS");
+        framerateLayout->addWidget(m_framerateComboBox);
+      }
     }
 
     m_audioGroupBox = new QGroupBox(this);
