@@ -195,7 +195,7 @@ let userscriptPromise;
 
     setInterval(async () => {
       const streamActive =
-        document.getElementsByClassName("panel-2ZFCRb activityPanel-9icbyU")
+        document.getElementsByClassName("panel-ufc1-o activityPanel-9icbyU")
           .length > 0;
 
       if (!streamActive && wasStreamActive) userscript.stopVirtmic();
@@ -213,7 +213,7 @@ let userscriptPromise;
         hiddenElements.length = 0;
       } else {
         for (const el of [
-          document.getElementsByClassName("actionButtons-2vEOUh")?.[0]
+          document.getElementsByClassName("actionButtons-1DmM2g")?.[0]
             ?.children[1],
           document.querySelector(
             ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
@@ -294,11 +294,9 @@ let userscriptPromise;
       }
 
       const buttonContainer =
-        document.getElementsByClassName("container-YkUktl")[0];
+        document.getElementsByClassName("container-1CH86i")[0];
       if (!buttonContainer) {
-        userscript.log(
-          "Cannot locate Mute/Deafen/Settings button container, please report this on GitHub"
-        );
+        userscript.log("Cannot locate Mute/Deafen/Settings button container");
       }
 
       muteBtn = buttonContainer
