@@ -37,6 +37,21 @@ told you and it's not my fault.
   applications) (see
   [#1](https://github.com/maltejur/discord-screenaudio/issues/1))
 
+## Alternatives
+
+If you have problems with this client, you can also try one of these
+alternatives which work in a similar way:
+
+- <a href="https://github.com/Vencord/Vesktop"><img src="https://raw.githubusercontent.com/Vencord/Vesktop/main/static/icon.png" height="13px">
+  Vesktop</a> - The Vencord desktop client, which, in addition to allowing you
+  to stream audio, also has propper plugin and theming support.
+- <a href="https://github.com/IceDBorn/pipewire-screenaudio"><img src="https://raw.githubusercontent.com/IceDBorn/pipewire-screenaudio/main/extension/assets/icons/icon.svg" height="13px">
+  pipewire-screenaudio</a> - Firefox extension which allows all websites
+  (including Discord) to stream audio.
+- [Screenshare-with-audio-on-Discord-with-Linux](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux) -
+  Userscript and manual instructions on how to stream audio in Discord with
+  Chrome or Firefox.
+
 ## Installation
 
 You have multiple options:
