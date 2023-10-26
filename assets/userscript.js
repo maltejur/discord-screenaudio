@@ -213,10 +213,10 @@ let userscriptPromise;
         hiddenElements.length = 0;
       } else {
         for (const el of [
-          document.getElementsByClassName("actionButtons-1DmM2g")?.[0]
+          document.getElementsByClassName("actionButtons_b58cbb")?.[0]
             ?.children[1],
           document.querySelector(
-            ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
+            ".wrapper__3f3a7 > div > div > div > div > .controlButton_ab2899"
           ),
         ]) {
           if (!el) continue;
@@ -294,7 +294,7 @@ let userscriptPromise;
       }
 
       const buttonContainer =
-        document.getElementsByClassName("container-1CH86i")[0];
+        document.getElementsByClassName("container_ca50b9")[0];
       if (!buttonContainer) {
         userscript.log("Cannot locate Mute/Deafen/Settings button container");
       }
