@@ -2,6 +2,7 @@
 <RCC>
   <qresource>
     <file>assets/userscript.js</file>
+    <file>assets/polyfills.js</file>
     <file>assets/style.css</file>
     <file>assets/arrpc/arrpc_bridge_mod.js</file>
     <file>assets/arrpc/arrpc.js</file>
