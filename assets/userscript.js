@@ -195,7 +195,7 @@ let userscriptPromise;
 
     setInterval(async () => {
       const streamActive =
-        document.getElementsByClassName("panel-ufc1-o activityPanel-9icbyU")
+        document.getElementsByClassName("panel_bd8c76 activityPanel__22355")
           .length > 0;
 
       if (!streamActive && wasStreamActive) userscript.stopVirtmic();
