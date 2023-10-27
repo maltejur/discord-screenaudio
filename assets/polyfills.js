@@ -2,10 +2,16 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-const hasOwn = function hasOwn(o, p) {
+Object.hasOwn = function (o, p) {
     const obj = Object(o);
     const key = String(p);
     return Object.prototype.hasOwnProperty.call(obj, key);
 }
 
-Object.hasOwn = hasOwn;
+Array.prototype.at = function (index) {
+    if (index >= 0) {
+        return this[index];
+    } else {
+        return this[this.length + index];
+    }
+};
