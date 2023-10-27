@@ -35,6 +35,7 @@ private:
   void setupPermissions();
   void setupUserStyles();
   void setupArrpc();
+  static void readAndAppendJsFile(const QString &path, QByteArray &data);
   void fetchUserStyles();
   bool acceptNavigationRequest(const QUrl &url,
                                QWebEnginePage::NavigationType type,

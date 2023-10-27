@@ -92,7 +92,7 @@ let userscriptPromise;
     const button = document.createElement("button");
     button.style.marginBottom = "20px";
     button.classList =
-      "button-ejjZWC lookFilled-1H2Jvj colorBrand-2M3O3N sizeSmall-3R2P2p grow-2T4nbg";
+      "button_afdfd9 lookFilled__19298 colorBrand_b2253e sizeSmall__71a98 grow__4c8a4";
     button.innerText = text;
     button.addEventListener("click", onClick);
     return button;
@@ -101,22 +101,22 @@ let userscriptPromise;
   function createSwitch(text, enabled, onClick) {
     const container = document.createElement("div");
     container.style.marginBottom = "20px";
-    container.className = "labelRow-NnoUIp";
+    container.className = "labelRow__523f2";
 
     const label = document.createElement("label");
     label.innerHTML = text;
-    label.className = "title-2yADjX";
+    label.className = "title__28a65";
     container.appendChild(label);
 
     const svg = document.createElement("div");
     container.appendChild(svg);
 
     function setSvgDisabled() {
-      svg.innerHTML = `<div class="container-1QtPKm default-colors" style="opacity: 1; background-color: rgb(114, 118, 125);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg><input id="uid_84" type="checkbox" class="input-125oad" tabindex="0"></div>`;
+      svg.innerHTML = `<div class="container__871ba default-colors" style="opacity: 1; background-color: rgb(114, 118, 125);"><svg class="slider__41d94" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: -3px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(114, 118, 125, 1)" d="M5.13231 6.72963L6.7233 5.13864L14.855 13.2704L13.264 14.8614L5.13231 6.72963Z"></path><path fill="rgba(114, 118, 125, 1)" d="M13.2704 5.13864L14.8614 6.72963L6.72963 14.8614L5.13864 13.2704L13.2704 5.13864Z"></path></svg></svg><input id="uid_84" type="checkbox" class="input-125oad" tabindex="0"></div>`;
     }
 
     function setSvgEnabled() {
-      svg.innerHTML = `<div class="container-1QtPKm default-colors checked-16gMAN" style="opacity: 1; background-color: rgb(59, 165, 92);"><svg class="slider-HJFN2i" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: 12px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(59, 165, 92, 1)" d="M7.89561 14.8538L6.30462 13.2629L14.3099 5.25755L15.9009 6.84854L7.89561 14.8538Z"></path><path fill="rgba(59, 165, 92, 1)" d="M4.08643 11.0903L5.67742 9.49929L9.4485 13.2704L7.85751 14.8614L4.08643 11.0903Z"></path></svg></svg><input id="uid_74" type="checkbox" class="input-125oad" tabindex="0" checked=""></div>`;
+      svg.innerHTML = `<div class="container__871ba default-colors checked__6bdb0" style="opacity: 1; background-color: rgb(59, 165, 92);"><svg class="slider__41d94" viewBox="0 0 28 20" preserveAspectRatio="xMinYMid meet" aria-hidden="true" style="left: 12px;"><rect fill="white" x="4" y="0" height="20" width="20" rx="10"></rect><svg viewBox="0 0 20 20" fill="none"><path fill="rgba(59, 165, 92, 1)" d="M7.89561 14.8538L6.30462 13.2629L14.3099 5.25755L15.9009 6.84854L7.89561 14.8538Z"></path><path fill="rgba(59, 165, 92, 1)" d="M4.08643 11.0903L5.67742 9.49929L9.4485 13.2704L7.85751 14.8614L4.08643 11.0903Z"></path></svg></svg><input id="uid_74" type="checkbox" class="input-125oad" tabindex="0" checked=""></div>`;
     }
 
     function updateSvg() {
@@ -194,8 +194,9 @@ let userscriptPromise;
     setTimeout(() => updateUserstyles());
 
     setInterval(async () => {
+      // The panel above your voice chat controls containing the application title and the 'stop streaming' button
       const streamActive =
-        document.getElementsByClassName("panel-ufc1-o activityPanel-9icbyU")
+        document.getElementsByClassName("panel_bd8c76 activityPanel__22355")
           .length > 0;
 
       if (!streamActive && wasStreamActive) userscript.stopVirtmic();
@@ -213,10 +214,12 @@ let userscriptPromise;
         hiddenElements.length = 0;
       } else {
         for (const el of [
-          document.getElementsByClassName("actionButtons-1DmM2g")?.[0]
+          // The 4 buttons for controlling the voice chat. Video, *Start Streaming*, Start Activity, and Soundboard.
+          document.getElementsByClassName("actionButtons_b58cbb")?.[0]
             ?.children[1],
+          // The round buttons in the voice chat interface
           document.querySelector(
-            ".wrapper-3t3Yqv > div > div > div > div > .controlButton-2PMNom"
+            ".wrapper__3f3a7 > div > div > div > div > .controlButton_ab2899"
           ),
         ]) {
           if (!el) continue;
@@ -245,7 +248,8 @@ let userscriptPromise;
         document.getElementsByClassName("dirscordScreenaudioAboutText")
           .length == 0
       ) {
-        for (const el of document.getElementsByClassName("info-3pQQBb")) {
+        // The information at the bottom of settings
+        for (const el of document.getElementsByClassName("info__755e1")) {
           let aboutEl;
           if (userscript.kxmlgui) {
             aboutEl = document.createElement("a");
@@ -273,15 +277,17 @@ let userscriptPromise;
 
       // Add event listener for keybind tab
       if (
+        // The notice about downloading the client to get access to keybinds
+        // This will not show up in the official desktop client.  
         document
           .getElementById("keybinds-tab")
           ?.getElementsByClassName(
-            "container-3jbRo5 info-1hMolH browserNotice-1u-Y5o"
+            "container_de00a3 info__7c80a browserNotice__5180b"
           ).length
       ) {
         const el = document
           .getElementById("keybinds-tab")
-          .getElementsByClassName("children-2C96Ex")[0];
+          .getElementsByClassName("children_b15c64")[0];
         const div = document.createElement("div");
         div.style.marginBottom = "50px";
         div.appendChild(
@@ -294,7 +300,7 @@ let userscriptPromise;
       }
 
       const buttonContainer =
-        document.getElementsByClassName("container-1CH86i")[0];
+        document.getElementsByClassName("container_ca50b9")[0];
       if (!buttonContainer) {
         userscript.log("Cannot locate Mute/Deafen/Settings button container");
       }
@@ -308,8 +314,9 @@ let userscriptPromise;
         : null;
 
       if (resolutionString) {
+        // The streaming resolution and quality shown in the call screen
         for (const el of document.getElementsByClassName(
-          "qualityIndicator-39wQDy"
+          "qualityIndicator_a92418"
         )) {
           el.innerHTML = resolutionString;
         }
@@ -322,16 +329,16 @@ let userscriptPromise;
         );
         if (!discordScreenaudioSettings) {
           const firstDivider = accountTab.getElementsByClassName(
-            "divider-3nqZNm marginTop40-Q4o1tS"
+            "divider_a2339a marginTop40__2b1fe"
           )[0];
           if (firstDivider) {
             const section = document.createElement("div");
-            section.className = "marginTop40-Q4o1tS";
+            section.className = "marginTop40__2b1fe";
             section.id = "discord-screenaudio-settings";
 
             const title = document.createElement("h2");
             title.className =
-              "h1-3iMExa title-lXcL8p defaultColor-3Olr-9 defaultMarginh1-1UYutH";
+              "h1__90460 title__3e421 defaultColor_d757c2 defaultMarginh1__902c1";
             title.innerText = "discord-screenaudio";
             section.appendChild(title);
 
@@ -387,7 +394,7 @@ let userscriptPromise;
             );
 
             const divider = document.createElement("div");
-            divider.className = "divider-3nqZNm marginTop40-Q4o1tS";
+            divider.className = "divider_a2339a marginTop40__2b1fe";
 
             firstDivider.after(section);
             section.after(divider);
