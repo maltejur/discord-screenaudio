@@ -41,11 +41,11 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   QByteArray content;
   readAndAppendJsFile(":/assets/userscript.js", content);
   readAndAppendJsFile(":/assets/polyfills.js", content);
-  
+
   if (MainWindow::instance()->settings()->value("vencord", false).toBool()) {
     qDebug(mainLog) << "Vencord is enabled";
     content.append(";");
-    
+
     readAndAppendJsFile(":/assets/vencord/vencord.js", content);
   }
   injectScript("userscript.js", content);
@@ -58,14 +58,15 @@ DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
   setupArrpc();
 }
 
-void DiscordPage::readAndAppendJsFile(const QString& path, QByteArray& data) {
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly))
-        qFatal("Failed to load file \"%s\" with error: %s",
-               path.toLatin1().constData(), file.errorString().toLatin1().constData());
+void DiscordPage::readAndAppendJsFile(const QString &path, QByteArray &data) {
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly))
+    qFatal("Failed to load file \"%s\" with error: %s",
+           path.toLatin1().constData(),
+           file.errorString().toLatin1().constData());
 
-    data.append(file.readAll());
-    file.close();
+  data.append(file.readAll());
+  file.close();
 }
 
 void DiscordPage::setupPermissions() {
