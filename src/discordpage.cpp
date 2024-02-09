@@ -20,7 +20,8 @@
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
 
-DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
+DiscordPage::DiscordPage(QWidget *parent)
+    : QWebEnginePage(new QWebEngineProfile("discord-screenaudio"), parent) {
   setBackgroundColor(QColor("#313338"));
 
   connect(this, &QWebEnginePage::featurePermissionRequested, this,

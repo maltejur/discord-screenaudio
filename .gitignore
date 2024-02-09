@@ -6,3 +6,4 @@
 .vscode
 /submodules/arrpc
 /submodules/Vencord
+.cache

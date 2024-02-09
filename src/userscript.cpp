@@ -17,6 +17,7 @@
 #include <QTimer>
 
 #ifdef KXMLGUI
+#include <KAboutData>
 #include <KActionCollection>
 #endif
 
