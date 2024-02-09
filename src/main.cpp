@@ -6,10 +6,6 @@
 #include "mainwindow.h"
 #include "virtmic.h"
 
-#ifdef KXMLGUI
-#include <KAboutData>
-#endif
-
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QLocalServer>

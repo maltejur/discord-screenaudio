@@ -10,7 +10,6 @@
 #include <QProcess>
 
 #ifdef KXMLGUI
-#include <KAboutData>
 #include <KHelpMenu>
 #include <KShortcutsDialog>
 #include <KXmlGuiWindow>

@@ -50,6 +50,16 @@ void CentralWidget::setupWebView() {
             notification->setText(notificationInfo->message());
             notification->setPixmap(
                 QPixmap::fromImage(notificationInfo->icon()));
+#ifdef QT6
+            auto action = notification->addDefaultAction("View");
+            connect(action, &KNotificationAction::activated,
+                    [&, notificationInfo = std::move(notificationInfo)]() {
+                      notificationInfo->click();
+                      show();
+                      activateWindow();
+                    });
+            notification->sendEvent();
+#else
             notification->setDefaultAction("View");
             connect(notification, &KNotification::defaultActivated,
                     [&, notificationInfo = std::move(notificationInfo)]() {
@@ -58,6 +68,7 @@ void CentralWidget::setupWebView() {
                       activateWindow();
                     });
             notification->sendEvent();
+#endif
 #endif
           }
         });
