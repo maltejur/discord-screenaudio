@@ -5,6 +5,7 @@
 #include "discordpage.h"
 #include "log.h"
 #include "mainwindow.h"
+#include "src/mediapicker.h"
 #include "virtmic.h"
 
 #include <QApplication>
@@ -16,17 +17,21 @@
 #include <QTemporaryFile>
 #include <QTimer>
 #include <QWebChannel>
+#include <QWebEngineProfile>
 #include <QWebEngineScript>
 #include <QWebEngineScriptCollection>
 #include <QWebEngineSettings>
 
-DiscordPage::DiscordPage(QWidget *parent) : QWebEnginePage(parent) {
+DiscordPage::DiscordPage(QWidget *parent)
+    : QWebEnginePage(new QWebEngineProfile("discord-screenaudio"), parent) {
   setBackgroundColor(QColor("#313338"));
 
   connect(this, &QWebEnginePage::featurePermissionRequested, this,
           &DiscordPage::featurePermissionRequested);
   connect(this, &DiscordPage::fullScreenRequested, MainWindow::instance(),
           &MainWindow::fullScreenRequested);
+  connect(this, &DiscordPage::desktopMediaRequested, this,
+          &DiscordPage::handleDesktopMediaRequest);
 
   setupPermissions();
 
@@ -338,4 +343,9 @@ void DiscordPage::setupArrpc() {
     injectFile(&DiscordPage::injectScript, "arrpc_bridge_mod.js",
                ":/assets/arrpc/arrpc_bridge_mod.js");
   }
+}
+
+void DiscordPage::handleDesktopMediaRequest(
+    const QWebEngineDesktopMediaRequest &request) {
+  (new MediaPicker(request, MainWindow::instance()))->exec();
 }

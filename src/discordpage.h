@@ -55,6 +55,7 @@ private:
 private Q_SLOTS:
   void featurePermissionRequested(const QUrl &securityOrigin,
                                   QWebEnginePage::Feature feature);
+  void handleDesktopMediaRequest(const QWebEngineDesktopMediaRequest &request);
 
 public Q_SLOTS:
   void getUserStyles(QString url);

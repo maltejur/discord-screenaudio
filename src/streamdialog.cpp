@@ -8,6 +8,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QLabel>
 #include <QPushButton>
 #include <QSizePolicy>
@@ -97,7 +98,8 @@ StreamDialog::StreamDialog(QWidget *parent) : QDialog(parent) {
     }
 
     auto button = new QPushButton(this);
-    button->setText("Start Stream");
+    button->setText("Select Screen Area");
+    button->setIcon(QIcon::fromTheme("next"));
     connect(button, &QPushButton::clicked, this, &StreamDialog::startStream);
     layout->addWidget(button, Qt::AlignRight | Qt::AlignBottom);
   }

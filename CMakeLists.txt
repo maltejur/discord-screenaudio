@@ -90,6 +90,7 @@ set(discord-screenaudio_SRC
   src/userscript.cpp
   src/centralwidget.cpp
   src/localserver.cpp
+  src/mediapicker.cpp
   resources.qrc
 )
 
