@@ -50,8 +50,8 @@ void CentralWidget::setupWebView() {
             notification->setText(notificationInfo->message());
             notification->setPixmap(
                 QPixmap::fromImage(notificationInfo->icon()));
-            notification->setDefaultAction("View");
-            connect(notification, &KNotification::defaultActivated,
+            notification->addDefaultAction("View");
+            connect(notification, &KNotification::defaultAction,
                     [&, notificationInfo = std::move(notificationInfo)]() {
                       notificationInfo->click();
                       show();
