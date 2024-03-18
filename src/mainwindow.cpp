@@ -36,7 +36,7 @@ MainWindow::MainWindow(bool useNotifySend, QWidget *parent)
   setCentralWidget(m_centralWidget);
   setupTrayIcon();
   setMinimumSize(800, 300);
-  connect(new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this),
+  connect(new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q), this),
           &QShortcut::activated, this, &MainWindow::toggleOrCloseWindow);
   if (m_settings->contains("geometry")) {
     restoreGeometry(m_settings->value("geometry").toByteArray());
