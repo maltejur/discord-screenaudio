@@ -218,9 +218,9 @@ let userscriptPromise;
           document.getElementsByClassName("actionButtons_b58cbb")?.[0]
             ?.children[1],
           // The round buttons in the voice chat interface
-          document.querySelector(
-            ".wrapper__3f3a7 > div > div > div > div > .controlButton_ab2899"
-          ),
+          // document.querySelector(
+          //   ".wrapper__3f3a7 > div > div > div > div > .controlButton_ab2899"
+          // ),
         ]) {
           if (!el) continue;
           if (el.classList.contains("discord-screenaudio-cloned")) continue;
@@ -278,7 +278,7 @@ let userscriptPromise;
       // Add event listener for keybind tab
       if (
         // The notice about downloading the client to get access to keybinds
-        // This will not show up in the official desktop client.  
+        // This will not show up in the official desktop client.
         document
           .getElementById("keybinds-tab")
           ?.getElementsByClassName(

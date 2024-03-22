@@ -7,3 +7,8 @@ SPDX-License-Identifier: GPL-3.0-or-later */
 .vc-backup-restore {
   display: none;
 }
+
+/* The round buttons in the voice chat interface */
+.wrapper__3f3a7 > div > div > .controlButton_ab2899 {
+  display: none;
+}
