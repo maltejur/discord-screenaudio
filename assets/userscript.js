@@ -300,7 +300,7 @@ let userscriptPromise;
       }
 
       const buttonContainer =
-        document.getElementsByClassName("container_ca50b9")[0];
+        document.getElementsByClassName("container_debb33")[0];
       if (!buttonContainer) {
         userscript.log("Cannot locate Mute/Deafen/Settings button container");
       }
