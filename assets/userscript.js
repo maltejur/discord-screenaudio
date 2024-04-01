@@ -196,7 +196,7 @@ let userscriptPromise;
     setInterval(async () => {
       // The panel above your voice chat controls containing the application title and the 'stop streaming' button
       const streamActive =
-        document.getElementsByClassName("panel_bd8c76 activityPanel__22355")
+        document.getElementsByClassName("panel_bd8c76 activityPanel_b73e7a")
           .length > 0;
 
       if (!streamActive && wasStreamActive) userscript.stopVirtmic();
@@ -215,7 +215,7 @@ let userscriptPromise;
       } else {
         for (const el of [
           // The 4 buttons for controlling the voice chat. Video, *Start Streaming*, Start Activity, and Soundboard.
-          document.getElementsByClassName("actionButtons_b58cbb")?.[0]
+          document.getElementsByClassName("actionButtons__85e3c")?.[0]
             ?.children[1],
           // The round buttons in the voice chat interface
           // document.querySelector(
@@ -300,7 +300,7 @@ let userscriptPromise;
       }
 
       const buttonContainer =
-        document.getElementsByClassName("container_ca50b9")[0];
+        document.getElementsByClassName("container_debb33")[0];
       if (!buttonContainer) {
         userscript.log("Cannot locate Mute/Deafen/Settings button container");
       }
