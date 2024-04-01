@@ -142,7 +142,7 @@ if(KF6GlobalAccel_FOUND)
 endif()
 
 install(TARGETS discord-screenaudio DESTINATION bin)
-install(FILES assets/de.shorsh.discord-screenaudio.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/255x255/apps)
+install(FILES assets/de.shorsh.discord-screenaudio.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps)
 install(PROGRAMS assets/de.shorsh.discord-screenaudio.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
 configure_file(assets/de.shorsh.discord-screenaudio.metainfo.xml.in de.shorsh.discord-screenaudio.metainfo.xml)
 install(FILES ${CMAKE_BINARY_DIR}/de.shorsh.discord-screenaudio.metainfo.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/metainfo)
