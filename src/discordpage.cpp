@@ -72,7 +72,6 @@ void DiscordPage::readAndAppendJsFile(const QString &path, QByteArray &data) {
 
 void DiscordPage::setupPermissions() {
   settings()->setAttribute(QWebEngineSettings::ScreenCaptureEnabled, true);
-  settings()->setAttribute(QWebEngineSettings::JavascriptCanOpenWindows, true);
   settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent,
                            true);
   settings()->setAttribute(
