@@ -4,6 +4,17 @@ SPDX-FileCopyrightText: 2022 Malte Jürgens and contributors
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
+> [!WARNING]  
+> **Deprecation Notice** \
+> This project isn't actively maintained anymore. Reasons are me not having
+> enough time to work on it, some fundamental issues (like hardware acceleration
+> problems caused by QtWebEngine), and the fact that there are now better
+> alternatives which make me not want to duplicate efforts. I mainly recommend
+> using and contributing to [Vesktop](https://github.com/Vencord/Vesktop) as an
+> alternative Discord client with great audio screensharing support, but a list
+> of other alternatives can be found [below](#alternatives). You can of course
+> still continue to use discord-screenaudio if it works for you.
+
 # discord-screenaudio
 
 A custom discord client that supports streaming with audio on Linux, made
@@ -42,13 +53,25 @@ told you and it's not my fault.
 If you have problems with this client, you can also try one of these
 alternatives which work in a similar way:
 
-- <a href="https://github.com/Vencord/Vesktop"><img src="https://raw.githubusercontent.com/Vencord/Vesktop/main/static/icon.png" height="13px">
-  Vesktop</a> - The Vencord desktop client, which, in addition to allowing you
-  to stream audio, also has propper plugin and theming support.
-- <a href="https://github.com/IceDBorn/pipewire-screenaudio"><img src="https://raw.githubusercontent.com/IceDBorn/pipewire-screenaudio/main/extension/assets/icons/icon.svg" height="13px">
-  pipewire-screenaudio</a> - Firefox extension which allows all websites
-  (including Discord) to stream audio.
-- [Screenshare-with-audio-on-Discord-with-Linux](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux) -
+- <a href="https://github.com/Vencord/Vesktop"><img
+  src="https://raw.githubusercontent.com/Vencord/Vesktop/main/static/icon.png"
+  height="13px"> Vesktop</a> - The Vencord desktop client, which, in addition to
+  allowing you to stream audio, also has propper plugin and theming support.
+- <a href="https://github.com/IceDBorn/pipewire-screenaudio"><img
+  src="https://raw.githubusercontent.com/IceDBorn/pipewire-screenaudio/main/extension/assets/icons/icon.svg"
+  height="13px"> pipewire-screenaudio</a> - Firefox extension which allows all
+  websites (including Discord) to stream audio.
+- <a href="https://github.com/SpacingBat3/WebCord"><img
+  src="https://raw.githubusercontent.com/SpacingBat3/WebCord/master/sources/assets/icons/app.png"
+  height="13px"> WebCord</a> - Another simple third-party Discord client, which
+  allows you to share the whole desktop audio through new Electron
+  functionality. 
+- <a href="https://support.google.com/chrome/a/answer/9025903"><img
+  src="https://www.google.com/chrome/static/images/chrome-logo.svg"
+  height="14px"> Google Chrome</a> - Chrome has recently added support for
+  sharing another Chrome tab, including audio. This should also cover a lot of
+  usecases for sharing screen audio.
+- [Screenshare-with-audio-on-Discord-with-Linux](https://github.com/edisionnano/Screenshare-with-audio-on-Discord-with-Linux)
   Userscript and manual instructions on how to stream audio in Discord with
   Chrome or Firefox.
 
